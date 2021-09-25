@@ -2,7 +2,6 @@
 #define __KEYBOARD_HPP__
 #include <queue>
 #include <bitset>
-#include <memory>
 #include <IKeyboard.hpp>
 
 class Keyboard : public IKeyboard {

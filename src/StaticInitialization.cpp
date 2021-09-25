@@ -1,22 +1,33 @@
 #include <Keyboard.hpp>
 #include <Mouse.hpp>
 
-static std::unique_ptr<IKeyboard> sKeyboard;
-static std::unique_ptr<IMouse> sMouse;
-
+static IKeyboard* s_pKeyboard = nullptr;
+static IMouse* s_pMouse = nullptr;
 
 IKeyboard* GetKeyboardInstance() noexcept {
-	return sKeyboard.get();
+	return s_pKeyboard;
 }
 
-void InitKeyboardInstance() noexcept {
-	sKeyboard = std::make_unique<Keyboard>();
+void InitKeyboardInstance() {
+	if(!s_pKeyboard)
+		s_pKeyboard = new Keyboard();
+}
+
+void CleanUpKeyboardInstance() {
+	if (s_pKeyboard)
+		delete s_pKeyboard;
 }
 
 IMouse* GetMouseInstance() noexcept {
-	return sMouse.get();
+	return s_pMouse;
 }
 
-void InitMouseInstance() noexcept {
-	sMouse = std::make_unique<Mouse>();
+void InitMouseInstance() {
+	if (!s_pMouse)
+		s_pMouse = new Mouse();
+}
+
+void CleanUpMouseInstance() {
+	if (s_pMouse)
+		delete s_pMouse;
 }

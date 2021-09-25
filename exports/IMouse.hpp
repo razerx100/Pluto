@@ -1,6 +1,5 @@
 #ifndef __IMOUSE_HPP__
 #define __IMOUSE_HPP__
-#include <memory>
 
 #ifdef BUILD_PLUTO
 #define PLUTO_DLL __declspec(dllexport)
@@ -122,6 +121,7 @@ public:
 };
 
 PLUTO_DLL IMouse* _cdecl GetMouseInstance() noexcept;
-PLUTO_DLL void _cdecl InitMouseInstance() noexcept;
+PLUTO_DLL void _cdecl InitMouseInstance();
+PLUTO_DLL void _cdecl CleanUpMouseInstance();
 
 #endif

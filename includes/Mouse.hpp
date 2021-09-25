@@ -1,7 +1,6 @@
 #ifndef __MOUSE_HPP__
 #define __MOUSE_HPP__
 #include <queue>
-#include <memory>
 #include <IMouse.hpp>
 
 class Mouse : public IMouse {

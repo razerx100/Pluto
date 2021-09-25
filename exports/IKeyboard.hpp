@@ -1,6 +1,6 @@
 #ifndef __IKEYBOARD_HPP__
 #define __IKEYBOARD_HPP__
-#include <memory>
+#include <cstdint>
 
 #ifdef BUILD_PLUTO
 #define PLUTO_DLL __declspec(dllexport)
@@ -118,6 +118,7 @@ public:
 };
 
 PLUTO_DLL IKeyboard* _cdecl GetKeyboardInstance() noexcept;
-PLUTO_DLL void _cdecl InitKeyboardInstance() noexcept;
+PLUTO_DLL void _cdecl InitKeyboardInstance();
+PLUTO_DLL void _cdecl CleanUpKeyboardInstance();
 
 #endif
