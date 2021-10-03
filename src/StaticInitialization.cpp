@@ -13,7 +13,7 @@ void InitKeyboardInstance() {
 		s_pKeyboard = new Keyboard();
 }
 
-void CleanUpKeyboardInstance() {
+void CleanUpKeyboardInstance() noexcept {
 	if (s_pKeyboard)
 		delete s_pKeyboard;
 }
@@ -27,7 +27,7 @@ void InitMouseInstance() {
 		s_pMouse = new Mouse();
 }
 
-void CleanUpMouseInstance() {
+void CleanUpMouseInstance() noexcept {
 	if (s_pMouse)
 		delete s_pMouse;
 }
