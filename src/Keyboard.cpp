@@ -43,6 +43,7 @@ void Keyboard::FlushKey() noexcept {
 void Keyboard::Flush() noexcept {
 	FlushKey();
 	FlushChar();
+	ClearState();
 }
 
 void Keyboard::OnKeyPressed(SKeyCodes keycode) noexcept {

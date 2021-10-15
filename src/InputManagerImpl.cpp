@@ -27,10 +27,16 @@ void InputManagerImpl::DeviceDisconnected(
 ) noexcept {
 	if (auto result = m_handleMap.find(handle); result != m_handleMap.end()) {
 		m_handleMap.erase(handle);
-		if (device == KeyboardDiv)
-			m_availableKeyboardIndices.push(result->second);
-		else if (device == MouseDiv)
-			m_availableMouseIndices.push(result->second);
+
+		std::uint32_t index = result->second;
+		if (device == KeyboardDiv) {
+			m_availableKeyboardIndices.push(index);
+			m_pKeyboards[index]->Flush();
+		}
+		else if (device == MouseDiv) {
+			m_availableMouseIndices.push(index);
+			m_pMouses[index]->Flush();
+		}
 	}
 }
 
@@ -47,8 +53,8 @@ IKeyboard* InputManagerImpl::GetKeyboardByHandle(std::uint64_t handle) noexcept 
 		std::uint32_t index = 0u;
 		if (!m_availableKeyboardIndices.empty()) {
 			index = m_availableKeyboardIndices.front();
-			m_handleMap.emplace(handle, index);
 			m_availableKeyboardIndices.pop();
+			m_handleMap.emplace(handle, index);
 		}
 
 		return m_pKeyboards[index].get();
@@ -62,8 +68,8 @@ IMouse* InputManagerImpl::GetMouseByHandle(std::uint64_t handle) noexcept {
 		std::uint32_t index = 0u;
 		if (!m_availableMouseIndices.empty()) {
 			index = m_availableMouseIndices.front();
-			m_handleMap.emplace(handle, index);
 			m_availableMouseIndices.pop();
+			m_handleMap.emplace(handle, index);
 		}
 
 		return m_pMouses[index].get();
