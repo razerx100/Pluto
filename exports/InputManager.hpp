@@ -4,9 +4,9 @@
 #include "IMouse.hpp"
 
 enum PLUTO_DLL DeviceType {
-	Keyboard,
-	Mouse,
-	Gamepad,
+	KeyboardDiv,
+	MouseDiv,
+	GamepadDiv,
 	DeviceTypeCount
 };
 

@@ -89,11 +89,6 @@ public:
 public:
 	virtual ~IKeyboard() = default;
 
-	// Must set a Native Keycode Getter in Window Module
-	virtual void SetNativeKeyCodeGetter(
-		SKeyCodes(*NativeKeyCodeGetter)(std::uint16_t)
-	) noexcept = 0;
-
 	// key events
 	virtual bool IsKeyPressed(SKeyCodes keycode) const noexcept = 0;
 	virtual Event ReadKey() noexcept = 0;
@@ -111,8 +106,8 @@ public:
 	virtual void DisableAutoRepeat() noexcept = 0;
 	virtual bool IsAutoRepeatEnabled() const noexcept = 0;
 
-	virtual void OnKeyPressed(std::uint16_t keycode) noexcept = 0;
-	virtual void OnKeyReleased(std::uint16_t keycode) noexcept = 0;
+	virtual void OnKeyPressed(SKeyCodes keycode) noexcept = 0;
+	virtual void OnKeyReleased(SKeyCodes keycode) noexcept = 0;
 	virtual void OnChar(char character) noexcept = 0;
 	virtual void ClearState() noexcept = 0;
 };

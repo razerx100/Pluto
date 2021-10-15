@@ -11,10 +11,6 @@ public:
 	Keyboard(const Keyboard&) = delete;
 	Keyboard& operator=(const Keyboard&) = delete;
 
-	void SetNativeKeyCodeGetter(
-		SKeyCodes(*NativeKeyCodeGetter)(std::uint16_t)
-	) noexcept override;
-
 	bool IsKeyPressed(SKeyCodes keycode) const noexcept override;
 	Event ReadKey() noexcept override;
 	bool IsKeyEmpty() const noexcept override;
@@ -31,8 +27,8 @@ public:
 	void DisableAutoRepeat() noexcept override;
 	bool IsAutoRepeatEnabled() const noexcept override;
 
-	void OnKeyPressed(std::uint16_t keycode) noexcept override;
-	void OnKeyReleased(std::uint16_t keycode) noexcept override;
+	void OnKeyPressed(SKeyCodes keycode) noexcept override;
+	void OnKeyReleased(SKeyCodes keycode) noexcept override;
 	void OnChar(char character) noexcept override;
 	void ClearState() noexcept override;
 
@@ -47,6 +43,5 @@ private:
 	std::bitset<s_nKeys> m_keystates;
 	std::queue<Event> m_keyBuffer;
 	std::queue<char> m_charBuffer;
-	SKeyCodes(*m_nativeKeyCodeGetter)(std::uint16_t);
 };
 #endif

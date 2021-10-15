@@ -1,7 +1,7 @@
 #include<Keyboard.hpp>
 
 Keyboard::Keyboard()
-	: m_autoRepeatEnabled(false), m_nativeKeyCodeGetter(nullptr) {}
+	: m_autoRepeatEnabled(false) {}
 
 bool Keyboard::IsKeyPressed(SKeyCodes keycode) const noexcept {
 	return m_keystates[keycode];
@@ -60,19 +60,15 @@ bool Keyboard::IsAutoRepeatEnabled() const noexcept {
 	return m_autoRepeatEnabled;
 }
 
-void Keyboard::OnKeyPressed(std::uint16_t keycode) noexcept {
-	SKeyCodes sKeyCode = m_nativeKeyCodeGetter(keycode);
-
-	m_keystates[sKeyCode] = true;
-	m_keyBuffer.emplace(Keyboard::Event(Keyboard::Event::Type::Press, sKeyCode));
+void Keyboard::OnKeyPressed(SKeyCodes keycode) noexcept {
+	m_keystates[keycode] = true;
+	m_keyBuffer.emplace(Keyboard::Event(Keyboard::Event::Type::Press, keycode));
 	TrimBuffer(m_keyBuffer);
 }
 
-void Keyboard::OnKeyReleased(std::uint16_t keycode) noexcept {
-	SKeyCodes sKeyCode = m_nativeKeyCodeGetter(keycode);
-
-	m_keystates[sKeyCode] = false;
-	m_keyBuffer.emplace(Keyboard::Event(Keyboard::Event::Type::Release, sKeyCode));
+void Keyboard::OnKeyReleased(SKeyCodes keycode) noexcept {
+	m_keystates[keycode] = false;
+	m_keyBuffer.emplace(Keyboard::Event(Keyboard::Event::Type::Release, keycode));
 	TrimBuffer(m_keyBuffer);
 }
 
@@ -89,10 +85,4 @@ template<typename T>
 void Keyboard::TrimBuffer(std::queue<T>& buffer) noexcept {
 	while (buffer.size() > s_bufferSize)
 		buffer.pop();
-}
-
-void Keyboard::SetNativeKeyCodeGetter(
-	SKeyCodes(*NativeKeyCodeGetter)(std::uint16_t)
-) noexcept {
-	m_nativeKeyCodeGetter = NativeKeyCodeGetter;
 }

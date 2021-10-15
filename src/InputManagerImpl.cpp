@@ -1,4 +1,6 @@
 #include <InputManagerImpl.hpp>
+#include <Keyboard.hpp>
+#include <Mouse.hpp>
 
 InputManagerImpl::InputManagerImpl() noexcept
 	: m_devicesCount(DeviceTypeCount) {}
@@ -8,14 +10,14 @@ void InputManagerImpl::AddDeviceSupport(
 ) noexcept {
 	m_devicesCount[device] += count;
 
-	if (device == Keyboard)
+	if (device == KeyboardDiv)
 		for (std::uint32_t index = 0u; index < count; ++index) {
-			m_pKeyboards.emplace_back(std::make_unique<IKeyboard>());
+			m_pKeyboards.emplace_back(std::make_unique<Keyboard>());
 			m_availableKeyboardIndices.push(index);
 		}
-	else if(device == Mouse)
+	else if(device == MouseDiv)
 		for (std::uint32_t index = 0u; index < count; ++index) {
-			m_pMouses.emplace_back(std::make_unique<IMouse>());
+			m_pMouses.emplace_back(std::make_unique<Mouse>());
 			m_availableMouseIndices.push(index);
 		}
 }
@@ -25,9 +27,9 @@ void InputManagerImpl::DeviceDisconnected(
 ) noexcept {
 	if (auto result = m_handleMap.find(handle); result != m_handleMap.end()) {
 		m_handleMap.erase(handle);
-		if (device == Keyboard)
+		if (device == KeyboardDiv)
 			m_availableKeyboardIndices.push(result->second);
-		else if (device == Mouse)
+		else if (device == MouseDiv)
 			m_availableMouseIndices.push(result->second);
 	}
 }
