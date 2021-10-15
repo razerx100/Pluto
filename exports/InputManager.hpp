@@ -3,10 +3,11 @@
 #include "IKeyboard.hpp"
 #include "IMouse.hpp"
 
-enum class PLUTO_DLL DeviceType {
+enum PLUTO_DLL DeviceType {
 	Keyboard,
 	Mouse,
-	Gamepad
+	Gamepad,
+	DeviceTypeCount
 };
 
 class PLUTO_DLL InputManager {
@@ -16,7 +17,9 @@ public:
 	virtual void AddDeviceSupport(
 		DeviceType device, std::uint32_t count = 1u
 	) noexcept = 0;
-	virtual void DeviceDisconnected(std::uint64_t handle) noexcept = 0;
+	virtual void DeviceDisconnected(
+		DeviceType device, std::uint64_t handle
+	) noexcept = 0;
 	virtual	IKeyboard* GetKeyboardByIndex(std::uint32_t index = 0u) const noexcept = 0;
 	virtual	IMouse* GetMouseByIndex(std::uint32_t index = 0u) const noexcept = 0;
 	virtual	IKeyboard* GetKeyboardByHandle(std::uint64_t handle) noexcept = 0;
