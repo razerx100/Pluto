@@ -46,6 +46,5 @@ private:
 	MouseData m_mouseData;
 
 	std::queue<Event> m_buffer;
-	std::queue<Vector2> m_rawDeltaBuffer;
 };
 #endif
