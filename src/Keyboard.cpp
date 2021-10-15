@@ -1,8 +1,5 @@
 #include<Keyboard.hpp>
 
-Keyboard::Keyboard()
-	: m_autoRepeatEnabled(false) {}
-
 bool Keyboard::IsKeyPressed(SKeyCodes keycode) const noexcept {
 	return m_keystates[keycode];
 }
@@ -46,18 +43,6 @@ void Keyboard::FlushKey() noexcept {
 void Keyboard::Flush() noexcept {
 	FlushKey();
 	FlushChar();
-}
-
-void Keyboard::EnableAutoRepeat() noexcept {
-	m_autoRepeatEnabled = true;
-}
-
-void Keyboard::DisableAutoRepeat() noexcept {
-	m_autoRepeatEnabled = false;
-}
-
-bool Keyboard::IsAutoRepeatEnabled() const noexcept {
-	return m_autoRepeatEnabled;
 }
 
 void Keyboard::OnKeyPressed(SKeyCodes keycode) noexcept {

@@ -4,7 +4,7 @@ Mouse::Mouse()
 	:
 	m_inWindow(false),
 	m_wheelDeltaCarry(0),
-	m_rawEnabled(false), m_mouseData{} {}
+	m_mouseData{} {}
 
 Vector2 Mouse::GetPos() const noexcept {
 	return { m_mouseData.x, m_mouseData.y };
@@ -34,10 +34,6 @@ bool Mouse::IsRightPressed() const noexcept {
 	return m_mouseData.rightPressed;
 }
 
-bool Mouse::IsRawEnabled() const noexcept {
-	return m_rawEnabled;
-}
-
 Mouse::Event Mouse::Read() noexcept {
 	if (!m_buffer.empty()) {
 		Mouse::Event e = m_buffer.front();
@@ -54,14 +50,6 @@ bool Mouse::IsBufferEmpty() const noexcept {
 
 void Mouse::Flush() noexcept {
 	m_buffer = std::queue<Event>();
-}
-
-void Mouse::EnableRaw() noexcept {
-	m_rawEnabled = true;
-}
-
-void Mouse::DisableRaw() noexcept {
-	m_rawEnabled = false;
 }
 
 void Mouse::OnMouseMove(int x, int y) noexcept {
@@ -154,24 +142,4 @@ void Mouse::OnWheelDelta(int delta) noexcept {
 		m_wheelDeltaCarry += 120;
 		OnWheelDown();
 	}
-}
-
-void Mouse::OnMouseRawDelta(int dx, int dy) noexcept {
-	m_rawDeltaBuffer.emplace(Vector2{dx, dy});
-	TrimRawDeltaBuffer();
-}
-
-void Mouse::TrimRawDeltaBuffer() noexcept {
-	while (m_rawDeltaBuffer.size() > s_bufferSize)
-		m_rawDeltaBuffer.pop();
-}
-
-Vector2 Mouse::ReadRawDelta() noexcept {
-	if (m_rawDeltaBuffer.empty())
-		return Vector2();
-
-	Vector2 d = m_rawDeltaBuffer.front();
-	m_rawDeltaBuffer.pop();
-
-	return d;
 }

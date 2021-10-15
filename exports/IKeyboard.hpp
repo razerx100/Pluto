@@ -101,19 +101,9 @@ public:
 	virtual void FlushChar() noexcept = 0;
 	virtual void Flush() noexcept = 0;
 
-	// auto-repeat control
-	virtual void EnableAutoRepeat() noexcept = 0;
-	virtual void DisableAutoRepeat() noexcept = 0;
-	virtual bool IsAutoRepeatEnabled() const noexcept = 0;
-
 	virtual void OnKeyPressed(SKeyCodes keycode) noexcept = 0;
 	virtual void OnKeyReleased(SKeyCodes keycode) noexcept = 0;
 	virtual void OnChar(char character) noexcept = 0;
 	virtual void ClearState() noexcept = 0;
 };
-
-PLUTO_DLL IKeyboard* _cdecl GetKeyboardInstance() noexcept;
-PLUTO_DLL void _cdecl InitKeyboardInstance();
-PLUTO_DLL void _cdecl CleanUpKeyboardInstance() noexcept;
-
 #endif

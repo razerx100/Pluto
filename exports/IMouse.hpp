@@ -92,18 +92,14 @@ public:
 	virtual int GetPosX() const noexcept = 0;
 	virtual int GetPosY() const noexcept = 0;
 	virtual Event Read() noexcept = 0;
-	virtual Vector2 ReadRawDelta() noexcept = 0;
 
 	virtual bool IsInWindow() const noexcept = 0;
 	virtual bool IsLeftPressed() const noexcept = 0;
 	virtual bool IsMiddlePressed() const noexcept = 0;
 	virtual bool IsRightPressed() const noexcept = 0;
 	virtual bool IsBufferEmpty() const noexcept = 0;
-	virtual bool IsRawEnabled() const noexcept = 0;
 
 	virtual void Flush() noexcept = 0;
-	virtual void EnableRaw() noexcept = 0;
-	virtual void DisableRaw() noexcept = 0;
 
 	virtual void OnMouseMove(int x, int y) noexcept = 0;
 	virtual void OnMouseLeave() noexcept = 0;
@@ -116,12 +112,6 @@ public:
 	virtual void OnRightRelease() noexcept = 0;
 	virtual void OnWheelUp() noexcept = 0;
 	virtual void OnWheelDown() noexcept = 0;
-	virtual void OnMouseRawDelta(int dx, int dy) noexcept = 0;
 	virtual void OnWheelDelta(int delta) noexcept = 0;
 };
-
-PLUTO_DLL IMouse* _cdecl GetMouseInstance() noexcept;
-PLUTO_DLL void _cdecl InitMouseInstance();
-PLUTO_DLL void _cdecl CleanUpMouseInstance() noexcept;
-
 #endif

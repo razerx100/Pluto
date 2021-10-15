@@ -6,7 +6,7 @@
 
 class Keyboard : public IKeyboard {
 public:
-	Keyboard();
+	Keyboard() = default;
 
 	Keyboard(const Keyboard&) = delete;
 	Keyboard& operator=(const Keyboard&) = delete;
@@ -22,11 +22,6 @@ public:
 	void FlushChar() noexcept override;
 	void Flush() noexcept override;
 
-	// auto-repeat control
-	void EnableAutoRepeat() noexcept override;
-	void DisableAutoRepeat() noexcept override;
-	bool IsAutoRepeatEnabled() const noexcept override;
-
 	void OnKeyPressed(SKeyCodes keycode) noexcept override;
 	void OnKeyReleased(SKeyCodes keycode) noexcept override;
 	void OnChar(char character) noexcept override;
@@ -39,7 +34,6 @@ private:
 private:
 	static constexpr unsigned int s_nKeys = 256u;
 	static constexpr unsigned int s_bufferSize = 16u;
-	bool m_autoRepeatEnabled;
 	std::bitset<s_nKeys> m_keystates;
 	std::queue<Event> m_keyBuffer;
 	std::queue<char> m_charBuffer;

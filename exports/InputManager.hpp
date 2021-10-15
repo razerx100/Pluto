@@ -26,7 +26,6 @@ public:
 	virtual	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept = 0;
 };
 
-
 PLUTO_DLL InputManager* _cdecl GetInputManagerInstance() noexcept;
 PLUTO_DLL void _cdecl InitInputManagerInstance();
 PLUTO_DLL void _cdecl CleanUpInputManagerInstance() noexcept;
