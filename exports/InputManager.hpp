@@ -19,7 +19,7 @@ public:
 		DeviceType device, std::uint32_t count = 1u
 	) noexcept = 0;
 	virtual void DeviceDisconnected(
-		DeviceType device, std::uint64_t handle
+		std::uint64_t handle
 	) noexcept = 0;
 
 	virtual std::uint32_t GetKeyboardCount() const noexcept = 0;

@@ -28,6 +28,7 @@ public:
 	void Flush() noexcept override;
 
 	void SetRawMouseState(std::uint16_t mouseState) noexcept override;
+	void OnMouseMove(int x, int y) noexcept override;
 	void OnMouseLeave() noexcept override;
 	void OnMouseEnter() noexcept override;
 	void OnWheelDelta(short delta) noexcept override;
@@ -36,10 +37,9 @@ private:
 	void TrimBuffer() noexcept;
 	void OnWheelUp() noexcept;
 	void OnWheelDown() noexcept;
-	void OnMouseMove(int x, int y) noexcept;
 
 private:
-	static constexpr unsigned int s_bufferSize = 16u;
+	static constexpr std::uint32_t s_bufferSize = 16u;
 	bool m_inWindow;
 	float m_mouseTicks;
 	Vector2 m_cursorPosition;

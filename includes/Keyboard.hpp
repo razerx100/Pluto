@@ -32,8 +32,8 @@ private:
 	static void TrimBuffer(std::queue<T>& buffer) noexcept;
 
 private:
-	static constexpr unsigned int s_nKeys = 256u;
-	static constexpr unsigned int s_bufferSize = 16u;
+	static constexpr std::uint32_t s_nKeys = 256u;
+	static constexpr std::uint32_t s_bufferSize = 16u;
 	std::bitset<s_nKeys> m_keystates;
 	std::queue<Event> m_keyBuffer;
 	std::queue<char> m_charBuffer;

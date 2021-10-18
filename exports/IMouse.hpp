@@ -93,6 +93,7 @@ public:
 	virtual void Flush() noexcept = 0;
 
 	virtual void SetRawMouseState(std::uint16_t mouseState) noexcept = 0;
+	virtual void OnMouseMove(int x, int y) noexcept = 0;
 	virtual void OnMouseLeave() noexcept = 0;
 	virtual void OnMouseEnter() noexcept = 0;
 	virtual void OnWheelDelta(short delta) noexcept = 0;

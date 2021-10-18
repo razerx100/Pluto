@@ -23,12 +23,14 @@ void InputManagerImpl::AddDeviceSupport(
 }
 
 void InputManagerImpl::DeviceDisconnected(
-	DeviceType device, std::uint64_t handle
+	std::uint64_t handle
 ) noexcept {
 	if (auto result = m_handleMap.find(handle); result != m_handleMap.end()) {
 		m_handleMap.erase(handle);
 
-		std::uint32_t index = result->second;
+		std::uint32_t index = result->second.index;
+		DeviceType device = result->second.type;
+
 		if (device == KeyboardDev) {
 			m_availableKeyboardIndices.push(index);
 			m_pKeyboards[index]->Flush();
@@ -50,32 +52,37 @@ IMouse* InputManagerImpl::GetMouseByIndex(std::uint32_t index) const noexcept {
 
 IKeyboard* InputManagerImpl::GetKeyboardByHandle(std::uint64_t handle) noexcept {
 	if (auto result = m_handleMap.find(handle); result == m_handleMap.end()) {
-		std::uint32_t index = 0u;
 		if (!m_availableKeyboardIndices.empty()) {
+			std::uint32_t index = 0u;
 			index = m_availableKeyboardIndices.front();
 			m_availableKeyboardIndices.pop();
-			m_handleMap.emplace(handle, index);
-		}
+			m_handleMap.emplace(handle, HandleData{ index, DeviceType::KeyboardDev });
 
-		return m_pKeyboards[index].get();
+			return m_pKeyboards[index].get();
+		}
+		else
+			return nullptr;
+
 	}
 	else
-		return m_pKeyboards[result->second].get();
+		return m_pKeyboards[result->second.index].get();
 }
 
 IMouse* InputManagerImpl::GetMouseByHandle(std::uint64_t handle) noexcept {
 	if (auto result = m_handleMap.find(handle); result == m_handleMap.end()) {
-		std::uint32_t index = 0u;
 		if (!m_availableMouseIndices.empty()) {
+			std::uint32_t index = 0u;
 			index = m_availableMouseIndices.front();
 			m_availableMouseIndices.pop();
-			m_handleMap.emplace(handle, index);
-		}
+			m_handleMap.emplace(handle, HandleData{ index, DeviceType::MouseDev });
 
-		return m_pMouses[index].get();
+			return m_pMouses[index].get();
+		}
+		else
+			return nullptr;
 	}
 	else
-		return m_pMouses[result->second].get();
+		return m_pMouses[result->second.index].get();
 }
 
 std::uint32_t InputManagerImpl::GetKeyboardCount() const noexcept {

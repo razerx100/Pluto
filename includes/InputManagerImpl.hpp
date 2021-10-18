@@ -6,6 +6,11 @@
 #include <vector>
 #include <queue>
 
+struct HandleData {
+	std::uint32_t index;
+	DeviceType type;
+};
+
 class InputManagerImpl : public InputManager {
 public:
 	InputManagerImpl() noexcept;
@@ -14,7 +19,7 @@ public:
 		DeviceType device, std::uint32_t count
 	) noexcept override;
 	void DeviceDisconnected(
-		DeviceType device, std::uint64_t handle
+		std::uint64_t handle
 	) noexcept override;
 
 	std::uint32_t GetKeyboardCount() const noexcept override;
@@ -28,7 +33,7 @@ public:
 	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept override;
 
 private:
-	std::unordered_map<std::uint64_t, std::uint32_t> m_handleMap;
+	std::unordered_map<std::uint64_t, HandleData> m_handleMap;
 	std::vector<std::unique_ptr<IKeyboard>> m_pKeyboards;
 	std::vector<std::unique_ptr<IMouse>> m_pMouses;
 	std::queue<std::uint32_t> m_availableKeyboardIndices;
