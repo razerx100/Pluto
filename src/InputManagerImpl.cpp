@@ -10,12 +10,12 @@ void InputManagerImpl::AddDeviceSupport(
 ) noexcept {
 	m_devicesCount[device] += count;
 
-	if (device == KeyboardDiv)
+	if (device == KeyboardDev)
 		for (std::uint32_t index = 0u; index < count; ++index) {
 			m_pKeyboards.emplace_back(std::make_unique<Keyboard>());
 			m_availableKeyboardIndices.push(index);
 		}
-	else if(device == MouseDiv)
+	else if(device == MouseDev)
 		for (std::uint32_t index = 0u; index < count; ++index) {
 			m_pMouses.emplace_back(std::make_unique<Mouse>());
 			m_availableMouseIndices.push(index);
@@ -29,11 +29,11 @@ void InputManagerImpl::DeviceDisconnected(
 		m_handleMap.erase(handle);
 
 		std::uint32_t index = result->second;
-		if (device == KeyboardDiv) {
+		if (device == KeyboardDev) {
 			m_availableKeyboardIndices.push(index);
 			m_pKeyboards[index]->Flush();
 		}
-		else if (device == MouseDiv) {
+		else if (device == MouseDev) {
 			m_availableMouseIndices.push(index);
 			m_pMouses[index]->Flush();
 		}
@@ -76,4 +76,28 @@ IMouse* InputManagerImpl::GetMouseByHandle(std::uint64_t handle) noexcept {
 	}
 	else
 		return m_pMouses[result->second].get();
+}
+
+std::uint32_t InputManagerImpl::GetKeyboardCount() const noexcept {
+	return static_cast<std::uint32_t>(m_pKeyboards.size());
+}
+
+std::uint32_t InputManagerImpl::GetMouseCount() const noexcept {
+	return static_cast<std::uint32_t>(m_pMouses.size());
+}
+
+std::vector<IKeyboard*> InputManagerImpl::GetKeyboardRefs() noexcept {
+	std::vector<IKeyboard*> pKeyboardRefs;
+	for (auto& keyboard : m_pKeyboards)
+		pKeyboardRefs.emplace_back(keyboard.get());
+
+	return pKeyboardRefs;
+}
+
+std::vector<IMouse*> InputManagerImpl::GetMouseRefs() noexcept {
+	std::vector<IMouse*> pMouseRefs;
+	for (auto& mouse : m_pMouses)
+		pMouseRefs.emplace_back(mouse.get());
+
+	return pMouseRefs;
 }

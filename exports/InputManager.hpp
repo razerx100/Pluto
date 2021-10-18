@@ -2,11 +2,12 @@
 #define __INPUT_MANAGER_HPP__
 #include "IKeyboard.hpp"
 #include "IMouse.hpp"
+#include <vector>
 
 enum PLUTO_DLL DeviceType {
-	KeyboardDiv,
-	MouseDiv,
-	GamepadDiv,
+	KeyboardDev,
+	MouseDev,
+	GamepadDev,
 	DeviceTypeCount
 };
 
@@ -20,6 +21,12 @@ public:
 	virtual void DeviceDisconnected(
 		DeviceType device, std::uint64_t handle
 	) noexcept = 0;
+
+	virtual std::uint32_t GetKeyboardCount() const noexcept = 0;
+	virtual std::uint32_t GetMouseCount() const noexcept = 0;
+
+	virtual std::vector<IKeyboard*> GetKeyboardRefs() noexcept = 0;
+	virtual std::vector<IMouse*> GetMouseRefs() noexcept = 0;
 	virtual	IKeyboard* GetKeyboardByIndex(std::uint32_t index = 0u) const noexcept = 0;
 	virtual	IMouse* GetMouseByIndex(std::uint32_t index = 0u) const noexcept = 0;
 	virtual	IKeyboard* GetKeyboardByHandle(std::uint64_t handle) noexcept = 0;

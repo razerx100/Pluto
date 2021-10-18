@@ -16,6 +16,12 @@ public:
 	void DeviceDisconnected(
 		DeviceType device, std::uint64_t handle
 	) noexcept override;
+
+	std::uint32_t GetKeyboardCount() const noexcept override;
+	std::uint32_t GetMouseCount() const noexcept override;
+
+	std::vector<IKeyboard*> GetKeyboardRefs() noexcept override;
+	std::vector<IMouse*> GetMouseRefs() noexcept override;
 	IKeyboard* GetKeyboardByIndex(std::uint32_t index) const noexcept override;
 	IMouse* GetMouseByIndex(std::uint32_t index) const noexcept override;
 	IKeyboard* GetKeyboardByHandle(std::uint64_t handle) noexcept override;

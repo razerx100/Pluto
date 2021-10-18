@@ -2,6 +2,7 @@
 #define __MOUSE_HPP__
 #include <queue>
 #include <IMouse.hpp>
+#include <bitset>
 
 class Mouse : public IMouse {
 public:
@@ -13,38 +14,38 @@ public:
 	Vector2 GetPos() const noexcept override;
 	int GetPosX() const noexcept override;
 	int GetPosY() const noexcept override;
+	float GetMouseTicks() const noexcept override;
 	Event Read() noexcept override;
 
 	bool IsInWindow() const noexcept override;
 	bool IsLeftPressed() const noexcept override;
 	bool IsMiddlePressed() const noexcept override;
 	bool IsRightPressed() const noexcept override;
+	bool IsX1Pressed() const noexcept override;
+	bool IsX2Pressed() const noexcept override;
 	bool IsBufferEmpty() const noexcept override;
 
 	void Flush() noexcept override;
 
-	void OnMouseMove(int x, int y) noexcept override;
+	void SetRawMouseState(std::uint16_t mouseState) noexcept override;
 	void OnMouseLeave() noexcept override;
 	void OnMouseEnter() noexcept override;
-	void OnLeftPress() noexcept override;
-	void OnMiddlePress() noexcept override;
-	void OnRightPress() noexcept override;
-	void OnLeftRelease() noexcept override;
-	void OnMiddleRelease() noexcept override;
-	void OnRightRelease() noexcept override;
-	void OnWheelUp() noexcept override;
-	void OnWheelDown() noexcept override;
-	void OnWheelDelta(int delta) noexcept override;
+	void OnWheelDelta(short delta) noexcept override;
 
 private:
 	void TrimBuffer() noexcept;
+	void OnWheelUp() noexcept;
+	void OnWheelDown() noexcept;
+	void OnMouseMove(int x, int y) noexcept;
 
 private:
 	static constexpr unsigned int s_bufferSize = 16u;
 	bool m_inWindow;
+	float m_mouseTicks;
+	Vector2 m_cursorPosition;
 	int m_wheelDeltaCarry;
-	MouseData m_mouseData;
 
+	std::bitset<16u> m_mouseState;
 	std::queue<Event> m_buffer;
 };
 #endif

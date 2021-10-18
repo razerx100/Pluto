@@ -3,19 +3,24 @@
 Mouse::Mouse()
 	:
 	m_inWindow(false),
-	m_wheelDeltaCarry(0),
-	m_mouseData{} {}
+	m_mouseTicks(0.0f),
+	m_cursorPosition{},
+	m_wheelDeltaCarry(0) {}
 
 Vector2 Mouse::GetPos() const noexcept {
-	return { m_mouseData.x, m_mouseData.y };
+	return m_cursorPosition;
 }
 
 int Mouse::GetPosX() const noexcept {
-	return m_mouseData.x;
+	return m_cursorPosition.x;
 }
 
 int Mouse::GetPosY() const noexcept {
-	return m_mouseData.y;
+	return m_cursorPosition.y;
+}
+
+float Mouse::GetMouseTicks() const noexcept {
+	return m_mouseTicks;
 }
 
 bool Mouse::IsInWindow() const noexcept {
@@ -23,15 +28,23 @@ bool Mouse::IsInWindow() const noexcept {
 }
 
 bool Mouse::IsLeftPressed() const noexcept {
-	return m_mouseData.leftPressed;
+	return m_mouseState[IMouse::Event::Type::LPress];
 }
 
 bool Mouse::IsMiddlePressed() const noexcept {
-	return m_mouseData.middlePressed;
+	return m_mouseState[IMouse::Event::Type::MPress];
 }
 
 bool Mouse::IsRightPressed() const noexcept {
-	return m_mouseData.rightPressed;
+	return m_mouseState[IMouse::Event::Type::RPress];
+}
+
+bool Mouse::IsX1Pressed() const noexcept {
+	return m_mouseState[IMouse::Event::Type::X1Press];
+}
+
+bool Mouse::IsX2Pressed() const noexcept {
+	return m_mouseState[IMouse::Event::Type::X2Press];
 }
 
 Mouse::Event Mouse::Read() noexcept {
@@ -53,76 +66,34 @@ void Mouse::Flush() noexcept {
 }
 
 void Mouse::OnMouseMove(int x, int y) noexcept {
-	m_mouseData.x = x;
-	m_mouseData.y = y;
+	m_cursorPosition.x = x;
+	m_cursorPosition.y = y;
 
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::Move, m_mouseData));
+	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::Move, m_cursorPosition));
 	TrimBuffer();
 }
 
 void Mouse::OnMouseEnter() noexcept {
 	m_inWindow = true;
 
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::Enter, m_mouseData));
+	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::Enter));
 	TrimBuffer();
 }
 
 void Mouse::OnMouseLeave() noexcept {
 	m_inWindow = false;
 
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::Leave, m_mouseData));
-	TrimBuffer();
-}
-
-void Mouse::OnLeftPress() noexcept {
-	m_mouseData.leftPressed = true;
-
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::LPress, m_mouseData));
-	TrimBuffer();
-}
-
-void Mouse::OnMiddlePress() noexcept {
-	m_mouseData.middlePressed = true;
-
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::MPress, m_mouseData));
-	TrimBuffer();
-}
-
-void Mouse::OnRightPress() noexcept {
-	m_mouseData.rightPressed = true;
-
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::RPress, m_mouseData));
-	TrimBuffer();
-}
-
-void Mouse::OnLeftRelease() noexcept {
-	m_mouseData.leftPressed = false;
-
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::LRelease, m_mouseData));
-	TrimBuffer();
-}
-
-void Mouse::OnMiddleRelease() noexcept {
-	m_mouseData.middlePressed = false;
-
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::MRelease, m_mouseData));
-	TrimBuffer();
-}
-
-void Mouse::OnRightRelease() noexcept {
-	m_mouseData.rightPressed = false;
-
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::RRelease, m_mouseData));
+	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::Leave));
 	TrimBuffer();
 }
 
 void Mouse::OnWheelUp() noexcept {
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::WheelUp, m_mouseData));
+	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::WheelUp));
 	TrimBuffer();
 }
 
 void Mouse::OnWheelDown() noexcept {
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::WheelDown, m_mouseData));
+	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::WheelDown));
 	TrimBuffer();
 }
 
@@ -131,7 +102,8 @@ void Mouse::TrimBuffer() noexcept {
 		m_buffer.pop();
 }
 
-void Mouse::OnWheelDelta(int delta) noexcept {
+void Mouse::OnWheelDelta(short delta) noexcept {
+	m_mouseTicks = static_cast<float>(delta) / 120;
 	m_wheelDeltaCarry += delta;
 
 	while (m_wheelDeltaCarry >= 120) {
@@ -142,4 +114,8 @@ void Mouse::OnWheelDelta(int delta) noexcept {
 		m_wheelDeltaCarry += 120;
 		OnWheelDown();
 	}
+}
+
+void Mouse::SetRawMouseState(std::uint16_t mouseState) noexcept {
+	m_mouseState = std::bitset<16u>(mouseState);
 }
