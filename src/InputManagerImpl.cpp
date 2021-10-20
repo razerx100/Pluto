@@ -3,19 +3,19 @@
 #include <Mouse.hpp>
 
 InputManagerImpl::InputManagerImpl() noexcept
-	: m_devicesCount(DeviceTypeCount) {}
+	: m_devicesCount(static_cast<std::uint32_t>(DeviceType::DeviceTypeCount)) {}
 
 void InputManagerImpl::AddDeviceSupport(
 	DeviceType device, std::uint32_t count
 ) noexcept {
-	m_devicesCount[device] += count;
+	m_devicesCount[static_cast<std::uint32_t>(device)] += count;
 
-	if (device == KeyboardDev)
+	if (device == DeviceType::Keyboard)
 		for (std::uint32_t index = 0u; index < count; ++index) {
 			m_pKeyboards.emplace_back(std::make_unique<Keyboard>());
 			m_availableKeyboardIndices.push(index);
 		}
-	else if(device == MouseDev)
+	else if(device == DeviceType::Mouse)
 		for (std::uint32_t index = 0u; index < count; ++index) {
 			m_pMouses.emplace_back(std::make_unique<Mouse>());
 			m_availableMouseIndices.push(index);
@@ -31,11 +31,11 @@ void InputManagerImpl::DeviceDisconnected(
 		std::uint32_t index = result->second.index;
 		DeviceType device = result->second.type;
 
-		if (device == KeyboardDev) {
+		if (device == DeviceType::Keyboard) {
 			m_availableKeyboardIndices.push(index);
 			m_pKeyboards[index]->Flush();
 		}
-		else if (device == MouseDev) {
+		else if (device == DeviceType::Mouse) {
 			m_availableMouseIndices.push(index);
 			m_pMouses[index]->Flush();
 		}
@@ -56,7 +56,7 @@ IKeyboard* InputManagerImpl::GetKeyboardByHandle(std::uint64_t handle) noexcept 
 			std::uint32_t index = 0u;
 			index = m_availableKeyboardIndices.front();
 			m_availableKeyboardIndices.pop();
-			m_handleMap.emplace(handle, HandleData{ index, DeviceType::KeyboardDev });
+			m_handleMap.emplace(handle, HandleData{ index, DeviceType::Keyboard });
 
 			return m_pKeyboards[index].get();
 		}
@@ -74,7 +74,7 @@ IMouse* InputManagerImpl::GetMouseByHandle(std::uint64_t handle) noexcept {
 			std::uint32_t index = 0u;
 			index = m_availableMouseIndices.front();
 			m_availableMouseIndices.pop();
-			m_handleMap.emplace(handle, HandleData{ index, DeviceType::MouseDev });
+			m_handleMap.emplace(handle, HandleData{ index, DeviceType::Mouse });
 
 			return m_pMouses[index].get();
 		}

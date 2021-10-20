@@ -18,11 +18,8 @@ public:
 	Event Read() noexcept override;
 
 	bool IsInWindow() const noexcept override;
-	bool IsLeftPressed() const noexcept override;
-	bool IsMiddlePressed() const noexcept override;
-	bool IsRightPressed() const noexcept override;
-	bool IsX1Pressed() const noexcept override;
-	bool IsX2Pressed() const noexcept override;
+	bool IsButtonPressed(MouseButtons button) const noexcept override;
+	bool AreButtonsPressed(int count, ...) const noexcept override;
 	bool IsBufferEmpty() const noexcept override;
 
 	void Flush() noexcept override;

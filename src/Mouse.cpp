@@ -1,4 +1,13 @@
 #include <Mouse.hpp>
+#include <cstdarg>
+
+static const std::vector<std::uint16_t> buttonMap = {
+	0,
+	2,
+	4,
+	6,
+	8
+};
 
 Mouse::Mouse()
 	:
@@ -23,28 +32,25 @@ float Mouse::GetMouseTicks() const noexcept {
 	return m_mouseTicks;
 }
 
+bool Mouse::IsButtonPressed(MouseButtons button) const noexcept {
+	return m_mouseState[buttonMap[static_cast<std::uint32_t>(button)]];
+}
+
+bool Mouse::AreButtonsPressed(int count, ...) const noexcept {
+	va_list list;
+	va_start(list, count);
+
+	bool result = true;
+	for (int _ = 0; _ < count; ++_)
+		result = result && IsButtonPressed(va_arg(list, MouseButtons));
+
+	va_end(list);
+
+	return result;
+}
+
 bool Mouse::IsInWindow() const noexcept {
 	return m_inWindow;
-}
-
-bool Mouse::IsLeftPressed() const noexcept {
-	return m_mouseState[IMouse::Event::Type::LPress];
-}
-
-bool Mouse::IsMiddlePressed() const noexcept {
-	return m_mouseState[IMouse::Event::Type::MPress];
-}
-
-bool Mouse::IsRightPressed() const noexcept {
-	return m_mouseState[IMouse::Event::Type::RPress];
-}
-
-bool Mouse::IsX1Pressed() const noexcept {
-	return m_mouseState[IMouse::Event::Type::X1Press];
-}
-
-bool Mouse::IsX2Pressed() const noexcept {
-	return m_mouseState[IMouse::Event::Type::X2Press];
 }
 
 Mouse::Event Mouse::Read() noexcept {

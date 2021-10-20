@@ -12,6 +12,7 @@ public:
 	Keyboard& operator=(const Keyboard&) = delete;
 
 	bool IsKeyPressed(SKeyCodes keycode) const noexcept override;
+	bool AreKeysPressed(int count, ...) const noexcept override;
 	Event ReadKey() noexcept override;
 	bool IsKeyEmpty() const noexcept override;
 	void FlushKey() noexcept override;
