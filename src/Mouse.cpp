@@ -123,5 +123,21 @@ void Mouse::OnWheelDelta(short delta) noexcept {
 }
 
 void Mouse::SetRawMouseState(std::uint16_t mouseState) noexcept {
-	m_mouseState = std::bitset<16u>(mouseState);
+	m_mouseState = std::bitset<16u>(
+		ProcessState(m_mouseState.to_ulong(), mouseState)
+		);
+}
+
+static constexpr std::uint16_t releaseFlag = 0x2AA;
+static constexpr std::uint16_t pressFlag = 0x155;
+
+std::uint16_t Mouse::ProcessState(
+	std::uint64_t currentState, std::uint16_t newFlag
+) noexcept {
+	std::uint16_t newState = static_cast<std::uint16_t>(currentState);
+
+	newState ^= (newFlag & pressFlag);
+	newState ^= ((newFlag & releaseFlag) >> 1);
+
+	return newState;
 }

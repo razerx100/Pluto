@@ -35,6 +35,10 @@ private:
 	void OnWheelUp() noexcept;
 	void OnWheelDown() noexcept;
 
+	std::uint16_t ProcessState(
+		std::uint64_t currentState, std::uint16_t newFlag
+	) noexcept;
+
 private:
 	static constexpr std::uint32_t s_bufferSize = 16u;
 	bool m_inWindow;
