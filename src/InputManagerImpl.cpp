@@ -35,10 +35,10 @@ void InputManagerImpl::DeviceDisconnected(
 	std::uint64_t handle
 ) noexcept {
 	if (auto result = m_handleMap.find(handle); result != m_handleMap.end()) {
-		m_handleMap.erase(handle);
-
 		std::uint32_t index = result->second.index;
 		DeviceType device = result->second.type;
+
+		m_handleMap.erase(handle);
 
 		if (device == DeviceType::Keyboard) {
 			m_availableKeyboardIndices.push(index);
