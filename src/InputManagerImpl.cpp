@@ -1,6 +1,7 @@
 #include <InputManagerImpl.hpp>
 #include <Keyboard.hpp>
 #include <Mouse.hpp>
+#include <Gamepad.hpp>
 
 InputManagerImpl::InputManagerImpl() noexcept
 	: m_devicesCount(static_cast<std::uint32_t>(DeviceType::DeviceTypeCount)) {}
@@ -8,17 +9,25 @@ InputManagerImpl::InputManagerImpl() noexcept
 void InputManagerImpl::AddDeviceSupport(
 	DeviceType device, std::uint32_t count
 ) noexcept {
-	m_devicesCount[static_cast<std::uint32_t>(device)] += count;
+	std::uint32_t deviceIndex = static_cast<std::uint32_t>(device);
+
+	std::uint32_t deviceIndexStart = m_devicesCount[deviceIndex];
+	m_devicesCount[deviceIndex] += count;
 
 	if (device == DeviceType::Keyboard)
 		for (std::uint32_t index = 0u; index < count; ++index) {
 			m_pKeyboards.emplace_back(std::make_unique<Keyboard>());
-			m_availableKeyboardIndices.push(index);
+			m_availableKeyboardIndices.push(deviceIndex + index);
 		}
 	else if(device == DeviceType::Mouse)
 		for (std::uint32_t index = 0u; index < count; ++index) {
 			m_pMouses.emplace_back(std::make_unique<Mouse>());
-			m_availableMouseIndices.push(index);
+			m_availableMouseIndices.push(deviceIndex + index);
+		}
+	else if (device == DeviceType::Gamepad)
+		for (std::uint32_t index = 0u; index < count; ++index) {
+			m_pGamepads.emplace_back(std::make_unique<Gamepad>());
+			m_availableGamepadIndices.push(deviceIndex + index);
 		}
 }
 
@@ -38,6 +47,10 @@ void InputManagerImpl::DeviceDisconnected(
 		else if (device == DeviceType::Mouse) {
 			m_availableMouseIndices.push(index);
 			m_pMouses[index]->Flush();
+		}
+		else if (device == DeviceType::Gamepad) {
+			m_availableGamepadIndices.push(index);
+			// Cleanup Gamepad state
 		}
 	}
 }

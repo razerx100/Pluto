@@ -36,8 +36,10 @@ private:
 	std::unordered_map<std::uint64_t, HandleData> m_handleMap;
 	std::vector<std::unique_ptr<IKeyboard>> m_pKeyboards;
 	std::vector<std::unique_ptr<IMouse>> m_pMouses;
+	std::vector<std::unique_ptr<IGamepad>> m_pGamepads;
 	std::queue<std::uint32_t> m_availableKeyboardIndices;
 	std::queue<std::uint32_t> m_availableMouseIndices;
+	std::queue<std::uint32_t> m_availableGamepadIndices;
 	std::vector<std::uint32_t> m_devicesCount;
 };
 #endif

@@ -2,6 +2,7 @@
 #define __INPUT_MANAGER_HPP__
 #include "IKeyboard.hpp"
 #include "IMouse.hpp"
+#include "IGamepad.hpp"
 #include <vector>
 
 enum class PLUTO_DLL DeviceType {

@@ -1,7 +1,8 @@
 # Pluto
-Input Manager library. Builds into Shared Library. Currently has two modules.
+Input Manager library. Builds into Shared Library. Currently has three modules.
 1. Keyboard.
 2. Mouse.
+3. Xbox Gamepad.
 
 ## Instructions
 Run the Setup script to configure the project.
