@@ -17,17 +17,17 @@ void InputManagerImpl::AddDeviceSupport(
 	if (device == DeviceType::Keyboard)
 		for (std::uint32_t index = 0u; index < count; ++index) {
 			m_pKeyboards.emplace_back(std::make_unique<Keyboard>());
-			m_availableKeyboardIndices.push(deviceIndex + index);
+			m_availableKeyboardIndices.push(deviceIndexStart + index);
 		}
 	else if(device == DeviceType::Mouse)
 		for (std::uint32_t index = 0u; index < count; ++index) {
 			m_pMouses.emplace_back(std::make_unique<Mouse>());
-			m_availableMouseIndices.push(deviceIndex + index);
+			m_availableMouseIndices.push(deviceIndexStart + index);
 		}
 	else if (device == DeviceType::Gamepad)
 		for (std::uint32_t index = 0u; index < count; ++index) {
 			m_pGamepads.emplace_back(std::make_unique<Gamepad>());
-			m_availableGamepadIndices.push(deviceIndex + index);
+			m_availableGamepadIndices.push(deviceIndexStart + index);
 		}
 }
 
