@@ -24,13 +24,17 @@ public:
 
 	std::uint32_t GetKeyboardCount() const noexcept override;
 	std::uint32_t GetMouseCount() const noexcept override;
+	std::uint32_t GetGamepadCount() const noexcept override;
 
 	std::vector<IKeyboard*> GetKeyboardRefs() noexcept override;
 	std::vector<IMouse*> GetMouseRefs() noexcept override;
+	std::vector<IGamepad*> GetGamepadRefs() noexcept override;
 	IKeyboard* GetKeyboardByIndex(std::uint32_t index) const noexcept override;
 	IMouse* GetMouseByIndex(std::uint32_t index) const noexcept override;
+	IGamepad* GetGamepadByIndex(std::uint32_t index = 0u) const noexcept override;
 	IKeyboard* GetKeyboardByHandle(std::uint64_t handle) noexcept override;
 	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept override;
+	IGamepad* GetGamepadByHandle(std::uint64_t handle) noexcept override;
 
 private:
 	std::unordered_map<std::uint64_t, HandleData> m_handleMap;
