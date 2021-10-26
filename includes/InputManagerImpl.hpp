@@ -36,6 +36,8 @@ public:
 	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept override;
 	IGamepad* GetGamepadByHandle(std::uint64_t handle) noexcept override;
 
+	void ClearInputStates() noexcept override;
+
 private:
 	std::unordered_map<std::uint64_t, HandleData> m_handleMap;
 	std::vector<std::unique_ptr<IKeyboard>> m_pKeyboards;

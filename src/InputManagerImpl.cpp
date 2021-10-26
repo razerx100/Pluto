@@ -154,3 +154,14 @@ std::vector<IGamepad*> InputManagerImpl::GetGamepadRefs() noexcept {
 
 	return pGamepadRefs;
 }
+
+
+void InputManagerImpl::ClearInputStates() noexcept {
+	for (auto& keyboard : m_pKeyboards)
+		keyboard->Flush();
+
+	for (auto& mouse : m_pMouses)
+		mouse->Flush();
+
+	// Flush gamepad states
+}

@@ -34,6 +34,7 @@ private:
 	void TrimBuffer() noexcept;
 	void OnWheelUp() noexcept;
 	void OnWheelDown() noexcept;
+	void ClearState() noexcept;
 
 	std::uint16_t ProcessState(
 		std::uint64_t currentState, std::uint16_t newFlag

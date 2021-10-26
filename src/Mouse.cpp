@@ -69,6 +69,7 @@ bool Mouse::IsBufferEmpty() const noexcept {
 
 void Mouse::Flush() noexcept {
 	m_buffer = std::queue<Event>();
+	ClearState();
 }
 
 void Mouse::OnMouseMove(int x, int y) noexcept {
@@ -140,4 +141,8 @@ std::uint16_t Mouse::ProcessState(
 	newState ^= ((newFlag & releaseFlag) >> 1);
 
 	return newState;
+}
+
+void Mouse::ClearState() noexcept {
+	m_mouseState.reset();
 }

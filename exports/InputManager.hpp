@@ -36,6 +36,8 @@ public:
 	virtual	IKeyboard* GetKeyboardByHandle(std::uint64_t handle) noexcept = 0;
 	virtual	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept = 0;
 	virtual	IGamepad* GetGamepadByHandle(std::uint64_t handle) noexcept = 0;
+
+	virtual void ClearInputStates() noexcept = 0;
 };
 
 PLUTO_DLL InputManager* __cdecl GetInputManagerInstance() noexcept;
