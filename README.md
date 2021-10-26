@@ -8,5 +8,5 @@ Input Manager library. Builds into Shared Library. Currently has three modules.
 Run the Setup script to configure the project.
 
 ## Requirements
-cmake 3.11+.\
+cmake 3.21+.\
 C++20 Standard supported Compiler.
