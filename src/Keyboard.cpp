@@ -80,9 +80,3 @@ void Keyboard::OnChar(char character) noexcept {
 void Keyboard::ClearState() noexcept {
 	m_keystates.reset();
 }
-
-template<typename T>
-void Keyboard::TrimBuffer(std::queue<T>& buffer) noexcept {
-	while (buffer.size() > s_bufferSize)
-		buffer.pop();
-}

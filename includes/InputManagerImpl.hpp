@@ -34,7 +34,7 @@ public:
 	IGamepad* GetGamepadByIndex(std::uint32_t index) const noexcept override;
 	IKeyboard* GetKeyboardByHandle(std::uint64_t handle) noexcept override;
 	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept override;
-	IGamepad* GetGamepadByHandle(std::uint64_t handle) noexcept override;
+	GamepadData GetGamepadByHandle(std::uint64_t handle) noexcept override;
 
 	void ClearInputStates() noexcept override;
 

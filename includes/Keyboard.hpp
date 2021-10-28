@@ -30,7 +30,10 @@ public:
 
 private:
 	template<typename T>
-	static void TrimBuffer(std::queue<T>& buffer) noexcept;
+	static void TrimBuffer(std::queue<T>& buffer) noexcept {
+		while (buffer.size() > s_bufferSize)
+			buffer.pop();
+	}
 
 private:
 	static constexpr std::uint32_t s_nKeys = 256u;

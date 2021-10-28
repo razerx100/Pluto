@@ -102,7 +102,7 @@ IMouse* InputManagerImpl::GetMouseByHandle(std::uint64_t handle) noexcept {
 		return m_pMouses[result->second.index].get();
 }
 
-IGamepad* InputManagerImpl::GetGamepadByHandle(std::uint64_t handle) noexcept {
+GamepadData InputManagerImpl::GetGamepadByHandle(std::uint64_t handle) noexcept {
 	if (auto result = m_handleMap.find(handle); result == m_handleMap.end()) {
 		if (!m_availableGamepadIndices.empty()) {
 			std::uint32_t index = 0u;
@@ -110,13 +110,15 @@ IGamepad* InputManagerImpl::GetGamepadByHandle(std::uint64_t handle) noexcept {
 			m_availableGamepadIndices.pop();
 			m_handleMap.emplace(handle, HandleData{ index, DeviceType::Gamepad });
 
-			return m_pGamepads[index].get();
+			return GamepadData(m_pGamepads[index].get(), index);
 		}
 		else
-			return nullptr;
+			return GamepadData();
 	}
 	else
-		return m_pGamepads[result->second.index].get();
+		return GamepadData(
+			m_pGamepads[result->second.index].get(), result->second.index
+		);
 }
 
 std::uint32_t InputManagerImpl::GetKeyboardCount() const noexcept {
