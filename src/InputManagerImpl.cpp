@@ -50,7 +50,7 @@ void InputManagerImpl::DeviceDisconnected(
 		}
 		else if (device == DeviceType::Gamepad) {
 			m_availableGamepadIndices.push(index);
-			// Cleanup Gamepad state
+			m_pGamepads[index]->ClearState();
 		}
 	}
 }
@@ -165,5 +165,6 @@ void InputManagerImpl::ClearInputStates() noexcept {
 	for (auto& mouse : m_pMouses)
 		mouse->Flush();
 
-	// Flush gamepad states
+	for (auto& gamepad : m_pGamepads)
+		gamepad->ClearState();
 }
