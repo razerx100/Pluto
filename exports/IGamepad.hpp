@@ -93,5 +93,12 @@ public:
 	virtual void OnRightTriggerMove(float data) noexcept = 0;
 
 	virtual void SetRawButtonState(std::uint16_t buttonFlags) noexcept = 0;
+	virtual void SetLeftThumbStickDeadZone(std::uint32_t deadzone) noexcept = 0;
+	virtual void SetRightThumbStickDeadZone(std::uint32_t deadzone) noexcept = 0;
+	virtual void SetTriggerThreshold(std::uint32_t threshold) noexcept = 0;
+
+	virtual std::uint32_t GetLeftThumbStickDeadZone() const noexcept = 0;
+	virtual std::uint32_t GetRightThumbStickDeadZone() const noexcept = 0;
+	virtual std::uint32_t GetTriggerThreshold() const noexcept = 0;
 };
 #endif

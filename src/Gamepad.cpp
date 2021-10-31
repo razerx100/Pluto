@@ -69,3 +69,27 @@ void Gamepad::OnRightTriggerMove(float data) noexcept {
 void Gamepad::SetRawButtonState(std::uint16_t buttonFlags) noexcept {
 	m_buttonState = std::bitset<16u>(buttonFlags);
 }
+
+void Gamepad::SetLeftThumbStickDeadZone(std::uint32_t deadzone) noexcept {
+	m_leftThumbStickDeadZone = deadzone;
+}
+
+void Gamepad::SetRightThumbStickDeadZone(std::uint32_t deadzone) noexcept {
+	m_rightThumbStickDeadZone = deadzone;
+}
+
+void Gamepad::SetTriggerThreshold(std::uint32_t threshold) noexcept {
+	m_triggerThreshold = threshold;
+}
+
+std::uint32_t Gamepad::GetLeftThumbStickDeadZone() const noexcept {
+	return m_leftThumbStickDeadZone;
+}
+
+std::uint32_t Gamepad::GetRightThumbStickDeadZone() const noexcept {
+	return m_rightThumbStickDeadZone;
+}
+
+std::uint32_t Gamepad::GetTriggerThreshold() const noexcept {
+	return m_triggerThreshold;
+}

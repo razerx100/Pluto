@@ -20,6 +20,13 @@ public:
 	void OnRightTriggerMove(float data) noexcept override;
 
 	void SetRawButtonState(std::uint16_t buttonFlags) noexcept override;
+	void SetLeftThumbStickDeadZone(std::uint32_t deadzone) noexcept override;
+	void SetRightThumbStickDeadZone(std::uint32_t deadzone) noexcept override;
+	void SetTriggerThreshold(std::uint32_t threshold) noexcept override;
+
+	std::uint32_t GetLeftThumbStickDeadZone() const noexcept override;
+	std::uint32_t GetRightThumbStickDeadZone() const noexcept override;
+	std::uint32_t GetTriggerThreshold() const noexcept override;
 
 private:
 	void ClearBuffer() noexcept;
@@ -29,5 +36,9 @@ private:
 	static constexpr std::uint32_t s_bufferSize = 16u;
 	std::bitset<16u> m_buttonState;
 	std::queue<Event> m_eventBuffer;
+
+	std::uint32_t m_leftThumbStickDeadZone;
+	std::uint32_t m_rightThumbStickDeadZone;
+	std::uint32_t m_triggerThreshold;
 };
 #endif
