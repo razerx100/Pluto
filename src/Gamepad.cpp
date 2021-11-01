@@ -1,8 +1,25 @@
 #include <Gamepad.hpp>
 #include <cstdarg>
 
+static const std::vector<std::uint16_t> buttonMap = {
+	0,
+	1,
+	2,
+	3,
+	4,
+	5,
+	6,
+	7,
+	8,
+	9,
+	12,
+	13,
+	14,
+	15
+};
+
 bool Gamepad::IsButtonPressed(XBoxButton button) const noexcept {
-	return m_buttonState[static_cast<std::uint32_t>(button)];
+	return m_buttonState[buttonMap[static_cast<std::uint32_t>(button)]];
 }
 
 bool Gamepad::AreButtonsPressed(int count, ...) const noexcept {
