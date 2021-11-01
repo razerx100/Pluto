@@ -13,21 +13,24 @@ void InputManagerImpl::AddDeviceSupport(
 
 	m_devicesCount[deviceIndex] += count;
 
-	if (device == DeviceType::Keyboard)
-		for (std::uint32_t index = 0u; index < count; ++index) {
+	if (device == DeviceType::Keyboard) {
+		for (std::uint32_t _ = 0u; _ < count; ++_)
 			m_pKeyboards.emplace_back(std::make_unique<Keyboard>());
-			m_keyboardIndices.resize(m_keyboardIndices.size() + count, true);
-		}
-	else if(device == DeviceType::Mouse)
-		for (std::uint32_t index = 0u; index < count; ++index) {
+
+		m_keyboardIndices.resize(m_keyboardIndices.size() + count, true);
+	}
+	else if (device == DeviceType::Mouse) {
+		for (std::uint32_t _ = 0u; _ < count; ++_)
 			m_pMouses.emplace_back(std::make_unique<Mouse>());
-			m_mouseIndices.resize(m_mouseIndices.size() + count, true);
-		}
-	else if (device == DeviceType::Gamepad)
-		for (std::uint32_t index = 0u; index < count; ++index) {
+
+		m_mouseIndices.resize(m_mouseIndices.size() + count, true);
+	}
+	else if (device == DeviceType::Gamepad) {
+		for (std::uint32_t _ = 0u; _ < count; ++_)
 			m_pGamepads.emplace_back(std::make_unique<Gamepad>());
-			m_gamepadIndices.resize(m_gamepadIndices.size() + count, true);
-		}
+
+		m_gamepadIndices.resize(m_gamepadIndices.size() + count, true);
+	}
 }
 
 void InputManagerImpl::DeviceDisconnected(
