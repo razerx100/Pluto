@@ -63,12 +63,12 @@ bool Gamepad::IsBufferEmpty() const noexcept {
 	return m_eventBuffer.empty();
 }
 
-void Gamepad::OnLeftThumbStickMove(float data) noexcept {
+void Gamepad::OnLeftThumbStickMove(ASData data) noexcept {
 	m_eventBuffer.emplace(Gamepad::Event(Gamepad::Event::Type::LeftThumbStick, data));
 	TrimBuffer();
 }
 
-void Gamepad::OnRightThumbStickMove(float data) noexcept {
+void Gamepad::OnRightThumbStickMove(ASData data) noexcept {
 	m_eventBuffer.emplace(Gamepad::Event(Gamepad::Event::Type::RightThumbStick, data));
 	TrimBuffer();
 }

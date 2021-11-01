@@ -14,8 +14,8 @@ public:
 	bool IsButtonPressed(XBoxButton button) const noexcept override;
 	bool AreButtonsPressed(int count, ...) const noexcept override;
 
-	void OnLeftThumbStickMove(float data) noexcept override;
-	void OnRightThumbStickMove(float data) noexcept override;
+	void OnLeftThumbStickMove(ASData data) noexcept override;
+	void OnRightThumbStickMove(ASData data) noexcept override;
 	void OnLeftTriggerMove(float data) noexcept override;
 	void OnRightTriggerMove(float data) noexcept override;
 
