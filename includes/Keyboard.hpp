@@ -1,8 +1,8 @@
 #ifndef __KEYBOARD_HPP__
 #define __KEYBOARD_HPP__
 #include <queue>
-#include <bitset>
 #include <IKeyboard.hpp>
+#include <array>
 
 class Keyboard : public IKeyboard {
 public:
@@ -14,12 +14,10 @@ public:
 	bool IsKeyPressed(SKeyCodes keycode) const noexcept override;
 	bool AreKeysPressed(int count, ...) const noexcept override;
 	Event ReadKey() noexcept override;
-	bool IsKeyEmpty() const noexcept override;
 	void FlushKey() noexcept override;
 
 	// char events
 	char ReadChar() noexcept override;
-	bool IsCharEmpty() const noexcept override;
 	void FlushChar() noexcept override;
 	void Flush() noexcept override;
 
@@ -38,7 +36,7 @@ private:
 private:
 	static constexpr std::uint32_t s_nKeys = 256u;
 	static constexpr std::uint32_t s_bufferSize = 16u;
-	std::bitset<s_nKeys> m_keystates;
+	std::array<bool, s_nKeys> m_keystates;
 	std::queue<Event> m_keyBuffer;
 	std::queue<char> m_charBuffer;
 };

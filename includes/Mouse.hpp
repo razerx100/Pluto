@@ -2,7 +2,6 @@
 #define __MOUSE_HPP__
 #include <queue>
 #include <IMouse.hpp>
-#include <bitset>
 
 class Mouse : public IMouse {
 public:
@@ -20,11 +19,11 @@ public:
 	bool IsInWindow() const noexcept override;
 	bool IsButtonPressed(MouseButtons button) const noexcept override;
 	bool AreButtonsPressed(int count, ...) const noexcept override;
-	bool IsBufferEmpty() const noexcept override;
 
 	void Flush() noexcept override;
 
-	void SetRawMouseState(std::uint16_t mouseState) noexcept override;
+	void SetPressState(std::uint16_t mouseState) noexcept override;
+	void SetReleaseState(std::uint16_t mouseState) noexcept override;
 	void OnMouseMove(int x, int y) noexcept override;
 	void OnMouseLeave() noexcept override;
 	void OnMouseEnter() noexcept override;
@@ -36,10 +35,6 @@ private:
 	void OnWheelDown() noexcept;
 	void ClearState() noexcept;
 
-	std::uint16_t ProcessState(
-		std::uint64_t currentState, std::uint16_t newFlag
-	) noexcept;
-
 private:
 	static constexpr std::uint32_t s_bufferSize = 16u;
 	bool m_inWindow;
@@ -47,7 +42,7 @@ private:
 	Vector2 m_cursorPosition;
 	int m_wheelDeltaCarry;
 
-	std::bitset<16u> m_mouseState;
+	std::uint16_t m_mouseState;
 	std::queue<Event> m_buffer;
 };
 #endif

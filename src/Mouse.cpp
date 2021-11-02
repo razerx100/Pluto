@@ -1,14 +1,6 @@
 #include <Mouse.hpp>
 #include <cstdarg>
 
-static const std::vector<std::uint16_t> buttonMap = {
-	0,
-	2,
-	4,
-	6,
-	8
-};
-
 Mouse::Mouse()
 	:
 	m_inWindow(false),
@@ -33,7 +25,7 @@ float Mouse::GetMouseTicks() const noexcept {
 }
 
 bool Mouse::IsButtonPressed(MouseButtons button) const noexcept {
-	return m_mouseState[buttonMap[static_cast<std::uint32_t>(button)]];
+	return m_mouseState & (1 << static_cast<std::uint32_t>(button));
 }
 
 bool Mouse::AreButtonsPressed(int count, ...) const noexcept {
@@ -61,10 +53,6 @@ Mouse::Event Mouse::Read() noexcept {
 	}
 	else
 		return Mouse::Event();
-}
-
-bool Mouse::IsBufferEmpty() const noexcept {
-	return m_buffer.empty();
 }
 
 void Mouse::Flush() noexcept {
@@ -123,26 +111,14 @@ void Mouse::OnWheelDelta(short delta) noexcept {
 	}
 }
 
-void Mouse::SetRawMouseState(std::uint16_t mouseState) noexcept {
-	m_mouseState = std::bitset<16u>(
-		ProcessState(m_mouseState.to_ulong(), mouseState)
-		);
+void Mouse::SetPressState(std::uint16_t pressState) noexcept {
+	m_mouseState |= pressState;
 }
 
-static constexpr std::uint16_t releaseFlag = 0x2AA;
-static constexpr std::uint16_t pressFlag = 0x155;
-
-std::uint16_t Mouse::ProcessState(
-	std::uint64_t currentState, std::uint16_t newFlag
-) noexcept {
-	std::uint16_t newState = static_cast<std::uint16_t>(currentState);
-
-	newState ^= (newFlag & pressFlag);
-	newState ^= ((newFlag & releaseFlag) >> 1);
-
-	return newState;
+void Mouse::SetReleaseState(std::uint16_t releaseState) noexcept {
+	m_mouseState ^= releaseState;
 }
 
 void Mouse::ClearState() noexcept {
-	m_mouseState.reset();
+	m_mouseState = 0u;
 }

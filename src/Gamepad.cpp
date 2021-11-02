@@ -1,25 +1,8 @@
 #include <Gamepad.hpp>
 #include <cstdarg>
 
-static const std::vector<std::uint16_t> buttonMap = {
-	0,
-	1,
-	2,
-	3,
-	4,
-	5,
-	6,
-	7,
-	8,
-	9,
-	12,
-	13,
-	14,
-	15
-};
-
 bool Gamepad::IsButtonPressed(XBoxButton button) const noexcept {
-	return m_buttonState[buttonMap[static_cast<std::uint32_t>(button)]];
+	return m_buttonState & (1 << static_cast<std::uint32_t>(button));
 }
 
 bool Gamepad::AreButtonsPressed(int count, ...) const noexcept {
@@ -45,7 +28,7 @@ void Gamepad::ClearBuffer() noexcept {
 }
 
 void Gamepad::ClearState() noexcept {
-	m_buttonState.reset();
+	m_buttonState = 0u;
 	ClearBuffer();
 }
 
@@ -57,10 +40,6 @@ Gamepad::Event Gamepad::Read() noexcept {
 	}
 	else
 		return Gamepad::Event();
-}
-
-bool Gamepad::IsBufferEmpty() const noexcept {
-	return m_eventBuffer.empty();
 }
 
 void Gamepad::OnLeftThumbStickMove(ASData data) noexcept {
@@ -84,7 +63,7 @@ void Gamepad::OnRightTriggerMove(float data) noexcept {
 }
 
 void Gamepad::SetRawButtonState(std::uint16_t buttonFlags) noexcept {
-	m_buttonState = std::bitset<16u>(buttonFlags);
+	m_buttonState = buttonFlags;
 }
 
 void Gamepad::SetLeftThumbStickDeadZone(std::uint32_t deadzone) noexcept {

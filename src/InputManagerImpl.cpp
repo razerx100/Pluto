@@ -9,9 +9,7 @@ InputManagerImpl::InputManagerImpl() noexcept
 void InputManagerImpl::AddDeviceSupport(
 	DeviceType device, std::uint32_t count
 ) noexcept {
-	std::uint32_t deviceIndex = static_cast<std::uint32_t>(device);
-
-	m_devicesCount[deviceIndex] += count;
+	m_devicesCount[static_cast<std::uint32_t>(device)] += count;
 
 	if (device == DeviceType::Keyboard) {
 		for (std::uint32_t _ = 0u; _ < count; ++_)

@@ -28,10 +28,6 @@ Keyboard::Event Keyboard::ReadKey() noexcept {
 		return Keyboard::Event();
 }
 
-bool Keyboard::IsKeyEmpty() const noexcept {
-	return m_keyBuffer.empty();
-}
-
 char Keyboard::ReadChar() noexcept {
 	if (!m_charBuffer.empty()) {
 		unsigned char charCode = m_charBuffer.front();
@@ -40,10 +36,6 @@ char Keyboard::ReadChar() noexcept {
 	}
 	else
 		return -1;
-}
-
-bool Keyboard::IsCharEmpty() const noexcept {
-	return m_charBuffer.empty();
 }
 
 void Keyboard::FlushChar() noexcept {
@@ -78,5 +70,5 @@ void Keyboard::OnChar(char character) noexcept {
 }
 
 void Keyboard::ClearState() noexcept {
-	m_keystates.reset();
+	m_keystates.fill(false);
 }

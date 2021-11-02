@@ -1,7 +1,6 @@
 #ifndef __GAMEPAD_HPP__
 #define __GAMEPAD_HPP__
 #include <IGamepad.hpp>
-#include <bitset>
 #include <queue>
 
 class Gamepad : public IGamepad {
@@ -9,7 +8,6 @@ public:
 	void ClearState() noexcept override;
 
 	Event Read() noexcept override;
-	bool IsBufferEmpty() const noexcept override;
 
 	bool IsButtonPressed(XBoxButton button) const noexcept override;
 	bool AreButtonsPressed(int count, ...) const noexcept override;
@@ -34,7 +32,7 @@ private:
 
 private:
 	static constexpr std::uint32_t s_bufferSize = 16u;
-	std::bitset<16u> m_buttonState;
+	std::uint16_t m_buttonState;
 	std::queue<Event> m_eventBuffer;
 
 	std::uint32_t m_leftThumbStickDeadZone;
