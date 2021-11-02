@@ -6,7 +6,8 @@ Mouse::Mouse()
 	m_inWindow(false),
 	m_mouseTicks(0.0f),
 	m_cursorPosition{},
-	m_wheelDeltaCarry(0) {}
+	m_wheelDeltaCarry(0),
+	m_mouseState(0u) {}
 
 Vector2 Mouse::GetPos() const noexcept {
 	return m_cursorPosition;
