@@ -15,19 +15,25 @@ void InputManagerImpl::AddDeviceSupport(
 		for (std::uint32_t _ = 0u; _ < count; ++_)
 			m_pKeyboards.emplace_back(std::make_unique<Keyboard>());
 
-		m_keyboardIndices.resize(m_keyboardIndices.size() + count, true);
+		m_availableKeyboardIndices.resize(
+			m_availableKeyboardIndices.size() + count, true
+		);
 	}
 	else if (device == DeviceType::Mouse) {
 		for (std::uint32_t _ = 0u; _ < count; ++_)
 			m_pMouses.emplace_back(std::make_unique<Mouse>());
 
-		m_mouseIndices.resize(m_mouseIndices.size() + count, true);
+		m_availableMouseIndices.resize(
+			m_availableMouseIndices.size() + count, true
+		);
 	}
 	else if (device == DeviceType::Gamepad) {
 		for (std::uint32_t _ = 0u; _ < count; ++_)
 			m_pGamepads.emplace_back(std::make_unique<Gamepad>());
 
-		m_gamepadIndices.resize(m_gamepadIndices.size() + count, true);
+		m_availableGamepadIndices.resize(
+			m_availableGamepadIndices.size() + count, true
+		);
 	}
 }
 
@@ -41,15 +47,15 @@ void InputManagerImpl::DeviceDisconnected(
 		m_handleMap.erase(handle);
 
 		if (device == DeviceType::Keyboard) {
-			m_keyboardIndices[index] = true;
+			m_availableKeyboardIndices[index] = true;
 			m_pKeyboards[index]->Flush();
 		}
 		else if (device == DeviceType::Mouse) {
-			m_mouseIndices[index] = true;
+			m_availableMouseIndices[index] = true;
 			m_pMouses[index]->Flush();
 		}
 		else if (device == DeviceType::Gamepad) {
-			m_gamepadIndices[index] = true;
+			m_availableGamepadIndices[index] = true;
 			m_pGamepads[index]->ClearState();
 		}
 	}
@@ -69,8 +75,8 @@ IGamepad* InputManagerImpl::GetGamepadByIndex(std::uint32_t index) const noexcep
 
 IKeyboard* InputManagerImpl::GetKeyboardByHandle(std::uint64_t handle) noexcept {
 	if (auto result = m_handleMap.find(handle); result == m_handleMap.end()) {
-		if (int index = FindIndex(m_keyboardIndices); index != -1) {
-			m_keyboardIndices[index] = false;
+		if (int index = FindIndex(m_availableKeyboardIndices); index != -1) {
+			m_availableKeyboardIndices[index] = false;
 			m_handleMap.emplace(handle, HandleData{
 					static_cast<std::uint32_t>(index), DeviceType::Keyboard
 				});
@@ -87,8 +93,8 @@ IKeyboard* InputManagerImpl::GetKeyboardByHandle(std::uint64_t handle) noexcept 
 
 IMouse* InputManagerImpl::GetMouseByHandle(std::uint64_t handle) noexcept {
 	if (auto result = m_handleMap.find(handle); result == m_handleMap.end()) {
-		if (int index = FindIndex(m_mouseIndices); index != -1) {
-			m_mouseIndices[index] = false;
+		if (int index = FindIndex(m_availableMouseIndices); index != -1) {
+			m_availableMouseIndices[index] = false;
 			m_handleMap.emplace(handle, HandleData{
 					static_cast<std::uint32_t>(index), DeviceType::Mouse
 				});
@@ -104,8 +110,8 @@ IMouse* InputManagerImpl::GetMouseByHandle(std::uint64_t handle) noexcept {
 
 GamepadData InputManagerImpl::GetGamepadByHandle(std::uint64_t handle) noexcept {
 	if (auto result = m_handleMap.find(handle); result == m_handleMap.end()) {
-		if (int index = FindIndex(m_gamepadIndices); index != -1) {
-			m_gamepadIndices[index] = false;
+		if (int index = FindIndex(m_availableGamepadIndices); index != -1) {
+			m_availableGamepadIndices[index] = false;
 			m_handleMap.emplace(handle, HandleData{
 					static_cast<std::uint32_t>(index), DeviceType::Gamepad
 				});

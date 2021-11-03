@@ -45,9 +45,9 @@ private:
 	std::vector<std::unique_ptr<IKeyboard>> m_pKeyboards;
 	std::vector<std::unique_ptr<IMouse>> m_pMouses;
 	std::vector<std::unique_ptr<IGamepad>> m_pGamepads;
-	std::vector<bool> m_keyboardIndices;
-	std::vector<bool> m_mouseIndices;
-	std::vector<bool> m_gamepadIndices;
+	std::vector<bool> m_availableKeyboardIndices;
+	std::vector<bool> m_availableMouseIndices;
+	std::vector<bool> m_availableGamepadIndices;
 	std::vector<std::uint32_t> m_devicesCount;
 };
 #endif

@@ -5,20 +5,20 @@ Mouse::Mouse()
 	:
 	m_inWindow(false),
 	m_mouseTicks(0.0f),
-	m_cursorPosition{},
+	m_cursorPositionDelta{},
 	m_wheelDeltaCarry(0),
 	m_mouseState(0u) {}
 
-Vector2 Mouse::GetPos() const noexcept {
-	return m_cursorPosition;
+Vector2 Mouse::GetPosDelta() const noexcept {
+	return m_cursorPositionDelta;
 }
 
-int Mouse::GetPosX() const noexcept {
-	return m_cursorPosition.x;
+int Mouse::GetPosDX() const noexcept {
+	return m_cursorPositionDelta.x;
 }
 
-int Mouse::GetPosY() const noexcept {
-	return m_cursorPosition.y;
+int Mouse::GetPosDY() const noexcept {
+	return m_cursorPositionDelta.y;
 }
 
 float Mouse::GetMouseTicks() const noexcept {
@@ -61,9 +61,9 @@ void Mouse::Flush() noexcept {
 	ClearState();
 }
 
-void Mouse::OnMouseMove(int x, int y) noexcept {
-	m_cursorPosition.x = x;
-	m_cursorPosition.y = y;
+void Mouse::OnMouseMove(int dx, int dy) noexcept {
+	m_cursorPositionDelta.x = dx;
+	m_cursorPositionDelta.y = dy;
 
 	TrimBuffer();
 }
