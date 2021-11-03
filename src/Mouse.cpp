@@ -65,7 +65,6 @@ void Mouse::OnMouseMove(int x, int y) noexcept {
 	m_cursorPosition.x = x;
 	m_cursorPosition.y = y;
 
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::Move, m_cursorPosition));
 	TrimBuffer();
 }
 
@@ -114,10 +113,28 @@ void Mouse::OnWheelDelta(short delta) noexcept {
 
 void Mouse::SetPressState(std::uint16_t pressState) noexcept {
 	m_mouseState |= pressState;
+
+	for (std::uint32_t index = 0u;
+		index < static_cast<std::uint32_t>(MouseButtons::Invalid); ++index)
+		if (pressState & (1u << index)) {
+			m_buffer.emplace(Mouse::Event(
+				Mouse::Event::Type::Press, static_cast<MouseButtons>(index)
+			));
+			TrimBuffer();
+		}
 }
 
 void Mouse::SetReleaseState(std::uint16_t releaseState) noexcept {
 	m_mouseState ^= releaseState;
+
+	for (std::uint32_t index = 0u;
+		index < static_cast<std::uint32_t>(MouseButtons::Invalid); ++index)
+		if (releaseState & (1u << index)) {
+			m_buffer.emplace(Mouse::Event(
+				Mouse::Event::Type::Release, static_cast<MouseButtons>(index)
+			));
+			TrimBuffer();
+		}
 }
 
 void Mouse::ClearState() noexcept {

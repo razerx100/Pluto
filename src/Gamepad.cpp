@@ -63,6 +63,24 @@ void Gamepad::OnRightTriggerMove(float data) noexcept {
 }
 
 void Gamepad::SetRawButtonState(std::uint16_t buttonFlags) noexcept {
+	for (std::uint32_t index = 0u;
+		index < static_cast<std::uint32_t>(XBoxButton::Invalid); ++index) {
+		if (auto flag = 1u << index; buttonFlags & flag) {
+			m_eventBuffer.emplace(Gamepad::Event(
+				Gamepad::Event::Type::Press, static_cast<XBoxButton>(index)
+			));
+			TrimBuffer();
+		}
+		else {
+			if (m_buttonState & flag) {
+				m_eventBuffer.emplace(Gamepad::Event(
+					Gamepad::Event::Type::Release, static_cast<XBoxButton>(index)
+				));
+				TrimBuffer();
+			}
+		}
+	}
+
 	m_buttonState = buttonFlags;
 }
 
