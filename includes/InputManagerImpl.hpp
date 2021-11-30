@@ -21,10 +21,6 @@ public:
 		std::uint64_t handle
 	) noexcept override;
 
-	std::uint32_t GetKeyboardCount() const noexcept override;
-	std::uint32_t GetMouseCount() const noexcept override;
-	std::uint32_t GetGamepadCount() const noexcept override;
-
 	void GetKeyboardRefs(
 		IKeyboard** keyboards, std::uint32_t& keyboardCount
 	) const noexcept override;

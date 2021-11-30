@@ -27,10 +27,6 @@ public:
 		std::uint64_t handle
 	) noexcept = 0;
 
-	virtual std::uint32_t GetKeyboardCount() const noexcept = 0;
-	virtual std::uint32_t GetMouseCount() const noexcept = 0;
-	virtual std::uint32_t GetGamepadCount() const noexcept = 0;
-
 	virtual void GetKeyboardRefs(
 		IKeyboard** keyboards, std::uint32_t& keyboardCount
 	) const noexcept = 0;

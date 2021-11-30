@@ -1,6 +1,6 @@
 #include <PlutoInstance.hpp>
 #include <InputManagerImpl.hpp>
 
-InputManager* CreateInputManagerInstance() noexcept {
+InputManager* CreatePlutoInstance() noexcept {
 	return new InputManagerImpl();
 }

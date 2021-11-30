@@ -127,18 +127,6 @@ GamepadData InputManagerImpl::GetGamepadByHandle(std::uint64_t handle) noexcept 
 		);
 }
 
-std::uint32_t InputManagerImpl::GetKeyboardCount() const noexcept {
-	return static_cast<std::uint32_t>(m_pKeyboards.size());
-}
-
-std::uint32_t InputManagerImpl::GetMouseCount() const noexcept {
-	return static_cast<std::uint32_t>(m_pMouses.size());
-}
-
-std::uint32_t InputManagerImpl::GetGamepadCount() const noexcept {
-	return static_cast<std::uint32_t>(m_pGamepads.size());
-}
-
 void InputManagerImpl::GetKeyboardRefs(
 	IKeyboard** keyboards, std::uint32_t& keyboardCount
 ) const noexcept {
