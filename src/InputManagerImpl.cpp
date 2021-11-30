@@ -2,6 +2,7 @@
 #include <Keyboard.hpp>
 #include <Mouse.hpp>
 #include <Gamepad.hpp>
+#include <cstring>
 
 InputManagerImpl::InputManagerImpl() noexcept
 	: m_devicesCount(static_cast<std::uint32_t>(DeviceType::DeviceTypeCount)) {}
@@ -139,28 +140,46 @@ std::uint32_t InputManagerImpl::GetGamepadCount() const noexcept {
 	return static_cast<std::uint32_t>(m_pGamepads.size());
 }
 
-std::vector<IKeyboard*> InputManagerImpl::GetKeyboardRefs() noexcept {
-	std::vector<IKeyboard*> pKeyboardRefs;
-	for (auto& keyboard : m_pKeyboards)
-		pKeyboardRefs.emplace_back(keyboard.get());
+void InputManagerImpl::GetKeyboardRefs(
+	IKeyboard* keyboards, std::uint32_t& keyboardCount
+) const noexcept {
+	if (keyboards) {
+		std::vector<IKeyboard*> keyboardRefs(m_pKeyboards.size());
+		for (auto& keyboard : m_pKeyboards)
+			keyboardRefs.emplace_back(keyboard.get());
 
-	return pKeyboardRefs;
+		std::memcpy(keyboards, keyboardRefs.data(), keyboardCount * sizeof(IKeyboard));
+	}
+	else
+		keyboardCount = static_cast<std::uint32_t>(m_pKeyboards.size());
 }
 
-std::vector<IMouse*> InputManagerImpl::GetMouseRefs() noexcept {
-	std::vector<IMouse*> pMouseRefs;
-	for (auto& mouse : m_pMouses)
-		pMouseRefs.emplace_back(mouse.get());
+void InputManagerImpl::GetMouseRefs(
+	IMouse* mouses, std::uint32_t& mouseCount
+) const noexcept {
+	if (mouses) {
+		std::vector<IMouse*> mouseRefs(m_pMouses.size());
+		for (auto& mouse : m_pMouses)
+			mouseRefs.emplace_back(mouse.get());
 
-	return pMouseRefs;
+		std::memcpy(mouses, mouseRefs.data(), mouseCount * sizeof(IMouse));
+	}
+	else
+		mouseCount = static_cast<std::uint32_t>(m_pMouses.size());
 }
 
-std::vector<IGamepad*> InputManagerImpl::GetGamepadRefs() noexcept {
-	std::vector<IGamepad*> pGamepadRefs;
-	for (auto& gamepad : m_pGamepads)
-		pGamepadRefs.emplace_back(gamepad.get());
+void InputManagerImpl::GetGamepadRefs(
+	IGamepad* gamepads, std::uint32_t& gamepadCount
+) const noexcept {
+	if (gamepads) {
+		std::vector<IGamepad*> gamepadRefs(m_pGamepads.size());
+		for (auto& gamepad : m_pGamepads)
+			gamepadRefs.emplace_back(gamepad.get());
 
-	return pGamepadRefs;
+		std::memcpy(gamepads, gamepadRefs.data(), gamepadCount * sizeof(IGamepad));
+	}
+	else
+		gamepadCount = static_cast<std::uint32_t>(m_pGamepads.size());
 }
 
 void InputManagerImpl::ClearInputStates() noexcept {
