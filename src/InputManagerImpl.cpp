@@ -2,7 +2,6 @@
 #include <Keyboard.hpp>
 #include <Mouse.hpp>
 #include <Gamepad.hpp>
-#include <cstring>
 
 InputManagerImpl::InputManagerImpl() noexcept
 	: m_devicesCount(static_cast<std::uint32_t>(DeviceType::DeviceTypeCount)) {}
@@ -141,43 +140,31 @@ std::uint32_t InputManagerImpl::GetGamepadCount() const noexcept {
 }
 
 void InputManagerImpl::GetKeyboardRefs(
-	IKeyboard* keyboards, std::uint32_t& keyboardCount
+	IKeyboard** keyboards, std::uint32_t& keyboardCount
 ) const noexcept {
-	if (keyboards) {
-		std::vector<IKeyboard*> keyboardRefs(m_pKeyboards.size());
-		for (auto& keyboard : m_pKeyboards)
-			keyboardRefs.emplace_back(keyboard.get());
-
-		std::memcpy(keyboards, keyboardRefs.data(), keyboardCount * sizeof(IKeyboard));
-	}
+	if (keyboards)
+		for (std::uint32_t index = 0u; index < keyboardCount; ++index)
+			keyboards[index] = m_pKeyboards[index].get();
 	else
 		keyboardCount = static_cast<std::uint32_t>(m_pKeyboards.size());
 }
 
 void InputManagerImpl::GetMouseRefs(
-	IMouse* mouses, std::uint32_t& mouseCount
+	IMouse** mouses, std::uint32_t& mouseCount
 ) const noexcept {
-	if (mouses) {
-		std::vector<IMouse*> mouseRefs(m_pMouses.size());
-		for (auto& mouse : m_pMouses)
-			mouseRefs.emplace_back(mouse.get());
-
-		std::memcpy(mouses, mouseRefs.data(), mouseCount * sizeof(IMouse));
-	}
+	if (mouses)
+		for (std::uint32_t index = 0u; index < mouseCount; ++index)
+			mouses[index] = m_pMouses[index].get();
 	else
 		mouseCount = static_cast<std::uint32_t>(m_pMouses.size());
 }
 
 void InputManagerImpl::GetGamepadRefs(
-	IGamepad* gamepads, std::uint32_t& gamepadCount
+	IGamepad** gamepads, std::uint32_t& gamepadCount
 ) const noexcept {
-	if (gamepads) {
-		std::vector<IGamepad*> gamepadRefs(m_pGamepads.size());
-		for (auto& gamepad : m_pGamepads)
-			gamepadRefs.emplace_back(gamepad.get());
-
-		std::memcpy(gamepads, gamepadRefs.data(), gamepadCount * sizeof(IGamepad));
-	}
+	if (gamepads)
+		for (std::uint32_t index = 0u; index < gamepadCount; ++index)
+			gamepads[index] = m_pGamepads[index].get();
 	else
 		gamepadCount = static_cast<std::uint32_t>(m_pGamepads.size());
 }
