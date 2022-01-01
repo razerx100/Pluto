@@ -50,14 +50,17 @@ public:
 			: m_type(type),
 			m_button(button) {}
 
+		[[nodiscard]]
 		bool IsValid() const noexcept {
 			return m_type != Type::Invalid;
 		}
 
+		[[nodiscard]]
 		Type GetType() const noexcept {
 			return m_type;
 		}
 
+		[[nodiscard]]
 		MouseButtons GetButton() const noexcept {
 			return m_button;
 		}
@@ -66,14 +69,22 @@ public:
 public:
 	virtual ~IMouse() = default;
 
+	[[nodiscard]]
 	virtual PosDelta GetPosDelta() const noexcept = 0;
+	[[nodiscard]]
 	virtual int GetPosDX() const noexcept = 0;
+	[[nodiscard]]
 	virtual int GetPosDY() const noexcept = 0;
+	[[nodiscard]]
 	virtual float GetMouseTicks() const noexcept = 0;
+	[[nodiscard]]
 	virtual Event Read() noexcept = 0;
 
+	[[nodiscard]]
 	virtual bool IsInWindow() const noexcept = 0;
+	[[nodiscard]]
 	virtual bool IsButtonPressed(MouseButtons button) const noexcept = 0;
+	[[nodiscard]]
 	virtual bool AreButtonsPressed(int count, ...) const noexcept = 0;
 
 	virtual void Flush() noexcept = 0;

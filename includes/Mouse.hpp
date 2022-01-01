@@ -10,14 +10,22 @@ public:
 	Mouse(const Mouse&) = delete;
 	Mouse& operator=(const Mouse&) = delete;
 
+	[[nodiscard]]
 	PosDelta GetPosDelta() const noexcept override;
+	[[nodiscard]]
 	int GetPosDX() const noexcept override;
+	[[nodiscard]]
 	int GetPosDY() const noexcept override;
+	[[nodiscard]]
 	float GetMouseTicks() const noexcept override;
+	[[nodiscard]]
 	Event Read() noexcept override;
 
+	[[nodiscard]]
 	bool IsInWindow() const noexcept override;
+	[[nodiscard]]
 	bool IsButtonPressed(MouseButtons button) const noexcept override;
+	[[nodiscard]]
 	bool AreButtonsPressed(int count, ...) const noexcept override;
 
 	void Flush() noexcept override;

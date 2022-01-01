@@ -11,12 +11,16 @@ public:
 	Keyboard(const Keyboard&) = delete;
 	Keyboard& operator=(const Keyboard&) = delete;
 
+	[[nodiscard]]
 	bool IsKeyPressed(SKeyCodes keycode) const noexcept override;
+	[[nodiscard]]
 	bool AreKeysPressed(int count, ...) const noexcept override;
+	[[nodiscard]]
 	Event ReadKey() noexcept override;
 	void FlushKey() noexcept override;
 
 	// char events
+	[[nodiscard]]
 	char ReadChar() noexcept override;
 	void FlushChar() noexcept override;
 	void Flush() noexcept override;

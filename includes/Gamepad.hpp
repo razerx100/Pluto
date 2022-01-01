@@ -7,9 +7,12 @@ class Gamepad : public IGamepad {
 public:
 	void ClearState() noexcept override;
 
+	[[nodiscard]]
 	Event Read() noexcept override;
 
+	[[nodiscard]]
 	bool IsButtonPressed(XBoxButton button) const noexcept override;
+	[[nodiscard]]
 	bool AreButtonsPressed(int count, ...) const noexcept override;
 
 	void OnLeftThumbStickMove(ASData data) noexcept override;
@@ -22,8 +25,11 @@ public:
 	void SetRightThumbStickDeadZone(std::uint32_t deadzone) noexcept override;
 	void SetTriggerThreshold(std::uint32_t threshold) noexcept override;
 
+	[[nodiscard]]
 	std::uint32_t GetLeftThumbStickDeadZone() const noexcept override;
+	[[nodiscard]]
 	std::uint32_t GetRightThumbStickDeadZone() const noexcept override;
+	[[nodiscard]]
 	std::uint32_t GetTriggerThreshold() const noexcept override;
 
 private:
