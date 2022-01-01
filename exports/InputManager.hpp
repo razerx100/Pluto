@@ -28,15 +28,31 @@ public:
 		std::uint64_t handle
 	) noexcept = 0;
 
+	[[nodiscard]]
 	virtual std::vector<IKeyboard*> GetKeyboardRefs() const noexcept = 0;
+	[[nodiscard]]
 	virtual std::vector<IMouse*> GetMouseRefs() const noexcept = 0;
+	[[nodiscard]]
 	virtual std::vector<IGamepad*> GetGamepadRefs() const noexcept = 0;
 
+	[[nodiscard]]
+	virtual std::uint32_t GetKeyboardsCount() const noexcept = 0;
+	[[nodiscard]]
+	virtual std::uint32_t GetMousesCount() const noexcept = 0;
+	[[nodiscard]]
+	virtual std::uint32_t GetGamepadsCount() const noexcept = 0;
+
+	[[nodiscard]]
 	virtual	IKeyboard* GetKeyboardByIndex(std::uint32_t index = 0u) const noexcept = 0;
+	[[nodiscard]]
 	virtual	IMouse* GetMouseByIndex(std::uint32_t index = 0u) const noexcept = 0;
+	[[nodiscard]]
 	virtual	IGamepad* GetGamepadByIndex(std::uint32_t index = 0u) const noexcept = 0;
+	[[nodiscard]]
 	virtual	IKeyboard* GetKeyboardByHandle(std::uint64_t handle) noexcept = 0;
+	[[nodiscard]]
 	virtual	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept = 0;
+	[[nodiscard]]
 	virtual	GamepadData GetGamepadByHandle(std::uint64_t handle) noexcept = 0;
 
 	virtual void ClearInputStates() noexcept = 0;

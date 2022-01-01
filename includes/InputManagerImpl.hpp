@@ -3,7 +3,6 @@
 #include <InputManager.hpp>
 #include <unordered_map>
 #include <memory>
-#include <vector>
 
 struct HandleData {
 	std::uint32_t index;
@@ -21,15 +20,31 @@ public:
 		std::uint64_t handle
 	) noexcept override;
 
+	[[nodiscard]]
 	std::vector<IKeyboard*> GetKeyboardRefs() const noexcept override;
+	[[nodiscard]]
 	std::vector<IMouse*> GetMouseRefs() const noexcept override;
+	[[nodiscard]]
 	std::vector<IGamepad*> GetGamepadRefs() const noexcept override;
 
+	[[nodiscard]]
+	std::uint32_t GetKeyboardsCount() const noexcept override;
+	[[nodiscard]]
+	std::uint32_t GetMousesCount() const noexcept override;
+	[[nodiscard]]
+	std::uint32_t GetGamepadsCount() const noexcept override;
+
+	[[nodiscard]]
 	IKeyboard* GetKeyboardByIndex(std::uint32_t index) const noexcept override;
+	[[nodiscard]]
 	IMouse* GetMouseByIndex(std::uint32_t index) const noexcept override;
+	[[nodiscard]]
 	IGamepad* GetGamepadByIndex(std::uint32_t index) const noexcept override;
+	[[nodiscard]]
 	IKeyboard* GetKeyboardByHandle(std::uint64_t handle) noexcept override;
+	[[nodiscard]]
 	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept override;
+	[[nodiscard]]
 	GamepadData GetGamepadByHandle(std::uint64_t handle) noexcept override;
 
 	void ClearInputStates() noexcept override;
