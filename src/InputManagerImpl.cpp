@@ -116,45 +116,43 @@ GamepadData InputManagerImpl::GetGamepadByHandle(std::uint64_t handle) noexcept 
 					static_cast<std::uint32_t>(index), DeviceType::Gamepad
 				});
 
-			return GamepadData(m_pGamepads[index].get(), index);
+			return GamepadData(m_pGamepads[index].get(), static_cast<std::uint8_t>(index));
 		}
 		else
 			return GamepadData();
 	}
 	else
 		return GamepadData(
-			m_pGamepads[result->second.index].get(), result->second.index
+			m_pGamepads[result->second.index].get(),
+			static_cast<std::uint8_t>(result->second.index)
 		);
 }
 
-void InputManagerImpl::GetKeyboardRefs(
-	IKeyboard** keyboards, std::uint32_t& keyboardCount
-) const noexcept {
-	if (keyboards)
-		for (std::uint32_t index = 0u; index < keyboardCount; ++index)
-			keyboards[index] = m_pKeyboards[index].get();
-	else
-		keyboardCount = static_cast<std::uint32_t>(m_pKeyboards.size());
+std::vector<IKeyboard*> InputManagerImpl::GetKeyboardRefs() const noexcept {
+	std::vector<IKeyboard*> keyboardRefs(m_pKeyboards.size());
+
+	for (std::uint32_t index = 0u; index < m_pKeyboards.size(); ++index)
+		keyboardRefs[index] = m_pKeyboards[index].get();
+
+	return keyboardRefs;
 }
 
-void InputManagerImpl::GetMouseRefs(
-	IMouse** mouses, std::uint32_t& mouseCount
-) const noexcept {
-	if (mouses)
-		for (std::uint32_t index = 0u; index < mouseCount; ++index)
-			mouses[index] = m_pMouses[index].get();
-	else
-		mouseCount = static_cast<std::uint32_t>(m_pMouses.size());
+std::vector<IMouse*> InputManagerImpl::GetMouseRefs() const noexcept {
+	std::vector<IMouse*> mouseRefs(m_pMouses.size());
+
+	for (std::uint32_t index = 0u; index < m_pMouses.size(); ++index)
+		mouseRefs[index] = m_pMouses[index].get();
+
+	return mouseRefs;
 }
 
-void InputManagerImpl::GetGamepadRefs(
-	IGamepad** gamepads, std::uint32_t& gamepadCount
-) const noexcept {
-	if (gamepads)
-		for (std::uint32_t index = 0u; index < gamepadCount; ++index)
-			gamepads[index] = m_pGamepads[index].get();
-	else
-		gamepadCount = static_cast<std::uint32_t>(m_pGamepads.size());
+std::vector<IGamepad*> InputManagerImpl::GetGamepadRefs() const noexcept {
+	std::vector<IGamepad*> gamepadRefs(m_pGamepads.size());
+
+	for (std::uint32_t index = 0u; index < m_pGamepads.size(); ++index)
+		gamepadRefs[index] = m_pGamepads[index].get();
+
+	return gamepadRefs;
 }
 
 void InputManagerImpl::ClearInputStates() noexcept {

@@ -10,7 +10,7 @@ public:
 	Mouse(const Mouse&) = delete;
 	Mouse& operator=(const Mouse&) = delete;
 
-	Vector2 GetPosDelta() const noexcept override;
+	PosDelta GetPosDelta() const noexcept override;
 	int GetPosDX() const noexcept override;
 	int GetPosDY() const noexcept override;
 	float GetMouseTicks() const noexcept override;
@@ -39,7 +39,7 @@ private:
 	static constexpr std::uint32_t s_bufferSize = 16u;
 	bool m_inWindow;
 	float m_mouseTicks;
-	Vector2 m_cursorPositionDelta;
+	PosDelta m_cursorPositionDelta;
 	int m_wheelDeltaCarry;
 
 	std::uint16_t m_mouseState;

@@ -21,11 +21,9 @@ public:
 		std::uint64_t handle
 	) noexcept override;
 
-	void GetKeyboardRefs(
-		IKeyboard** keyboards, std::uint32_t& keyboardCount
-	) const noexcept override;
-	void GetMouseRefs(IMouse** mouses, std::uint32_t& mouseCount) const noexcept override;
-	void GetGamepadRefs(IGamepad** gamepads, std::uint32_t& gamepadCount) const noexcept override;
+	std::vector<IKeyboard*> GetKeyboardRefs() const noexcept override;
+	std::vector<IMouse*> GetMouseRefs() const noexcept override;
+	std::vector<IGamepad*> GetGamepadRefs() const noexcept override;
 
 	IKeyboard* GetKeyboardByIndex(std::uint32_t index) const noexcept override;
 	IMouse* GetMouseByIndex(std::uint32_t index) const noexcept override;

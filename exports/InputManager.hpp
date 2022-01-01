@@ -3,6 +3,7 @@
 #include <IKeyboard.hpp>
 #include <IMouse.hpp>
 #include <IGamepad.hpp>
+#include <vector>
 
 enum class PLUTO_DLL DeviceType {
 	Keyboard,
@@ -27,13 +28,9 @@ public:
 		std::uint64_t handle
 	) noexcept = 0;
 
-	virtual void GetKeyboardRefs(
-		IKeyboard** keyboards, std::uint32_t& keyboardCount
-	) const noexcept = 0;
-	virtual void GetMouseRefs(IMouse** mouses, std::uint32_t& mouseCount) const noexcept = 0;
-	virtual void GetGamepadRefs(
-		IGamepad** gamepads, std::uint32_t& gamepadCount
-	) const noexcept = 0;
+	virtual std::vector<IKeyboard*> GetKeyboardRefs() const noexcept = 0;
+	virtual std::vector<IMouse*> GetMouseRefs() const noexcept = 0;
+	virtual std::vector<IGamepad*> GetGamepadRefs() const noexcept = 0;
 
 	virtual	IKeyboard* GetKeyboardByIndex(std::uint32_t index = 0u) const noexcept = 0;
 	virtual	IMouse* GetMouseByIndex(std::uint32_t index = 0u) const noexcept = 0;

@@ -1,5 +1,6 @@
 #ifndef __IMOUSE_HPP__
 #define __IMOUSE_HPP__
+#include <utility>
 
 #ifdef BUILD_PLUTO
 #define PLUTO_DLL __declspec(dllexport)
@@ -7,10 +8,7 @@
 #define PLUTO_DLL __declspec(dllimport)
 #endif
 
-struct PLUTO_DLL Vector2 {
-	int x;
-	int y;
-};
+typedef std::pair<std::int32_t, std::int32_t> PosDelta;
 
 enum class PLUTO_DLL MouseButtons {
 	Left,
@@ -68,7 +66,7 @@ public:
 public:
 	virtual ~IMouse() = default;
 
-	virtual Vector2 GetPosDelta() const noexcept = 0;
+	virtual PosDelta GetPosDelta() const noexcept = 0;
 	virtual int GetPosDX() const noexcept = 0;
 	virtual int GetPosDY() const noexcept = 0;
 	virtual float GetMouseTicks() const noexcept = 0;
