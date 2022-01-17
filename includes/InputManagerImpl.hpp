@@ -5,7 +5,7 @@
 #include <memory>
 
 struct HandleData {
-	std::uint32_t index;
+	size_t index;
 	DeviceType type;
 };
 
@@ -14,7 +14,7 @@ public:
 	InputManagerImpl() noexcept;
 
 	void AddDeviceSupport(
-		DeviceType device, std::uint32_t count
+		DeviceType device, size_t count
 	) noexcept override;
 	void DeviceDisconnected(
 		std::uint64_t handle
@@ -28,18 +28,18 @@ public:
 	std::vector<IGamepad*> GetGamepadRefs() const noexcept override;
 
 	[[nodiscard]]
-	std::uint32_t GetKeyboardsCount() const noexcept override;
+	size_t GetKeyboardsCount() const noexcept override;
 	[[nodiscard]]
-	std::uint32_t GetMousesCount() const noexcept override;
+	size_t GetMousesCount() const noexcept override;
 	[[nodiscard]]
-	std::uint32_t GetGamepadsCount() const noexcept override;
+	size_t GetGamepadsCount() const noexcept override;
 
 	[[nodiscard]]
-	IKeyboard* GetKeyboardByIndex(std::uint32_t index) const noexcept override;
+	IKeyboard* GetKeyboardByIndex(size_t index) const noexcept override;
 	[[nodiscard]]
-	IMouse* GetMouseByIndex(std::uint32_t index) const noexcept override;
+	IMouse* GetMouseByIndex(size_t index) const noexcept override;
 	[[nodiscard]]
-	IGamepad* GetGamepadByIndex(std::uint32_t index) const noexcept override;
+	IGamepad* GetGamepadByIndex(size_t index) const noexcept override;
 	[[nodiscard]]
 	IKeyboard* GetKeyboardByHandle(std::uint64_t handle) noexcept override;
 	[[nodiscard]]
@@ -50,7 +50,7 @@ public:
 	void ClearInputStates() noexcept override;
 
 private:
-	int FindIndex(const std::vector<bool>& data) const noexcept;
+	std::int64_t FindIndex(const std::vector<bool>& data) const noexcept;
 
 private:
 	std::unordered_map<std::uint64_t, HandleData> m_handleMap;
@@ -60,6 +60,6 @@ private:
 	std::vector<bool> m_availableKeyboardIndices;
 	std::vector<bool> m_availableMouseIndices;
 	std::vector<bool> m_availableGamepadIndices;
-	std::vector<std::uint32_t> m_devicesCount;
+	std::vector<size_t> m_devicesCount;
 };
 #endif
