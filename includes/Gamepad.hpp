@@ -13,7 +13,7 @@ public:
 	[[nodiscard]]
 	bool IsButtonPressed(XBoxButton button) const noexcept override;
 	[[nodiscard]]
-	bool AreButtonsPressed(int count, ...) const noexcept override;
+	bool AreButtonsPressed(size_t count, ...) const noexcept override;
 
 	void OnLeftThumbStickMove(ASData data) noexcept override;
 	void OnRightThumbStickMove(ASData data) noexcept override;
@@ -37,7 +37,7 @@ private:
 	void TrimBuffer() noexcept;
 
 private:
-	static constexpr std::uint32_t s_bufferSize = 16u;
+	static constexpr size_t s_bufferSize = 16u;
 	std::uint16_t m_buttonState;
 	std::queue<Event> m_eventBuffer;
 

@@ -13,9 +13,9 @@ public:
 	[[nodiscard]]
 	PosDelta GetPosDelta() const noexcept override;
 	[[nodiscard]]
-	int GetPosDX() const noexcept override;
+	std::int64_t GetPosDX() const noexcept override;
 	[[nodiscard]]
-	int GetPosDY() const noexcept override;
+	std::int64_t GetPosDY() const noexcept override;
 	[[nodiscard]]
 	float GetMouseTicks() const noexcept override;
 	[[nodiscard]]
@@ -26,16 +26,16 @@ public:
 	[[nodiscard]]
 	bool IsButtonPressed(MouseButtons button) const noexcept override;
 	[[nodiscard]]
-	bool AreButtonsPressed(int count, ...) const noexcept override;
+	bool AreButtonsPressed(size_t count, ...) const noexcept override;
 
 	void Flush() noexcept override;
 
-	void SetPressState(std::uint16_t mouseState) noexcept override;
-	void SetReleaseState(std::uint16_t mouseState) noexcept override;
-	void OnMouseMove(int dx, int dy) noexcept override;
+	void SetPressState(std::uint8_t mouseState) noexcept override;
+	void SetReleaseState(std::uint8_t mouseState) noexcept override;
+	void OnMouseMove(std::int64_t dx, std::int64_t dy) noexcept override;
 	void OnMouseLeave() noexcept override;
 	void OnMouseEnter() noexcept override;
-	void OnWheelDelta(short delta) noexcept override;
+	void OnWheelDelta(std::int16_t delta) noexcept override;
 
 private:
 	void TrimBuffer() noexcept;
@@ -44,13 +44,13 @@ private:
 	void ClearState() noexcept;
 
 private:
-	static constexpr std::uint32_t s_bufferSize = 16u;
+	static constexpr size_t s_bufferSize = 16u;
 	bool m_inWindow;
 	float m_mouseTicks;
 	PosDelta m_cursorPositionDelta;
 	int m_wheelDeltaCarry;
 
-	std::uint16_t m_mouseState;
+	std::uint8_t m_mouseState;
 	std::queue<Event> m_buffer;
 };
 #endif

@@ -14,14 +14,14 @@ public:
 	[[nodiscard]]
 	bool IsKeyPressed(SKeyCodes keycode) const noexcept override;
 	[[nodiscard]]
-	bool AreKeysPressed(int count, ...) const noexcept override;
+	bool AreKeysPressed(size_t count, ...) const noexcept override;
 	[[nodiscard]]
 	Event ReadKey() noexcept override;
 	void FlushKey() noexcept override;
 
 	// char events
 	[[nodiscard]]
-	char ReadChar() noexcept override;
+	std::optional<char> ReadChar() noexcept override;
 	void FlushChar() noexcept override;
 	void Flush() noexcept override;
 

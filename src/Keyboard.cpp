@@ -5,12 +5,12 @@ bool Keyboard::IsKeyPressed(SKeyCodes keycode) const noexcept {
 	return m_keystates[static_cast<std::uint32_t>(keycode)];
 }
 
-bool Keyboard::AreKeysPressed(int count, ...) const noexcept {
+bool Keyboard::AreKeysPressed(size_t count, ...) const noexcept {
 	va_list list;
 	va_start(list, count);
 
 	bool result = true;
-	for (int _ = 0; _ < count; ++_)
+	for (size_t _ = 0; _ < count; ++_)
 		result = result && IsKeyPressed(va_arg(list, SKeyCodes));
 
 	va_end(list);
@@ -28,14 +28,15 @@ Keyboard::Event Keyboard::ReadKey() noexcept {
 		return Keyboard::Event();
 }
 
-char Keyboard::ReadChar() noexcept {
+std::optional<char> Keyboard::ReadChar() noexcept {
 	if (!m_charBuffer.empty()) {
-		unsigned char charCode = m_charBuffer.front();
+		char charCode = m_charBuffer.front();
 		m_charBuffer.pop();
+
 		return charCode;
 	}
 	else
-		return -1;
+		return {};
 }
 
 void Keyboard::FlushChar() noexcept {
@@ -53,13 +54,13 @@ void Keyboard::Flush() noexcept {
 }
 
 void Keyboard::OnKeyPressed(SKeyCodes keycode) noexcept {
-	m_keystates[static_cast<std::uint32_t>(keycode)] = true;
+	m_keystates[static_cast<size_t>(keycode)] = true;
 	m_keyBuffer.emplace(Keyboard::Event(Keyboard::Event::Type::Press, keycode));
 	TrimBuffer(m_keyBuffer);
 }
 
 void Keyboard::OnKeyReleased(SKeyCodes keycode) noexcept {
-	m_keystates[static_cast<std::uint32_t>(keycode)] = false;
+	m_keystates[static_cast<size_t>(keycode)] = false;
 	m_keyBuffer.emplace(Keyboard::Event(Keyboard::Event::Type::Release, keycode));
 	TrimBuffer(m_keyBuffer);
 }

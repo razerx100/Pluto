@@ -3,6 +3,7 @@
 #include <InputManager.hpp>
 #include <unordered_map>
 #include <memory>
+#include <optional>
 
 struct HandleData {
 	size_t index;
@@ -50,7 +51,7 @@ public:
 	void ClearInputStates() noexcept override;
 
 private:
-	std::int64_t FindIndex(const std::vector<bool>& data) const noexcept;
+	std::optional<size_t> FindIndex(const std::vector<bool>& data) const noexcept;
 
 private:
 	std::unordered_map<std::uint64_t, HandleData> m_handleMap;

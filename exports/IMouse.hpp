@@ -8,7 +8,7 @@
 #define PLUTO_DLL __declspec(dllimport)
 #endif
 
-typedef std::pair<std::int32_t, std::int32_t> PosDelta;
+typedef std::pair<std::int64_t, std::int64_t> PosDelta;
 
 enum class PLUTO_DLL MouseButtons {
 	Left,
@@ -72,9 +72,9 @@ public:
 	[[nodiscard]]
 	virtual PosDelta GetPosDelta() const noexcept = 0;
 	[[nodiscard]]
-	virtual int GetPosDX() const noexcept = 0;
+	virtual std::int64_t GetPosDX() const noexcept = 0;
 	[[nodiscard]]
-	virtual int GetPosDY() const noexcept = 0;
+	virtual std::int64_t GetPosDY() const noexcept = 0;
 	[[nodiscard]]
 	virtual float GetMouseTicks() const noexcept = 0;
 	[[nodiscard]]
@@ -85,15 +85,15 @@ public:
 	[[nodiscard]]
 	virtual bool IsButtonPressed(MouseButtons button) const noexcept = 0;
 	[[nodiscard]]
-	virtual bool AreButtonsPressed(int count, ...) const noexcept = 0;
+	virtual bool AreButtonsPressed(size_t count, ...) const noexcept = 0;
 
 	virtual void Flush() noexcept = 0;
 
-	virtual void SetPressState(std::uint16_t mouseState) noexcept = 0;
-	virtual void SetReleaseState(std::uint16_t mouseState) noexcept = 0;
-	virtual void OnMouseMove(int dx, int dy) noexcept = 0;
+	virtual void SetPressState(std::uint8_t mouseState) noexcept = 0;
+	virtual void SetReleaseState(std::uint8_t mouseState) noexcept = 0;
+	virtual void OnMouseMove(std::int64_t dx, std::int64_t dy) noexcept = 0;
 	virtual void OnMouseLeave() noexcept = 0;
 	virtual void OnMouseEnter() noexcept = 0;
-	virtual void OnWheelDelta(short delta) noexcept = 0;
+	virtual void OnWheelDelta(std::int16_t delta) noexcept = 0;
 };
 #endif

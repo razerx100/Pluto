@@ -13,11 +13,11 @@ PosDelta Mouse::GetPosDelta() const noexcept {
 	return m_cursorPositionDelta;
 }
 
-int Mouse::GetPosDX() const noexcept {
+std::int64_t Mouse::GetPosDX() const noexcept {
 	return m_cursorPositionDelta.first;
 }
 
-int Mouse::GetPosDY() const noexcept {
+std::int64_t Mouse::GetPosDY() const noexcept {
 	return m_cursorPositionDelta.second;
 }
 
@@ -26,10 +26,10 @@ float Mouse::GetMouseTicks() const noexcept {
 }
 
 bool Mouse::IsButtonPressed(MouseButtons button) const noexcept {
-	return m_mouseState & (1 << static_cast<std::uint32_t>(button));
+	return m_mouseState & (1u << static_cast<std::uint32_t>(button));
 }
 
-bool Mouse::AreButtonsPressed(int count, ...) const noexcept {
+bool Mouse::AreButtonsPressed(size_t count, ...) const noexcept {
 	va_list list;
 	va_start(list, count);
 
@@ -61,7 +61,7 @@ void Mouse::Flush() noexcept {
 	ClearState();
 }
 
-void Mouse::OnMouseMove(int dx, int dy) noexcept {
+void Mouse::OnMouseMove(std::int64_t dx, int64_t dy) noexcept {
 	m_cursorPositionDelta.first = dx;
 	m_cursorPositionDelta.second = dy;
 
@@ -97,7 +97,7 @@ void Mouse::TrimBuffer() noexcept {
 		m_buffer.pop();
 }
 
-void Mouse::OnWheelDelta(short delta) noexcept {
+void Mouse::OnWheelDelta(std::int16_t delta) noexcept {
 	m_mouseTicks = static_cast<float>(delta) / 120;
 	m_wheelDeltaCarry += delta;
 
@@ -111,28 +111,30 @@ void Mouse::OnWheelDelta(short delta) noexcept {
 	}
 }
 
-void Mouse::SetPressState(std::uint16_t pressState) noexcept {
+void Mouse::SetPressState(std::uint8_t pressState) noexcept {
 	m_mouseState |= pressState;
 
-	for (std::uint32_t index = 0u;
+	for (size_t index = 0u;
 		index < static_cast<std::uint32_t>(MouseButtons::Invalid); ++index)
 		if (pressState & (1u << index)) {
 			m_buffer.emplace(Mouse::Event(
 				Mouse::Event::Type::Press, static_cast<MouseButtons>(index)
 			));
+
 			TrimBuffer();
 		}
 }
 
-void Mouse::SetReleaseState(std::uint16_t releaseState) noexcept {
+void Mouse::SetReleaseState(std::uint8_t releaseState) noexcept {
 	m_mouseState ^= releaseState;
 
-	for (std::uint32_t index = 0u;
+	for (size_t index = 0u;
 		index < static_cast<std::uint32_t>(MouseButtons::Invalid); ++index)
 		if (releaseState & (1u << index)) {
 			m_buffer.emplace(Mouse::Event(
 				Mouse::Event::Type::Release, static_cast<MouseButtons>(index)
 			));
+
 			TrimBuffer();
 		}
 }

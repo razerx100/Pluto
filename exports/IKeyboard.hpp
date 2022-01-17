@@ -1,6 +1,7 @@
 #ifndef __IKEYBOARD_HPP__
 #define __IKEYBOARD_HPP__
 #include <cstdint>
+#include <optional>
 
 #ifdef BUILD_PLUTO
 #define PLUTO_DLL __declspec(dllexport)
@@ -102,7 +103,7 @@ public:
 	[[nodiscard]]
 	virtual bool IsKeyPressed(SKeyCodes keycode) const noexcept = 0;
 	[[nodiscard]]
-	virtual bool AreKeysPressed(int count, ...) const noexcept = 0;
+	virtual bool AreKeysPressed(size_t count, ...) const noexcept = 0;
 	[[nodiscard]]
 	virtual Event ReadKey() noexcept = 0;
 
@@ -110,7 +111,7 @@ public:
 
 	// char events
 	[[nodiscard]]
-	virtual char ReadChar() noexcept = 0;
+	virtual std::optional<char> ReadChar() noexcept = 0;
 	virtual void FlushChar() noexcept = 0;
 	virtual void Flush() noexcept = 0;
 
