@@ -5,19 +5,19 @@
 #include <IGamepad.hpp>
 #include <vector>
 
-enum class PLUTO_DLL DeviceType {
+enum class DeviceType {
 	Keyboard,
 	Mouse,
 	Gamepad,
 	DeviceTypeCount
 };
 
-struct PLUTO_DLL GamepadData {
+struct GamepadData {
 	IGamepad* pGamepad = nullptr;
 	size_t index = 0u;
 };
 
-class PLUTO_DLL InputManager {
+class InputManager {
 public:
 	virtual ~InputManager() = default;
 

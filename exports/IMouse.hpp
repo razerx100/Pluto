@@ -2,15 +2,9 @@
 #define __IMOUSE_HPP__
 #include <utility>
 
-#ifdef BUILD_PLUTO
-#define PLUTO_DLL __declspec(dllexport)
-#else
-#define PLUTO_DLL __declspec(dllimport)
-#endif
-
 typedef std::pair<std::int64_t, std::int64_t> PosDelta;
 
-enum class PLUTO_DLL MouseButtons {
+enum class MouseButtons {
 	Left,
 	Right,
 	Middle,
@@ -19,7 +13,7 @@ enum class PLUTO_DLL MouseButtons {
 	Invalid
 };
 
-class PLUTO_DLL IMouse {
+class IMouse {
 public:
 	class Event {
 	public:

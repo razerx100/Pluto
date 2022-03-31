@@ -3,13 +3,7 @@
 #include <cstdint>
 #include <optional>
 
-#ifdef BUILD_PLUTO
-#define PLUTO_DLL __declspec(dllexport)
-#else
-#define PLUTO_DLL __declspec(dllimport)
-#endif
-
-enum class PLUTO_DLL SKeyCodes {
+enum class SKeyCodes {
 	Default,
 	BackSpace,
 	Tab,
@@ -54,7 +48,7 @@ enum class PLUTO_DLL SKeyCodes {
 	QuoteUS
 };
 
-class PLUTO_DLL IKeyboard {
+class IKeyboard {
 public:
 	class Event {
 	public:
