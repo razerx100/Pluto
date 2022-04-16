@@ -1,14 +1,11 @@
-#ifndef __INPUT_MANAGER_IMPL_HPP__
-#define __INPUT_MANAGER_IMPL_HPP__
+#ifndef INPUT_MANAGER_IMPL_HPP_
+#define INPUT_MANAGER_IMPL_HPP_
 #include <InputManager.hpp>
 #include <unordered_map>
 #include <memory>
 #include <optional>
 
-struct HandleData {
-	size_t index;
-	DeviceType type;
-};
+using HandleData = std::pair<size_t, DeviceType>;
 
 class InputManagerImpl : public InputManager {
 public:
@@ -17,7 +14,7 @@ public:
 	void AddDeviceSupport(
 		DeviceType device, size_t count
 	) noexcept override;
-	void DeviceDisconnected(
+	void DisconnectDevice(
 		std::uint64_t handle
 	) noexcept override;
 

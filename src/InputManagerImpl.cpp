@@ -37,12 +37,11 @@ void InputManagerImpl::AddDeviceSupport(
 	}
 }
 
-void InputManagerImpl::DeviceDisconnected(
+void InputManagerImpl::DisconnectDevice(
 	std::uint64_t handle
 ) noexcept {
 	if (auto result = m_handleMap.find(handle); result != m_handleMap.end()) {
-		size_t index = result->second.index;
-		DeviceType device = result->second.type;
+		auto [index, device] = result->second;
 
 		m_handleMap.erase(handle);
 
@@ -99,7 +98,7 @@ IKeyboard* InputManagerImpl::GetKeyboardByHandle(std::uint64_t handle) noexcept 
 
 	}
 	else
-		return m_pKeyboards[result->second.index].get();
+		return m_pKeyboards[result->second.first].get();
 }
 
 IMouse* InputManagerImpl::GetMouseByHandle(std::uint64_t handle) noexcept {
@@ -116,7 +115,7 @@ IMouse* InputManagerImpl::GetMouseByHandle(std::uint64_t handle) noexcept {
 			return nullptr;
 	}
 	else
-		return m_pMouses[result->second.index].get();
+		return m_pMouses[result->second.first].get();
 }
 
 GamepadData InputManagerImpl::GetGamepadByHandle(std::uint64_t handle) noexcept {
@@ -133,10 +132,10 @@ GamepadData InputManagerImpl::GetGamepadByHandle(std::uint64_t handle) noexcept 
 			return GamepadData();
 	}
 	else
-		return GamepadData(
-			m_pGamepads[result->second.index].get(),
-			result->second.index
-		);
+		return {
+			m_pGamepads[result->second.first].get(),
+			result->second.first
+	};
 }
 
 std::vector<IKeyboard*> InputManagerImpl::GetKeyboardRefs() const noexcept {

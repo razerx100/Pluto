@@ -1,5 +1,5 @@
-#ifndef __GAMEPAD_HPP__
-#define __GAMEPAD_HPP__
+#ifndef GAMEPAD_HPP_
+#define GAMEPAD_HPP_
 #include <IGamepad.hpp>
 #include <queue>
 

@@ -1,5 +1,5 @@
-#ifndef __MOUSE_HPP__
-#define __MOUSE_HPP__
+#ifndef MOUSE_HPP_
+#define MOUSE_HPP_
 #include <queue>
 #include <IMouse.hpp>
 

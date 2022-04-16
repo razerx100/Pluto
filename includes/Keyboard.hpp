@@ -1,5 +1,5 @@
-#ifndef __KEYBOARD_HPP__
-#define __KEYBOARD_HPP__
+#ifndef KEYBOARD_HPP_
+#define KEYBOARD_HPP_
 #include <queue>
 #include <IKeyboard.hpp>
 #include <array>
