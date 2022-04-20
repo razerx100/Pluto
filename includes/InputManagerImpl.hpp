@@ -7,7 +7,7 @@
 
 using HandleData = std::pair<size_t, DeviceType>;
 
-class InputManagerImpl : public InputManager {
+class InputManagerImpl final : public InputManager {
 public:
 	InputManagerImpl() noexcept;
 

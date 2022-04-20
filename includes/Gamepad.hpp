@@ -3,7 +3,7 @@
 #include <IGamepad.hpp>
 #include <queue>
 
-class Gamepad : public IGamepad {
+class Gamepad final : public IGamepad {
 public:
 	void ClearState() noexcept override;
 

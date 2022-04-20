@@ -3,7 +3,7 @@
 #include <queue>
 #include <IMouse.hpp>
 
-class Mouse : public IMouse {
+class Mouse final : public IMouse {
 public:
 	Mouse();
 

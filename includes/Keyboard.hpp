@@ -4,7 +4,7 @@
 #include <IKeyboard.hpp>
 #include <array>
 
-class Keyboard : public IKeyboard {
+class Keyboard final : public IKeyboard {
 public:
 	Keyboard() = default;
 
