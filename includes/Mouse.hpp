@@ -11,15 +11,11 @@ public:
 	Mouse& operator=(const Mouse&) = delete;
 
 	[[nodiscard]]
-	PosDelta GetPosDelta() const noexcept override;
-	[[nodiscard]]
-	std::int64_t GetPosDX() const noexcept override;
-	[[nodiscard]]
-	std::int64_t GetPosDY() const noexcept override;
-	[[nodiscard]]
 	float GetMouseTicks() const noexcept override;
 	[[nodiscard]]
-	Event Read() noexcept override;
+	std::optional<Event> ReadEvents() noexcept override;
+	[[nodiscard]]
+	std::optional<PosDelta> ReadPosDelta() noexcept override;
 
 	[[nodiscard]]
 	bool IsInWindow() const noexcept override;
@@ -38,7 +34,12 @@ public:
 	void OnWheelDelta(std::int16_t delta) noexcept override;
 
 private:
-	void TrimBuffer() noexcept;
+	template<typename T>
+	static void TrimBuffer(std::queue<T>& buffer) noexcept {
+		while (std::size(buffer) > s_bufferSize)
+			buffer.pop();
+	}
+
 	void OnWheelUp() noexcept;
 	void OnWheelDown() noexcept;
 	void ClearState() noexcept;
@@ -47,10 +48,10 @@ private:
 	static constexpr size_t s_bufferSize = 16u;
 	bool m_inWindow;
 	float m_mouseTicks;
-	PosDelta m_cursorPositionDelta;
 	int m_wheelDeltaCarry;
 
 	std::uint8_t m_mouseState;
-	std::queue<Event> m_buffer;
+	std::queue<Event> m_eventBuffer;
+	std::queue<PosDelta> m_posDeltaBuffer;
 };
 #endif

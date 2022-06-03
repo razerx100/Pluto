@@ -6,7 +6,7 @@ bool Keyboard::IsKeyPressed(SKeyCodes keycode) const noexcept {
 }
 
 bool Keyboard::AreKeysPressed(size_t count, ...) const noexcept {
-	va_list list;
+	va_list list = nullptr;
 	va_start(list, count);
 
 	bool result = true;
@@ -18,18 +18,19 @@ bool Keyboard::AreKeysPressed(size_t count, ...) const noexcept {
 	return result;
 }
 
-Keyboard::Event Keyboard::ReadKey() noexcept {
-	if (!m_keyBuffer.empty()) {
-		Keyboard::Event e = m_keyBuffer.front();
+std::optional<Keyboard::Event> Keyboard::ReadKey() noexcept {
+	if (!std::empty(m_keyBuffer)) {
+		Keyboard::Event _event = m_keyBuffer.front();
 		m_keyBuffer.pop();
-		return e;
+
+		return _event;
 	}
 	else
-		return Keyboard::Event();
+		return {};
 }
 
 std::optional<char> Keyboard::ReadChar() noexcept {
-	if (!m_charBuffer.empty()) {
+	if (!std::empty(m_charBuffer)) {
 		char charCode = m_charBuffer.front();
 		m_charBuffer.pop();
 

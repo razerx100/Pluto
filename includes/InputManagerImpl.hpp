@@ -5,18 +5,12 @@
 #include <memory>
 #include <optional>
 
-using HandleData = std::pair<size_t, DeviceType>;
-
 class InputManagerImpl final : public InputManager {
 public:
 	InputManagerImpl() noexcept;
 
-	void AddDeviceSupport(
-		DeviceType device, size_t count
-	) noexcept override;
-	void DisconnectDevice(
-		std::uint64_t handle
-	) noexcept override;
+	void AddDeviceSupport(DeviceType device, size_t count) noexcept override;
+	void DisconnectDevice(std::uint64_t handle) noexcept override;
 
 	[[nodiscard]]
 	std::vector<IKeyboard*> GetKeyboardRefs() const noexcept override;
@@ -26,11 +20,18 @@ public:
 	std::vector<IGamepad*> GetGamepadRefs() const noexcept override;
 
 	[[nodiscard]]
-	size_t GetKeyboardsCount() const noexcept override;
+	IKeyboard* GetKeyboard() const noexcept override;
 	[[nodiscard]]
-	size_t GetMousesCount() const noexcept override;
+	IMouse* GetMouse() const noexcept override;
 	[[nodiscard]]
-	size_t GetGamepadsCount() const noexcept override;
+	IGamepad* GetGamepad() const noexcept override;
+
+	[[nodiscard]]
+	size_t GetKeyboardCount() const noexcept override;
+	[[nodiscard]]
+	size_t GetMouseCount() const noexcept override;
+	[[nodiscard]]
+	size_t GetGamepadCount() const noexcept override;
 
 	[[nodiscard]]
 	IKeyboard* GetKeyboardByIndex(size_t index) const noexcept override;
@@ -43,18 +44,48 @@ public:
 	[[nodiscard]]
 	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept override;
 	[[nodiscard]]
-	GamepadData GetGamepadByHandle(std::uint64_t handle) noexcept override;
+	GamepadData GetGamepadDataByHandle(std::uint64_t handle) noexcept override;
 
 	void ClearInputStates() noexcept override;
 
 private:
-	std::optional<size_t> FindIndex(const std::vector<bool>& data) const noexcept;
+	struct HandleData {
+		size_t deviceIndex;
+		DeviceType deviceType;
+	};
+
+	std::optional<size_t> GetAvailableIndex(std::vector<bool>& indices) const noexcept;
+	void AddAvailableIndices(std::vector<bool>& indices, size_t count) noexcept;
+
+	template<class T>
+	static std::vector<T*> GetVectorOfRefs(
+		const std::vector<std::unique_ptr<T>>& ptrs
+	) noexcept {
+		std::vector<T*> refs;
+
+		for (size_t index = 0u; index < std::size(ptrs); ++index)
+			refs.emplace_back(ptrs[index].get());
+
+		return refs;
+	}
+
+	template<class T>
+	static T* GetPtrByIndex(
+		const std::vector<std::unique_ptr<T>>& ptrs, size_t index
+	) noexcept {
+		if (std::size(ptrs) > index) [[likely]]
+			return ptrs[index].get();
+		else [[unlikely]]
+			return nullptr;
+	}
 
 private:
 	std::unordered_map<std::uint64_t, HandleData> m_handleMap;
+
 	std::vector<std::unique_ptr<IKeyboard>> m_pKeyboards;
 	std::vector<std::unique_ptr<IMouse>> m_pMouses;
 	std::vector<std::unique_ptr<IGamepad>> m_pGamepads;
+
 	std::vector<bool> m_availableKeyboardIndices;
 	std::vector<bool> m_availableMouseIndices;
 	std::vector<bool> m_availableGamepadIndices;

@@ -4,43 +4,33 @@
 #include <Gamepad.hpp>
 
 InputManagerImpl::InputManagerImpl() noexcept
-	: m_devicesCount(static_cast<size_t>(DeviceType::DeviceTypeCount)) {}
+	: m_devicesCount(static_cast<size_t>(DeviceType::Invalid)) {}
 
-void InputManagerImpl::AddDeviceSupport(
-	DeviceType device, size_t count
-) noexcept {
+void InputManagerImpl::AddDeviceSupport(DeviceType device, size_t count) noexcept {
 	m_devicesCount[static_cast<size_t>(device)] += count;
 
 	if (device == DeviceType::Keyboard) {
 		for (size_t _ = 0u; _ < count; ++_)
 			m_pKeyboards.emplace_back(std::make_unique<Keyboard>());
 
-		m_availableKeyboardIndices.resize(
-			m_availableKeyboardIndices.size() + count, true
-		);
+		AddAvailableIndices(m_availableKeyboardIndices, count);
 	}
 	else if (device == DeviceType::Mouse) {
 		for (size_t _ = 0u; _ < count; ++_)
 			m_pMouses.emplace_back(std::make_unique<Mouse>());
 
-		m_availableMouseIndices.resize(
-			m_availableMouseIndices.size() + count, true
-		);
+		AddAvailableIndices(m_availableMouseIndices, count);
 	}
 	else if (device == DeviceType::Gamepad) {
 		for (size_t _ = 0u; _ < count; ++_)
 			m_pGamepads.emplace_back(std::make_unique<Gamepad>());
 
-		m_availableGamepadIndices.resize(
-			m_availableGamepadIndices.size() + count, true
-		);
+		AddAvailableIndices(m_availableGamepadIndices, count);
 	}
 }
 
-void InputManagerImpl::DisconnectDevice(
-	std::uint64_t handle
-) noexcept {
-	if (auto result = m_handleMap.find(handle); result != m_handleMap.end()) {
+void InputManagerImpl::DisconnectDevice(std::uint64_t handle) noexcept {
+	if (auto result = m_handleMap.find(handle); result != std::end(m_handleMap)) {
 		auto [index, device] = result->second;
 
 		m_handleMap.erase(handle);
@@ -55,114 +45,102 @@ void InputManagerImpl::DisconnectDevice(
 		}
 		else if (device == DeviceType::Gamepad) {
 			m_availableGamepadIndices[index] = true;
-			m_pGamepads[index]->ClearState();
+			m_pGamepads[index]->Flush();
 		}
 	}
 }
 
 IKeyboard* InputManagerImpl::GetKeyboardByIndex(size_t index) const noexcept {
-	return m_pKeyboards[index].get();
+	return GetPtrByIndex(m_pKeyboards, index);
 }
 
 IMouse* InputManagerImpl::GetMouseByIndex(size_t index) const noexcept {
-	return m_pMouses[index].get();
+	return GetPtrByIndex(m_pMouses, index);
 }
 
 IGamepad* InputManagerImpl::GetGamepadByIndex(size_t index) const noexcept {
-	return m_pGamepads[index].get();
+	return GetPtrByIndex(m_pGamepads, index);
 }
 
-size_t InputManagerImpl::GetKeyboardsCount() const noexcept {
-	return m_pKeyboards.size();
+IKeyboard* InputManagerImpl::GetKeyboard() const noexcept {
+	return GetKeyboardByIndex(0u);
 }
 
-size_t InputManagerImpl::GetMousesCount() const noexcept {
-	return m_pMouses.size();
+IMouse* InputManagerImpl::GetMouse() const noexcept {
+	return GetMouseByIndex(0u);
 }
 
-size_t InputManagerImpl::GetGamepadsCount() const noexcept {
-	return m_pGamepads.size();
+IGamepad* InputManagerImpl::GetGamepad() const noexcept {
+	return GetGamepadByIndex(0u);
+}
+
+size_t InputManagerImpl::GetKeyboardCount() const noexcept {
+	return std::size(m_pKeyboards);
+}
+
+size_t InputManagerImpl::GetMouseCount() const noexcept {
+	return std::size(m_pMouses);
+}
+
+size_t InputManagerImpl::GetGamepadCount() const noexcept {
+	return std::size(m_pGamepads);
 }
 
 IKeyboard* InputManagerImpl::GetKeyboardByHandle(std::uint64_t handle) noexcept {
-	if (auto result = m_handleMap.find(handle); result == m_handleMap.end()) {
-		if (auto index = FindIndex(m_availableKeyboardIndices); index) {
-			m_availableKeyboardIndices[*index] = false;
-			m_handleMap.emplace(handle, HandleData{
-					*index, DeviceType::Keyboard
-				});
+	if (auto result = m_handleMap.find(handle); result == std::end(m_handleMap)) [[unlikely]] {
+		if (auto index = GetAvailableIndex(m_availableKeyboardIndices); index) [[likely]] {
+			m_handleMap.emplace(handle, HandleData{ *index, DeviceType::Keyboard });
+
 			return m_pKeyboards[*index].get();
 		}
-		else
+		else [[unlikely]]
 			return nullptr;
-
 	}
-	else
-		return m_pKeyboards[result->second.first].get();
+	else [[likely]]
+		return m_pKeyboards[result->second.deviceIndex].get();
 }
 
 IMouse* InputManagerImpl::GetMouseByHandle(std::uint64_t handle) noexcept {
-	if (auto result = m_handleMap.find(handle); result == m_handleMap.end()) {
-		if (auto index = FindIndex(m_availableMouseIndices); index) {
-			m_availableMouseIndices[*index] = false;
-			m_handleMap.emplace(handle, HandleData{
-					*index, DeviceType::Mouse
-				});
+	if (auto result = m_handleMap.find(handle); result == std::end(m_handleMap)) [[unlikely]] {
+		if (auto index = GetAvailableIndex(m_availableMouseIndices); index) [[likely]] {
+			m_handleMap.emplace(handle, HandleData{ *index, DeviceType::Mouse });
 
 			return m_pMouses[*index].get();
 		}
-		else
+		else [[unlikely]]
 			return nullptr;
 	}
-	else
-		return m_pMouses[result->second.first].get();
+	else [[likely]]
+		return m_pMouses[result->second.deviceIndex].get();
 }
 
-GamepadData InputManagerImpl::GetGamepadByHandle(std::uint64_t handle) noexcept {
-	if (auto result = m_handleMap.find(handle); result == m_handleMap.end()) {
-		if (auto index = FindIndex(m_availableGamepadIndices); index) {
-			m_availableGamepadIndices[*index] = false;
-			m_handleMap.emplace(handle, HandleData{
-					*index, DeviceType::Gamepad
-				});
+GamepadData InputManagerImpl::GetGamepadDataByHandle(std::uint64_t handle) noexcept {
+	if (auto result = m_handleMap.find(handle); result == std::end(m_handleMap)) [[unlikely]] {
+		if (auto index = GetAvailableIndex(m_availableGamepadIndices); index) [[likely]] {
+			m_handleMap.emplace(handle, HandleData{ *index, DeviceType::Gamepad });
 
-			return GamepadData(m_pGamepads[*index].get(), *index);
+			return { m_pGamepads[*index].get(), *index };
 		}
-		else
-			return GamepadData();
+		else [[unlikely]]
+			return GamepadData{ nullptr, 0u };
 	}
-	else
-		return {
-			m_pGamepads[result->second.first].get(),
-			result->second.first
-	};
+	else [[likely]] {
+		size_t index = result->second.deviceIndex;
+
+		return { m_pGamepads[index].get(), index };
+	}
 }
 
 std::vector<IKeyboard*> InputManagerImpl::GetKeyboardRefs() const noexcept {
-	std::vector<IKeyboard*> keyboardRefs(m_pKeyboards.size());
-
-	for (size_t index = 0u; index < m_pKeyboards.size(); ++index)
-		keyboardRefs[index] = m_pKeyboards[index].get();
-
-	return keyboardRefs;
+	return GetVectorOfRefs(m_pKeyboards);
 }
 
 std::vector<IMouse*> InputManagerImpl::GetMouseRefs() const noexcept {
-	std::vector<IMouse*> mouseRefs(m_pMouses.size());
-
-	for (size_t index = 0u; index < m_pMouses.size(); ++index)
-		mouseRefs[index] = m_pMouses[index].get();
-
-	return mouseRefs;
+	return GetVectorOfRefs(m_pMouses);
 }
 
 std::vector<IGamepad*> InputManagerImpl::GetGamepadRefs() const noexcept {
-	std::vector<IGamepad*> gamepadRefs(m_pGamepads.size());
-
-	for (size_t index = 0u; index < m_pGamepads.size(); ++index)
-		gamepadRefs[index] = m_pGamepads[index].get();
-
-	return gamepadRefs;
+	return GetVectorOfRefs(m_pGamepads);
 }
 
 void InputManagerImpl::ClearInputStates() noexcept {
@@ -176,10 +154,20 @@ void InputManagerImpl::ClearInputStates() noexcept {
 		gamepad->ClearState();
 }
 
-std::optional<size_t> InputManagerImpl::FindIndex(const std::vector<bool>& data) const noexcept {
-	for (size_t index = 0; index < data.size(); ++index)
-		if (data[index])
+std::optional<size_t> InputManagerImpl::GetAvailableIndex(
+	std::vector<bool>& indices
+) const noexcept {
+	for (size_t index = 0; index < std::size(indices); ++index)
+		if (indices[index]) {
+			indices[index] = false;
+
 			return index;
+		}
 
 	return {};
+}
+
+void InputManagerImpl::AddAvailableIndices(std::vector<bool>& indices, size_t count) noexcept {
+	for (size_t _ = 0u; _ < count; ++_)
+		indices.emplace_back(true);
 }

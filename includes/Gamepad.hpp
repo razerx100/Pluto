@@ -6,17 +6,27 @@
 class Gamepad final : public IGamepad {
 public:
 	void ClearState() noexcept override;
+	void ClearBuffers() noexcept override;
+	void Flush() noexcept override;
 
 	[[nodiscard]]
-	Event Read() noexcept override;
+	std::optional<Event> ReadEvent() noexcept override;
+	[[nodiscard]]
+	std::optional<float> ReadLeftTriggerData() noexcept override;
+	[[nodiscard]]
+	std::optional<float> ReadRightTriggerData() noexcept override;
+	[[nodiscard]]
+	std::optional<ThumbStickData> ReadLeftThumbStickData() noexcept override;
+	[[nodiscard]]
+	std::optional<ThumbStickData> ReadRightThumbStickData() noexcept override;
 
 	[[nodiscard]]
 	bool IsButtonPressed(XBoxButton button) const noexcept override;
 	[[nodiscard]]
 	bool AreButtonsPressed(size_t count, ...) const noexcept override;
 
-	void OnLeftThumbStickMove(ASData data) noexcept override;
-	void OnRightThumbStickMove(ASData data) noexcept override;
+	void OnLeftThumbStickMove(ThumbStickData data) noexcept override;
+	void OnRightThumbStickMove(ThumbStickData data) noexcept override;
 	void OnLeftTriggerMove(float data) noexcept override;
 	void OnRightTriggerMove(float data) noexcept override;
 
@@ -33,13 +43,21 @@ public:
 	std::uint32_t GetTriggerThreshold() const noexcept override;
 
 private:
-	void ClearBuffer() noexcept;
-	void TrimBuffer() noexcept;
+	template<typename T>
+	static void TrimBuffer(std::queue<T>& buffer) noexcept {
+		while (std::size(buffer) > s_bufferSize)
+			buffer.pop();
+	}
 
 private:
 	static constexpr size_t s_bufferSize = 16u;
 	std::uint16_t m_buttonState;
+
 	std::queue<Event> m_eventBuffer;
+	std::queue<float> m_leftTriggerBuffer;
+	std::queue<float> m_rightTriggerBuffer;
+	std::queue<ThumbStickData> m_leftThumbStickBuffer;
+	std::queue<ThumbStickData> m_rightThumbStickBuffer;
 
 	std::uint32_t m_leftThumbStickDeadZone;
 	std::uint32_t m_rightThumbStickDeadZone;

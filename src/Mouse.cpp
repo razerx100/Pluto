@@ -5,21 +5,8 @@ Mouse::Mouse()
 	:
 	m_inWindow(false),
 	m_mouseTicks(0.0f),
-	m_cursorPositionDelta{},
 	m_wheelDeltaCarry(0),
 	m_mouseState(0u) {}
-
-PosDelta Mouse::GetPosDelta() const noexcept {
-	return m_cursorPositionDelta;
-}
-
-std::int64_t Mouse::GetPosDX() const noexcept {
-	return m_cursorPositionDelta.first;
-}
-
-std::int64_t Mouse::GetPosDY() const noexcept {
-	return m_cursorPositionDelta.second;
-}
 
 float Mouse::GetMouseTicks() const noexcept {
 	return m_mouseTicks;
@@ -30,7 +17,7 @@ bool Mouse::IsButtonPressed(MouseButtons button) const noexcept {
 }
 
 bool Mouse::AreButtonsPressed(size_t count, ...) const noexcept {
-	va_list list;
+	va_list list = nullptr;
 	va_start(list, count);
 
 	bool result = true;
@@ -46,55 +33,51 @@ bool Mouse::IsInWindow() const noexcept {
 	return m_inWindow;
 }
 
-Mouse::Event Mouse::Read() noexcept {
-	if (!m_buffer.empty()) {
-		Mouse::Event e = m_buffer.front();
-		m_buffer.pop();
-		return e;
+std::optional<Mouse::Event> Mouse::ReadEvents() noexcept {
+	if (!std::empty(m_eventBuffer)) {
+		Mouse::Event _event = m_eventBuffer.front();
+		m_eventBuffer.pop();
+
+		return _event;
 	}
 	else
-		return Mouse::Event();
+		return {};
 }
 
 void Mouse::Flush() noexcept {
-	m_buffer = std::queue<Event>();
+	m_eventBuffer = std::queue<Event>();
+	m_posDeltaBuffer = std::queue<PosDelta>();
 	ClearState();
 }
 
 void Mouse::OnMouseMove(std::int64_t dx, int64_t dy) noexcept {
-	m_cursorPositionDelta.first = dx;
-	m_cursorPositionDelta.second = dy;
+	m_posDeltaBuffer.emplace(dx, dy);
 
-	TrimBuffer();
+	TrimBuffer(m_posDeltaBuffer);
 }
 
 void Mouse::OnMouseEnter() noexcept {
 	m_inWindow = true;
 
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::Enter));
-	TrimBuffer();
+	m_eventBuffer.emplace(Mouse::Event(Mouse::Event::Type::Enter));
+	TrimBuffer(m_eventBuffer);
 }
 
 void Mouse::OnMouseLeave() noexcept {
 	m_inWindow = false;
 
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::Leave));
-	TrimBuffer();
+	m_eventBuffer.emplace(Mouse::Event(Mouse::Event::Type::Leave));
+	TrimBuffer(m_eventBuffer);
 }
 
 void Mouse::OnWheelUp() noexcept {
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::WheelUp));
-	TrimBuffer();
+	m_eventBuffer.emplace(Mouse::Event(Mouse::Event::Type::WheelUp));
+	TrimBuffer(m_eventBuffer);
 }
 
 void Mouse::OnWheelDown() noexcept {
-	m_buffer.emplace(Mouse::Event(Mouse::Event::Type::WheelDown));
-	TrimBuffer();
-}
-
-void Mouse::TrimBuffer() noexcept {
-	while (m_buffer.size() > s_bufferSize)
-		m_buffer.pop();
+	m_eventBuffer.emplace(Mouse::Event(Mouse::Event::Type::WheelDown));
+	TrimBuffer(m_eventBuffer);
 }
 
 void Mouse::OnWheelDelta(std::int16_t delta) noexcept {
@@ -114,31 +97,44 @@ void Mouse::OnWheelDelta(std::int16_t delta) noexcept {
 void Mouse::SetPressState(std::uint8_t pressState) noexcept {
 	m_mouseState |= pressState;
 
-	for (size_t index = 0u;
-		index < static_cast<std::uint32_t>(MouseButtons::Invalid); ++index)
+	constexpr size_t buttonCount = static_cast<std::uint32_t>(MouseButtons::Invalid);
+
+	for (size_t index = 0u; index < buttonCount; ++index)
 		if (pressState & (1u << index)) {
-			m_buffer.emplace(Mouse::Event(
+			m_eventBuffer.emplace(Mouse::Event(
 				Mouse::Event::Type::Press, static_cast<MouseButtons>(index)
 			));
 
-			TrimBuffer();
+			TrimBuffer(m_eventBuffer);
 		}
 }
 
 void Mouse::SetReleaseState(std::uint8_t releaseState) noexcept {
 	m_mouseState ^= releaseState;
 
-	for (size_t index = 0u;
-		index < static_cast<std::uint32_t>(MouseButtons::Invalid); ++index)
+	constexpr size_t buttonCount = static_cast<std::uint32_t>(MouseButtons::Invalid);
+
+	for (size_t index = 0u; index < buttonCount; ++index)
 		if (releaseState & (1u << index)) {
-			m_buffer.emplace(Mouse::Event(
+			m_eventBuffer.emplace(Mouse::Event(
 				Mouse::Event::Type::Release, static_cast<MouseButtons>(index)
 			));
 
-			TrimBuffer();
+			TrimBuffer(m_eventBuffer);
 		}
 }
 
 void Mouse::ClearState() noexcept {
 	m_mouseState = 0u;
+}
+
+std::optional<PosDelta> Mouse::ReadPosDelta() noexcept {
+	if (!std::empty(m_posDeltaBuffer)) {
+		PosDelta positionDelta = m_posDeltaBuffer.front();
+		m_posDeltaBuffer.pop();
+
+		return positionDelta;
+	}
+	else
+		return {};
 }

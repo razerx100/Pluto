@@ -16,7 +16,7 @@ public:
 	[[nodiscard]]
 	bool AreKeysPressed(size_t count, ...) const noexcept override;
 	[[nodiscard]]
-	Event ReadKey() noexcept override;
+	std::optional<Event> ReadKey() noexcept override;
 	void FlushKey() noexcept override;
 
 	// char events
@@ -33,7 +33,7 @@ public:
 private:
 	template<typename T>
 	static void TrimBuffer(std::queue<T>& buffer) noexcept {
-		while (buffer.size() > s_bufferSize)
+		while (std::size(buffer) > s_bufferSize)
 			buffer.pop();
 	}
 

@@ -6,7 +6,7 @@ bool Gamepad::IsButtonPressed(XBoxButton button) const noexcept {
 }
 
 bool Gamepad::AreButtonsPressed(size_t count, ...) const noexcept {
-	va_list list;
+	va_list list = nullptr;
 	va_start(list, count);
 
 	bool result = true;
@@ -18,64 +18,64 @@ bool Gamepad::AreButtonsPressed(size_t count, ...) const noexcept {
 	return result;
 }
 
-void Gamepad::TrimBuffer() noexcept {
-	while (m_eventBuffer.size() > s_bufferSize)
-		m_eventBuffer.pop();
-}
-
-void Gamepad::ClearBuffer() noexcept {
+void Gamepad::ClearBuffers() noexcept {
 	m_eventBuffer = std::queue<Event>();
+	m_leftTriggerBuffer = std::queue<float>();
+	m_rightTriggerBuffer = std::queue<float>();
+	m_leftThumbStickBuffer = std::queue<ThumbStickData>();
+	m_rightThumbStickBuffer = std::queue<ThumbStickData>();
 }
 
 void Gamepad::ClearState() noexcept {
 	m_buttonState = 0u;
-	ClearBuffer();
 }
 
-Gamepad::Event Gamepad::Read() noexcept {
-	if (!m_eventBuffer.empty()) {
-		Gamepad::Event e = m_eventBuffer.front();
+std::optional<Gamepad::Event> Gamepad::ReadEvent() noexcept {
+	if (!std::empty(m_eventBuffer)) {
+		Gamepad::Event _event = m_eventBuffer.front();
 		m_eventBuffer.pop();
-		return e;
+		return _event;
 	}
 	else
-		return Gamepad::Event();
+		return {};
 }
 
-void Gamepad::OnLeftThumbStickMove(ASData data) noexcept {
-	m_eventBuffer.emplace(Gamepad::Event(Gamepad::Event::Type::LeftThumbStick, data));
-	TrimBuffer();
+void Gamepad::OnLeftThumbStickMove(ThumbStickData data) noexcept {
+	m_leftThumbStickBuffer.emplace(data);
+	TrimBuffer(m_leftThumbStickBuffer);
 }
 
-void Gamepad::OnRightThumbStickMove(ASData data) noexcept {
-	m_eventBuffer.emplace(Gamepad::Event(Gamepad::Event::Type::RightThumbStick, data));
-	TrimBuffer();
+void Gamepad::OnRightThumbStickMove(ThumbStickData data) noexcept {
+	m_rightThumbStickBuffer.emplace(data);
+	TrimBuffer(m_rightThumbStickBuffer);
 }
 
 void Gamepad::OnLeftTriggerMove(float data) noexcept {
-	m_eventBuffer.emplace(Gamepad::Event(Gamepad::Event::Type::LeftTrigger, data));
-	TrimBuffer();
+	m_leftTriggerBuffer.emplace(data);
+	TrimBuffer(m_leftTriggerBuffer);
 }
 
 void Gamepad::OnRightTriggerMove(float data) noexcept {
-	m_eventBuffer.emplace(Gamepad::Event(Gamepad::Event::Type::RightTrigger, data));
-	TrimBuffer();
+	m_rightTriggerBuffer.emplace(data);
+	TrimBuffer(m_rightTriggerBuffer);
 }
 
 void Gamepad::SetRawButtonState(std::uint16_t buttonFlags) noexcept {
-	for (size_t index = 0u; index < static_cast<size_t>(XBoxButton::Invalid); ++index) {
+	constexpr size_t buttonCount = static_cast<size_t>(XBoxButton::Invalid);
+
+	for (size_t index = 0u; index < buttonCount; ++index) {
 		if (auto flag = 1u << index; buttonFlags & flag) {
 			m_eventBuffer.emplace(Gamepad::Event(
 				Gamepad::Event::Type::Press, static_cast<XBoxButton>(index)
 			));
-			TrimBuffer();
+			TrimBuffer(m_eventBuffer);
 		}
 		else {
 			if (m_buttonState & flag) {
 				m_eventBuffer.emplace(Gamepad::Event(
 					Gamepad::Event::Type::Release, static_cast<XBoxButton>(index)
 				));
-				TrimBuffer();
+				TrimBuffer(m_eventBuffer);
 			}
 		}
 	}
@@ -105,4 +105,53 @@ std::uint32_t Gamepad::GetRightThumbStickDeadZone() const noexcept {
 
 std::uint32_t Gamepad::GetTriggerThreshold() const noexcept {
 	return m_triggerThreshold;
+}
+
+std::optional<float> Gamepad::ReadLeftTriggerData() noexcept {
+	if (!std::empty(m_leftTriggerBuffer)) {
+		float magnitude = m_leftTriggerBuffer.front();
+		m_leftTriggerBuffer.pop();
+
+		return magnitude;
+	}
+	else
+		return {};
+}
+
+std::optional<float> Gamepad::ReadRightTriggerData() noexcept {
+	if (!std::empty(m_rightTriggerBuffer)) {
+		float magnitude = m_rightTriggerBuffer.front();
+		m_rightTriggerBuffer.pop();
+
+		return magnitude;
+	}
+	else
+		return {};
+}
+
+std::optional<ThumbStickData> Gamepad::ReadLeftThumbStickData() noexcept {
+	if (!std::empty(m_leftThumbStickBuffer)) {
+		ThumbStickData thumbStickData = m_leftThumbStickBuffer.front();
+		m_leftThumbStickBuffer.pop();
+
+		return thumbStickData;
+	}
+	else
+		return {};
+}
+
+std::optional<ThumbStickData> Gamepad::ReadRightThumbStickData() noexcept {
+	if (!std::empty(m_rightThumbStickBuffer)) {
+		ThumbStickData thumbStickData = m_rightThumbStickBuffer.front();
+		m_rightThumbStickBuffer.pop();
+
+		return thumbStickData;
+	}
+	else
+		return {};
+}
+
+void Gamepad::Flush() noexcept {
+	ClearState();
+	ClearBuffers();
 }
