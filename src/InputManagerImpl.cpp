@@ -43,10 +43,6 @@ void InputManagerImpl::DisconnectDevice(std::uint64_t handle) noexcept {
 			m_availableMouseIndices[index] = true;
 			m_pMouses[index]->Flush();
 		}
-		else if (device == DeviceType::Gamepad) {
-			m_availableGamepadIndices[index] = true;
-			m_pGamepads[index]->Flush();
-		}
 	}
 }
 
@@ -100,13 +96,6 @@ IMouse* InputManagerImpl::GetMouseByHandle(std::uint64_t handle) noexcept {
 	);
 }
 
-IGamepad* InputManagerImpl::GetGamepadByHandle(std::uint64_t handle) noexcept {
-	return GetDeviceByHandle(
-		handle, m_availableGamepadIndices,
-		m_pGamepads, DeviceType::Gamepad
-	);
-}
-
 std::vector<IKeyboard*> InputManagerImpl::GetKeyboardRefs() const noexcept {
 	return GetVectorOfRefs(m_pKeyboards);
 }
@@ -148,9 +137,11 @@ void InputManagerImpl::AddAvailableIndices(std::vector<bool>& indices, size_t co
 		indices.emplace_back(true);
 }
 
-bool InputManagerImpl::DoesGamepadHandleExist(std::uint64_t handle) const noexcept {
-	if (auto result = m_handleMap.find(handle); result != std::end(m_handleMap))
-		return true;
-	else
-		return false;
+void InputManagerImpl::ActivateGamepadByIndex(size_t index) noexcept {
+	m_availableGamepadIndices[index] = false;
+}
+
+void InputManagerImpl::DisconnectGamepadByIndex(size_t index) noexcept {
+	m_availableGamepadIndices[index] = true;
+	m_pGamepads[index]->Flush();
 }

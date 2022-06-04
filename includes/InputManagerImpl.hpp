@@ -43,11 +43,9 @@ public:
 	IKeyboard* GetKeyboardByHandle(std::uint64_t handle) noexcept override;
 	[[nodiscard]]
 	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept override;
-	[[nodiscard]]
-	IGamepad* GetGamepadByHandle(std::uint64_t handle) noexcept override;
 
-	[[nodiscard]]
-	bool DoesGamepadHandleExist(std::uint64_t handle) const noexcept override;
+	void ActivateGamepadByIndex(size_t index) noexcept override;
+	void DisconnectGamepadByIndex(size_t index) noexcept override;
 
 	void ClearInputStates() noexcept override;
 
