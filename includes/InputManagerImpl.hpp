@@ -44,7 +44,6 @@ public:
 	[[nodiscard]]
 	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept override;
 
-	void ActivateGamepadByIndex(size_t index) noexcept override;
 	void DisconnectGamepadByIndex(size_t index) noexcept override;
 
 	void ClearInputStates() noexcept override;
@@ -67,7 +66,7 @@ private:
 
 	std::vector<bool> m_availableKeyboardIndices;
 	std::vector<bool> m_availableMouseIndices;
-	std::vector<bool> m_availableGamepadIndices;
+
 	std::vector<size_t> m_devicesCount;
 
 private:

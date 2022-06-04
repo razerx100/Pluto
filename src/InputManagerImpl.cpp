@@ -21,12 +21,9 @@ void InputManagerImpl::AddDeviceSupport(DeviceType device, size_t count) noexcep
 
 		AddAvailableIndices(m_availableMouseIndices, count);
 	}
-	else if (device == DeviceType::Gamepad) {
+	else if (device == DeviceType::Gamepad)
 		for (size_t _ = 0u; _ < count; ++_)
 			m_pGamepads.emplace_back(std::make_unique<Gamepad>());
-
-		AddAvailableIndices(m_availableGamepadIndices, count);
-	}
 }
 
 void InputManagerImpl::DisconnectDevice(std::uint64_t handle) noexcept {
@@ -137,11 +134,6 @@ void InputManagerImpl::AddAvailableIndices(std::vector<bool>& indices, size_t co
 		indices.emplace_back(true);
 }
 
-void InputManagerImpl::ActivateGamepadByIndex(size_t index) noexcept {
-	m_availableGamepadIndices[index] = false;
-}
-
 void InputManagerImpl::DisconnectGamepadByIndex(size_t index) noexcept {
-	m_availableGamepadIndices[index] = true;
 	m_pGamepads[index]->Flush();
 }

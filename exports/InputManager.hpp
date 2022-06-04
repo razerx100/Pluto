@@ -52,7 +52,6 @@ public:
 	[[nodiscard]]
 	virtual	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept = 0;
 
-	virtual void ActivateGamepadByIndex(size_t index) noexcept = 0;
 	virtual void DisconnectGamepadByIndex(size_t index) noexcept = 0;
 
 	virtual void ClearInputStates() noexcept = 0;
