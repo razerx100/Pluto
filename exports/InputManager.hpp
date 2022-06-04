@@ -51,9 +51,11 @@ public:
 	virtual	IKeyboard* GetKeyboardByHandle(std::uint64_t handle) noexcept = 0;
 	[[nodiscard]]
 	virtual	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept = 0;
-
 	[[nodiscard]]
 	virtual	IGamepad* GetGamepadByHandle(std::uint64_t handle) noexcept = 0;
+
+	[[nodiscard]]
+	virtual bool DoesGamepadHandleExist(std::uint64_t handle) const noexcept = 0;
 
 	virtual void ClearInputStates() noexcept = 0;
 };

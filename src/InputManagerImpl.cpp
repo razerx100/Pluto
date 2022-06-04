@@ -147,3 +147,10 @@ void InputManagerImpl::AddAvailableIndices(std::vector<bool>& indices, size_t co
 	for (size_t _ = 0u; _ < count; ++_)
 		indices.emplace_back(true);
 }
+
+bool InputManagerImpl::DoesGamepadHandleExist(std::uint64_t handle) const noexcept {
+	if (auto result = m_handleMap.find(handle); result != std::end(m_handleMap))
+		return true;
+	else
+		return false;
+}

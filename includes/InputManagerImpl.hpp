@@ -46,6 +46,9 @@ public:
 	[[nodiscard]]
 	IGamepad* GetGamepadByHandle(std::uint64_t handle) noexcept override;
 
+	[[nodiscard]]
+	bool DoesGamepadHandleExist(std::uint64_t handle) const noexcept override;
+
 	void ClearInputStates() noexcept override;
 
 private:
