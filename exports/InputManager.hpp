@@ -12,8 +12,6 @@ enum class DeviceType {
 	Invalid
 };
 
-using GamepadData = std::pair<IGamepad*, size_t>;
-
 class InputManager {
 public:
 	virtual ~InputManager() = default;
@@ -53,8 +51,9 @@ public:
 	virtual	IKeyboard* GetKeyboardByHandle(std::uint64_t handle) noexcept = 0;
 	[[nodiscard]]
 	virtual	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept = 0;
+
 	[[nodiscard]]
-	virtual	GamepadData GetGamepadDataByHandle(std::uint64_t handle) noexcept = 0;
+	virtual	IGamepad* GetGamepadByHandle(std::uint64_t handle) noexcept = 0;
 
 	virtual void ClearInputStates() noexcept = 0;
 };

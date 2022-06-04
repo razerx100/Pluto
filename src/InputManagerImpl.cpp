@@ -87,48 +87,24 @@ size_t InputManagerImpl::GetGamepadCount() const noexcept {
 }
 
 IKeyboard* InputManagerImpl::GetKeyboardByHandle(std::uint64_t handle) noexcept {
-	if (auto result = m_handleMap.find(handle); result == std::end(m_handleMap)) [[unlikely]] {
-		if (auto index = GetAvailableIndex(m_availableKeyboardIndices); index) [[likely]] {
-			m_handleMap.emplace(handle, HandleData{ *index, DeviceType::Keyboard });
-
-			return m_pKeyboards[*index].get();
-		}
-		else [[unlikely]]
-			return nullptr;
-	}
-	else [[likely]]
-		return m_pKeyboards[result->second.deviceIndex].get();
+	return GetDeviceByHandle(
+		handle, m_availableKeyboardIndices,
+		m_pKeyboards, DeviceType::Keyboard
+	);
 }
 
 IMouse* InputManagerImpl::GetMouseByHandle(std::uint64_t handle) noexcept {
-	if (auto result = m_handleMap.find(handle); result == std::end(m_handleMap)) [[unlikely]] {
-		if (auto index = GetAvailableIndex(m_availableMouseIndices); index) [[likely]] {
-			m_handleMap.emplace(handle, HandleData{ *index, DeviceType::Mouse });
-
-			return m_pMouses[*index].get();
-		}
-		else [[unlikely]]
-			return nullptr;
-	}
-	else [[likely]]
-		return m_pMouses[result->second.deviceIndex].get();
+	return GetDeviceByHandle(
+		handle, m_availableMouseIndices,
+		m_pMouses, DeviceType::Mouse
+	);
 }
 
-GamepadData InputManagerImpl::GetGamepadDataByHandle(std::uint64_t handle) noexcept {
-	if (auto result = m_handleMap.find(handle); result == std::end(m_handleMap)) [[unlikely]] {
-		if (auto index = GetAvailableIndex(m_availableGamepadIndices); index) [[likely]] {
-			m_handleMap.emplace(handle, HandleData{ *index, DeviceType::Gamepad });
-
-			return { m_pGamepads[*index].get(), *index };
-		}
-		else [[unlikely]]
-			return GamepadData{ nullptr, 0u };
-	}
-	else [[likely]] {
-		size_t index = result->second.deviceIndex;
-
-		return { m_pGamepads[index].get(), index };
-	}
+IGamepad* InputManagerImpl::GetGamepadByHandle(std::uint64_t handle) noexcept {
+	return GetDeviceByHandle(
+		handle, m_availableGamepadIndices,
+		m_pGamepads, DeviceType::Gamepad
+	);
 }
 
 std::vector<IKeyboard*> InputManagerImpl::GetKeyboardRefs() const noexcept {

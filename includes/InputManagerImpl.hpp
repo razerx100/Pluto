@@ -44,7 +44,7 @@ public:
 	[[nodiscard]]
 	IMouse* GetMouseByHandle(std::uint64_t handle) noexcept override;
 	[[nodiscard]]
-	GamepadData GetGamepadDataByHandle(std::uint64_t handle) noexcept override;
+	IGamepad* GetGamepadByHandle(std::uint64_t handle) noexcept override;
 
 	void ClearInputStates() noexcept override;
 
@@ -57,6 +57,19 @@ private:
 	std::optional<size_t> GetAvailableIndex(std::vector<bool>& indices) const noexcept;
 	void AddAvailableIndices(std::vector<bool>& indices, size_t count) noexcept;
 
+private:
+	std::unordered_map<std::uint64_t, HandleData> m_handleMap;
+
+	std::vector<std::unique_ptr<IKeyboard>> m_pKeyboards;
+	std::vector<std::unique_ptr<IMouse>> m_pMouses;
+	std::vector<std::unique_ptr<IGamepad>> m_pGamepads;
+
+	std::vector<bool> m_availableKeyboardIndices;
+	std::vector<bool> m_availableMouseIndices;
+	std::vector<bool> m_availableGamepadIndices;
+	std::vector<size_t> m_devicesCount;
+
+private:
 	template<class T>
 	static std::vector<T*> GetVectorOfRefs(
 		const std::vector<std::unique_ptr<T>>& ptrs
@@ -79,16 +92,23 @@ private:
 			return nullptr;
 	}
 
-private:
-	std::unordered_map<std::uint64_t, HandleData> m_handleMap;
+	template<class T>
+	T* GetDeviceByHandle(
+		std::uint64_t handle, std::vector<bool>& availableIndices,
+		const std::vector<std::unique_ptr<T>>& ptrs, DeviceType type
+	) noexcept {
+		if (auto result = m_handleMap.find(handle);
+			result == std::end(m_handleMap)) [[unlikely]] {
+			if (auto index = GetAvailableIndex(availableIndices); index) [[likely]] {
+				m_handleMap.emplace(handle, HandleData{ *index, type });
 
-	std::vector<std::unique_ptr<IKeyboard>> m_pKeyboards;
-	std::vector<std::unique_ptr<IMouse>> m_pMouses;
-	std::vector<std::unique_ptr<IGamepad>> m_pGamepads;
-
-	std::vector<bool> m_availableKeyboardIndices;
-	std::vector<bool> m_availableMouseIndices;
-	std::vector<bool> m_availableGamepadIndices;
-	std::vector<size_t> m_devicesCount;
+				return ptrs[*index].get();
+			}
+			else [[unlikely]]
+				return nullptr;
+		}
+		else [[likely]]
+			return ptrs[result->second.deviceIndex].get();
+	}
 };
 #endif
