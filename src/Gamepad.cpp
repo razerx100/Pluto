@@ -2,7 +2,7 @@
 #include <cstdarg>
 
 bool Gamepad::IsButtonPressed(XBoxButton button) const noexcept {
-	return m_buttonState & (1u << static_cast<std::uint32_t>(button));
+	return m_buttonState[static_cast<size_t>(button)];
 }
 
 bool Gamepad::AreButtonsPressed(size_t count, ...) const noexcept {
@@ -62,22 +62,21 @@ void Gamepad::OnRightTriggerMove(float data) noexcept {
 
 void Gamepad::SetRawButtonState(std::uint16_t buttonFlags) noexcept {
 	constexpr size_t buttonCount = static_cast<size_t>(XBoxButton::Invalid);
+	static std::bitset<16u> buttonCheckBuffer{};
+	buttonCheckBuffer = buttonFlags;
 
 	for (size_t index = 0u; index < buttonCount; ++index) {
-		if (auto flag = 1u << index; buttonFlags & flag) {
+		if (buttonCheckBuffer[index])
 			m_eventBuffer.emplace(Gamepad::Event(
 				Gamepad::Event::Type::Press, static_cast<XBoxButton>(index)
 			));
-			TrimBuffer(m_eventBuffer);
-		}
-		else {
-			if (m_buttonState & flag) {
+		else
+			if (m_buttonState[index])
 				m_eventBuffer.emplace(Gamepad::Event(
 					Gamepad::Event::Type::Release, static_cast<XBoxButton>(index)
 				));
-				TrimBuffer(m_eventBuffer);
-			}
-		}
+
+		TrimBuffer(m_eventBuffer);
 	}
 
 	m_buttonState = buttonFlags;

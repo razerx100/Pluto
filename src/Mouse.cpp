@@ -2,18 +2,15 @@
 #include <cstdarg>
 
 Mouse::Mouse()
-	:
-	m_inWindow(false),
-	m_mouseTicks(0.0f),
-	m_wheelDeltaCarry(0),
-	m_mouseState(0u) {}
+	: m_inWindow{ false }, m_mouseTicks{ 0.f }, m_wheelDeltaCarry{ 0 }, m_mouseState{ 0u },
+	m_currentCursorCoord{ 0u, 0u } {}
 
 float Mouse::GetMouseTicks() const noexcept {
 	return m_mouseTicks;
 }
 
 bool Mouse::IsButtonPressed(MouseButtons button) const noexcept {
-	return m_mouseState & (1u << static_cast<std::uint32_t>(button));
+	return m_mouseState[static_cast<size_t>(button)];
 }
 
 bool Mouse::AreButtonsPressed(size_t count, ...) const noexcept {
@@ -46,14 +43,13 @@ std::optional<Mouse::Event> Mouse::ReadEvents() noexcept {
 
 void Mouse::Flush() noexcept {
 	m_eventBuffer = std::queue<Event>();
-	m_posDeltaBuffer = std::queue<PosDelta>();
+	m_currentCursorCoord = { 0u, 0u };
 	ClearState();
 }
 
-void Mouse::OnMouseMove(std::int64_t dx, int64_t dy) noexcept {
-	m_posDeltaBuffer.emplace(dx, dy);
-
-	TrimBuffer(m_posDeltaBuffer);
+void Mouse::OnMouseMove(std::uint16_t xCoord, std::uint16_t yCoord) noexcept {
+	m_currentCursorCoord.x = xCoord;
+	m_currentCursorCoord.y = yCoord;
 }
 
 void Mouse::OnMouseEnter() noexcept {
@@ -98,9 +94,11 @@ void Mouse::SetPressState(std::uint8_t pressState) noexcept {
 	m_mouseState |= pressState;
 
 	constexpr size_t buttonCount = static_cast<std::uint32_t>(MouseButtons::Invalid);
+	static std::bitset<8u> pressStateCheck{};
+	pressStateCheck = pressState;
 
 	for (size_t index = 0u; index < buttonCount; ++index)
-		if (pressState & (1u << index)) {
+		if (pressStateCheck[index]) {
 			m_eventBuffer.emplace(Mouse::Event(
 				Mouse::Event::Type::Press, static_cast<MouseButtons>(index)
 			));
@@ -113,9 +111,11 @@ void Mouse::SetReleaseState(std::uint8_t releaseState) noexcept {
 	m_mouseState ^= releaseState;
 
 	constexpr size_t buttonCount = static_cast<std::uint32_t>(MouseButtons::Invalid);
+	static std::bitset<8u> releaseStateCheck{};
+	releaseStateCheck = releaseState;
 
 	for (size_t index = 0u; index < buttonCount; ++index)
-		if (releaseState & (1u << index)) {
+		if (releaseStateCheck[index]) {
 			m_eventBuffer.emplace(Mouse::Event(
 				Mouse::Event::Type::Release, static_cast<MouseButtons>(index)
 			));
@@ -128,13 +128,6 @@ void Mouse::ClearState() noexcept {
 	m_mouseState = 0u;
 }
 
-std::optional<PosDelta> Mouse::ReadPosDelta() noexcept {
-	if (!std::empty(m_posDeltaBuffer)) {
-		PosDelta positionDelta = m_posDeltaBuffer.front();
-		m_posDeltaBuffer.pop();
-
-		return positionDelta;
-	}
-	else
-		return {};
+CursorCoord Mouse::GetCurrentCursorCoord() const noexcept {
+	return m_currentCursorCoord;
 }

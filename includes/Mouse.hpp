@@ -1,6 +1,7 @@
 #ifndef MOUSE_HPP_
 #define MOUSE_HPP_
 #include <queue>
+#include <bitset>
 #include <IMouse.hpp>
 
 class Mouse final : public IMouse {
@@ -15,7 +16,7 @@ public:
 	[[nodiscard]]
 	std::optional<Event> ReadEvents() noexcept override;
 	[[nodiscard]]
-	std::optional<PosDelta> ReadPosDelta() noexcept override;
+	CursorCoord GetCurrentCursorCoord() const noexcept override;
 
 	[[nodiscard]]
 	bool IsInWindow() const noexcept override;
@@ -28,7 +29,7 @@ public:
 
 	void SetPressState(std::uint8_t mouseState) noexcept override;
 	void SetReleaseState(std::uint8_t mouseState) noexcept override;
-	void OnMouseMove(std::int64_t dx, std::int64_t dy) noexcept override;
+	void OnMouseMove(std::uint16_t xCoord, std::uint16_t yCoord) noexcept override;
 	void OnMouseLeave() noexcept override;
 	void OnMouseEnter() noexcept override;
 	void OnWheelDelta(std::int16_t delta) noexcept override;
@@ -49,9 +50,9 @@ private:
 	bool m_inWindow;
 	float m_mouseTicks;
 	int m_wheelDeltaCarry;
+	CursorCoord m_currentCursorCoord;
 
-	std::uint8_t m_mouseState;
+	std::bitset<8u> m_mouseState;
 	std::queue<Event> m_eventBuffer;
-	std::queue<PosDelta> m_posDeltaBuffer;
 };
 #endif

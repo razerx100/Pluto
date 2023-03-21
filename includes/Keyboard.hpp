@@ -1,8 +1,8 @@
 #ifndef KEYBOARD_HPP_
 #define KEYBOARD_HPP_
 #include <queue>
+#include <bitset>
 #include <IKeyboard.hpp>
-#include <array>
 
 class Keyboard final : public IKeyboard {
 public:
@@ -40,7 +40,7 @@ private:
 private:
 	static constexpr std::uint32_t s_nKeys = 256u;
 	static constexpr std::uint32_t s_bufferSize = 16u;
-	std::array<bool, s_nKeys> m_keystates;
+	std::bitset<s_nKeys> m_keystates;
 	std::queue<Event> m_keyBuffer;
 	std::queue<char> m_charBuffer;
 };

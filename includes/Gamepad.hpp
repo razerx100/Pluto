@@ -1,7 +1,8 @@
 #ifndef GAMEPAD_HPP_
 #define GAMEPAD_HPP_
-#include <IGamepad.hpp>
 #include <queue>
+#include <bitset>
+#include <IGamepad.hpp>
 
 class Gamepad final : public IGamepad {
 public:
@@ -51,7 +52,7 @@ private:
 
 private:
 	static constexpr size_t s_bufferSize = 16u;
-	std::uint16_t m_buttonState;
+	std::bitset<16u> m_buttonState;
 
 	std::queue<Event> m_eventBuffer;
 	std::queue<float> m_leftTriggerBuffer;

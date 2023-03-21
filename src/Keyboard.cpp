@@ -2,7 +2,7 @@
 #include <cstdarg>
 
 bool Keyboard::IsKeyPressed(SKeyCodes keycode) const noexcept {
-	return m_keystates[static_cast<std::uint32_t>(keycode)];
+	return m_keystates[static_cast<size_t>(keycode)];
 }
 
 bool Keyboard::AreKeysPressed(size_t count, ...) const noexcept {
@@ -72,5 +72,5 @@ void Keyboard::OnChar(char character) noexcept {
 }
 
 void Keyboard::ClearState() noexcept {
-	m_keystates.fill(false);
+	m_keystates.reset();
 }
