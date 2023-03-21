@@ -47,7 +47,7 @@ void Mouse::Flush() noexcept {
 	ClearState();
 }
 
-void Mouse::OnMouseMove(std::uint16_t xCoord, std::uint16_t yCoord) noexcept {
+void Mouse::SetCurrentCursorCoord(std::uint16_t xCoord, std::uint16_t yCoord) noexcept {
 	m_currentCursorCoord.x = xCoord;
 	m_currentCursorCoord.y = yCoord;
 }
