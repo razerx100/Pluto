@@ -33,6 +33,7 @@ public:
 	void OnMouseLeave() noexcept override;
 	void OnMouseEnter() noexcept override;
 	void OnWheelDelta(std::int16_t delta) noexcept override;
+	void ClearState() noexcept override;
 
 private:
 	template<typename T>
@@ -43,7 +44,6 @@ private:
 
 	void OnWheelUp() noexcept;
 	void OnWheelDown() noexcept;
-	void ClearState() noexcept;
 
 private:
 	static constexpr size_t s_bufferSize = 16u;

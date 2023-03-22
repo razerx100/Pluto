@@ -27,7 +27,7 @@ void Gamepad::ClearBuffers() noexcept {
 }
 
 void Gamepad::ClearState() noexcept {
-	m_buttonState = 0u;
+	m_buttonState.reset();
 }
 
 std::optional<Gamepad::Event> Gamepad::ReadEvent() noexcept {

@@ -18,15 +18,28 @@ size_t InputManagerImpl::GetGamepadCount() const noexcept {
 }
 
 IKeyboard& InputManagerImpl::GetKeyboard() const noexcept {
-	return *m_keyboard.get();
+	return *GetKeyboardRef();
 }
 
 IMouse& InputManagerImpl::GetMouse() const noexcept {
-	return *m_mouse.get();
+	return *GetMouseRef();
 }
 
 IGamepad& InputManagerImpl::GetGamepad(size_t index) const noexcept {
-	return *m_gamepads[index].get();
+	return *GetGamepadRef(index);
+}
+
+IKeyboard* InputManagerImpl::GetKeyboardRef() const noexcept {
+	return m_keyboard.get();
+}
+
+IMouse* InputManagerImpl::GetMouseRef() const noexcept {
+
+	return m_mouse.get();
+}
+
+IGamepad* InputManagerImpl::GetGamepadRef(size_t index) const noexcept {
+	return m_gamepads[index].get();
 }
 
 void InputManagerImpl::DisconnectGamepad(size_t index) noexcept {
@@ -34,9 +47,9 @@ void InputManagerImpl::DisconnectGamepad(size_t index) noexcept {
 }
 
 void InputManagerImpl::ClearInputStates() noexcept {
-	m_keyboard->Flush();
-	m_mouse->Flush();
+	m_keyboard->ClearState();
+	m_mouse->ClearState();
 
 	for (auto& gamepad : m_gamepads)
-		gamepad->Flush();
+		gamepad->ClearState();
 }

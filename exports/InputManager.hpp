@@ -19,10 +19,15 @@ public:
 	virtual	IMouse& GetMouse() const noexcept = 0;
 	[[nodiscard]]
 	virtual	IGamepad& GetGamepad(size_t index = 0u) const noexcept = 0;
+	[[nodiscard]]
+	virtual	IKeyboard* GetKeyboardRef() const noexcept = 0;
+	[[nodiscard]]
+	virtual	IMouse* GetMouseRef() const noexcept = 0;
+	[[nodiscard]]
+	virtual	IGamepad* GetGamepadRef(size_t index = 0u) const noexcept = 0;
 
 	virtual void DisconnectGamepad(size_t index = 0u) noexcept = 0;
 
 	virtual void ClearInputStates() noexcept = 0;
 };
-
 #endif

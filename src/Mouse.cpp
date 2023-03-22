@@ -125,7 +125,7 @@ void Mouse::SetReleaseState(std::uint8_t releaseState) noexcept {
 }
 
 void Mouse::ClearState() noexcept {
-	m_mouseState = 0u;
+	m_mouseState.reset();
 }
 
 CursorCoord Mouse::GetCurrentCursorCoord() const noexcept {

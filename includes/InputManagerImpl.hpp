@@ -20,6 +20,12 @@ public:
 	IMouse& GetMouse() const noexcept override;
 	[[nodiscard]]
 	IGamepad& GetGamepad(size_t index = 0u) const noexcept override;
+	[[nodiscard]]
+	IKeyboard* GetKeyboardRef() const noexcept override;
+	[[nodiscard]]
+	IMouse* GetMouseRef() const noexcept override;
+	[[nodiscard]]
+	IGamepad* GetGamepadRef(size_t index = 0u) const noexcept override;
 
 	void DisconnectGamepad(size_t index = 0u) noexcept override;
 
