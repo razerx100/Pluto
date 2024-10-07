@@ -1,11 +1,12 @@
 # Pluto
-Input Manager library. Builds into Shared Library. Currently has three modules.
+Input Manager library. Currently only has a Win32 implementation.
+
 1. Keyboard.
 2. Mouse.
 3. Xbox Gamepad.
 
 ## Instructions
-Run the Setup script to configure the project. The setup script uses the ***Visual Studio 17 2022*** generator for project generation. But ***Visual Studio 16 2019*** generator should work as well.
+Use the ADD_TEST_PLUTO cmake flag to add unit testing.
 
 ## Requirements
 cmake 3.21+.\
