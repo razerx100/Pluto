@@ -1,5 +1,5 @@
-#ifndef I_MOUSE_HPP_
-#define I_MOUSE_HPP_
+#ifndef MOUSE_HPP_
+#define MOUSE_HPP_
 #include <utility>
 #include <optional>
 
@@ -19,7 +19,7 @@ enum class MouseButtons
 	Invalid
 };
 
-class IMouse
+class Mouse
 {
 public:
 	class Event
@@ -37,15 +37,16 @@ public:
 		};
 
 	private:
-		Type m_type;
+		Type         m_type;
 		MouseButtons m_button;
 
 	public:
-		Event() : m_type(Type::Invalid), m_button(MouseButtons::Invalid) {}
-
-		Event(Type type) : m_type(type), m_button(MouseButtons::Invalid) {}
-
-		Event(Type type, MouseButtons button) : m_type(type), m_button(button) {}
+		Event() : m_type{ Type::Invalid }, m_button{ MouseButtons::Invalid }
+		{}
+		Event(Type type) : m_type{ type }, m_button{ MouseButtons::Invalid }
+		{}
+		Event(Type type, MouseButtons button) : m_type{ type }, m_button{ button }
+		{}
 
 		[[nodiscard]]
 		bool IsValid() const noexcept
@@ -67,7 +68,7 @@ public:
 	};
 
 public:
-	virtual ~IMouse() = default;
+	virtual ~Mouse() = default;
 
 	[[nodiscard]]
 	virtual float GetMouseTicks() const noexcept = 0;

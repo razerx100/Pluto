@@ -1,13 +1,15 @@
-#ifndef KEYBOARD_HPP_
-#define KEYBOARD_HPP_
+#ifndef KEYBOARD_IMPL_HPP_
+#define KEYBOARD_IMPL_HPP_
 #include <queue>
 #include <bitset>
-#include <IKeyboard.hpp>
+#include <Keyboard.hpp>
 
-class Keyboard final : public IKeyboard
+class KeyboardImpl final : public Keyboard
 {
 public:
-	Keyboard() = default;
+	KeyboardImpl()
+		: m_keystates{}, m_keyBuffer{}, m_charBuffer{}
+	{}
 
 	[[nodiscard]]
 	bool IsKeyPressed(SKeyCodes keycode) const noexcept override;
@@ -39,12 +41,27 @@ private:
 private:
 	static constexpr std::uint32_t s_nKeys      = 256u;
 	static constexpr std::uint32_t s_bufferSize = 16u;
+
 	std::bitset<s_nKeys> m_keystates;
 	std::queue<Event>    m_keyBuffer;
 	std::queue<char>     m_charBuffer;
 
 public:
-	Keyboard(const Keyboard&) = delete;
-	Keyboard& operator=(const Keyboard&) = delete;
+	KeyboardImpl(const KeyboardImpl&) = delete;
+	KeyboardImpl& operator=(const KeyboardImpl&) = delete;
+
+	KeyboardImpl(KeyboardImpl&& other) noexcept
+		: m_keystates{ std::move(other.m_keystates) },
+		m_keyBuffer{ std::move(other.m_keyBuffer) },
+		m_charBuffer{ std::move(other.m_charBuffer) }
+	{}
+	KeyboardImpl& operator=(KeyboardImpl&& other) noexcept
+	{
+		m_keystates  = std::move(other.m_keystates);
+		m_keyBuffer  = std::move(other.m_keyBuffer);
+		m_charBuffer = std::move(other.m_charBuffer);
+
+		return *this;
+	}
 };
 #endif

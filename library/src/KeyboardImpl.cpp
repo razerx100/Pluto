@@ -1,12 +1,12 @@
-#include <Keyboard.hpp>
+#include <KeyboardImpl.hpp>
 #include <cstdarg>
 
-bool Keyboard::IsKeyPressed(SKeyCodes keycode) const noexcept
+bool KeyboardImpl::IsKeyPressed(SKeyCodes keycode) const noexcept
 {
 	return m_keystates[static_cast<size_t>(keycode)];
 }
 
-bool Keyboard::AreKeysPressed(size_t count, ...) const noexcept
+bool KeyboardImpl::AreKeysPressed(size_t count, ...) const noexcept
 {
 	va_list list = nullptr;
 	va_start(list, count);
@@ -20,7 +20,7 @@ bool Keyboard::AreKeysPressed(size_t count, ...) const noexcept
 	return result;
 }
 
-std::optional<Keyboard::Event> Keyboard::ReadKey() noexcept
+std::optional<KeyboardImpl::Event> KeyboardImpl::ReadKey() noexcept
 {
 	if (!std::empty(m_keyBuffer))
 	{
@@ -33,7 +33,7 @@ std::optional<Keyboard::Event> Keyboard::ReadKey() noexcept
 		return {};
 }
 
-std::optional<char> Keyboard::ReadChar() noexcept
+std::optional<char> KeyboardImpl::ReadChar() noexcept
 {
 	if (!std::empty(m_charBuffer))
 	{
@@ -46,44 +46,44 @@ std::optional<char> Keyboard::ReadChar() noexcept
 		return {};
 }
 
-void Keyboard::FlushChar() noexcept
+void KeyboardImpl::FlushChar() noexcept
 {
 	m_charBuffer = std::queue<char>();
 }
 
-void Keyboard::FlushKey() noexcept
+void KeyboardImpl::FlushKey() noexcept
 {
 	m_keyBuffer = std::queue<Event>();
 }
 
-void Keyboard::Flush() noexcept
+void KeyboardImpl::Flush() noexcept
 {
 	FlushKey();
 	FlushChar();
 	ClearState();
 }
 
-void Keyboard::OnKeyPressed(SKeyCodes keycode) noexcept
+void KeyboardImpl::OnKeyPressed(SKeyCodes keycode) noexcept
 {
 	m_keystates[static_cast<size_t>(keycode)] = true;
 	m_keyBuffer.emplace(Keyboard::Event(Keyboard::Event::Type::Press, keycode));
 	TrimBuffer(m_keyBuffer);
 }
 
-void Keyboard::OnKeyReleased(SKeyCodes keycode) noexcept
+void KeyboardImpl::OnKeyReleased(SKeyCodes keycode) noexcept
 {
 	m_keystates[static_cast<size_t>(keycode)] = false;
 	m_keyBuffer.emplace(Keyboard::Event(Keyboard::Event::Type::Release, keycode));
 	TrimBuffer(m_keyBuffer);
 }
 
-void Keyboard::OnChar(char character) noexcept
+void KeyboardImpl::OnChar(char character) noexcept
 {
 	m_charBuffer.emplace(character);
 	TrimBuffer(m_charBuffer);
 }
 
-void Keyboard::ClearState() noexcept
+void KeyboardImpl::ClearState() noexcept
 {
 	m_keystates.reset();
 }

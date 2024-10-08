@@ -1,22 +1,22 @@
-#include <Mouse.hpp>
+#include <MouseImpl.hpp>
 #include <cstdarg>
 
-Mouse::Mouse()
-	: m_inWindow{ false }, m_mouseTicks{ 0.f }, m_wheelDeltaCarry{ 0 }, m_mouseState{ 0u },
-	m_currentCursorCoord{ 0u, 0u }
+MouseImpl::MouseImpl()
+	: m_mouseTicks{ 0.f }, m_wheelDeltaCarry{ 0 }, m_mouseState{ 0u },
+	m_currentCursorCoord{ 0u, 0u }, m_inWindow{ false }
 {}
 
-float Mouse::GetMouseTicks() const noexcept
+float MouseImpl::GetMouseTicks() const noexcept
 {
 	return m_mouseTicks;
 }
 
-bool Mouse::IsButtonPressed(MouseButtons button) const noexcept
+bool MouseImpl::IsButtonPressed(MouseButtons button) const noexcept
 {
 	return m_mouseState[static_cast<size_t>(button)];
 }
 
-bool Mouse::AreButtonsPressed(size_t count, ...) const noexcept
+bool MouseImpl::AreButtonsPressed(size_t count, ...) const noexcept
 {
 	va_list list = nullptr;
 	va_start(list, count);
@@ -30,12 +30,12 @@ bool Mouse::AreButtonsPressed(size_t count, ...) const noexcept
 	return result;
 }
 
-bool Mouse::IsInWindow() const noexcept
+bool MouseImpl::IsInWindow() const noexcept
 {
 	return m_inWindow;
 }
 
-std::optional<Mouse::Event> Mouse::ReadEvents() noexcept
+std::optional<Mouse::Event> MouseImpl::ReadEvents() noexcept
 {
 	if (!std::empty(m_eventBuffer))
 	{
@@ -48,20 +48,20 @@ std::optional<Mouse::Event> Mouse::ReadEvents() noexcept
 		return {};
 }
 
-void Mouse::Flush() noexcept
+void MouseImpl::Flush() noexcept
 {
 	m_eventBuffer        = std::queue<Event>();
 	m_currentCursorCoord = { 0u, 0u };
 	ClearState();
 }
 
-void Mouse::SetCurrentCursorCoord(std::uint16_t xCoord, std::uint16_t yCoord) noexcept
+void MouseImpl::SetCurrentCursorCoord(std::uint16_t xCoord, std::uint16_t yCoord) noexcept
 {
 	m_currentCursorCoord.x = xCoord;
 	m_currentCursorCoord.y = yCoord;
 }
 
-void Mouse::OnMouseEnter() noexcept
+void MouseImpl::OnMouseEnter() noexcept
 {
 	m_inWindow = true;
 
@@ -69,7 +69,7 @@ void Mouse::OnMouseEnter() noexcept
 	TrimBuffer(m_eventBuffer);
 }
 
-void Mouse::OnMouseLeave() noexcept
+void MouseImpl::OnMouseLeave() noexcept
 {
 	m_inWindow = false;
 
@@ -77,19 +77,19 @@ void Mouse::OnMouseLeave() noexcept
 	TrimBuffer(m_eventBuffer);
 }
 
-void Mouse::OnWheelUp() noexcept
+void MouseImpl::OnWheelUp() noexcept
 {
 	m_eventBuffer.emplace(Mouse::Event(Mouse::Event::Type::WheelUp));
 	TrimBuffer(m_eventBuffer);
 }
 
-void Mouse::OnWheelDown() noexcept
+void MouseImpl::OnWheelDown() noexcept
 {
 	m_eventBuffer.emplace(Mouse::Event(Mouse::Event::Type::WheelDown));
 	TrimBuffer(m_eventBuffer);
 }
 
-void Mouse::OnWheelDelta(std::int16_t delta) noexcept
+void MouseImpl::OnWheelDelta(std::int16_t delta) noexcept
 {
 	m_mouseTicks       = static_cast<float>(delta) / 120;
 	m_wheelDeltaCarry += delta;
@@ -106,7 +106,7 @@ void Mouse::OnWheelDelta(std::int16_t delta) noexcept
 	}
 }
 
-void Mouse::SetPressState(std::uint8_t pressState) noexcept
+void MouseImpl::SetPressState(std::uint8_t pressState) noexcept
 {
 	m_mouseState |= pressState;
 
@@ -125,7 +125,7 @@ void Mouse::SetPressState(std::uint8_t pressState) noexcept
 		}
 }
 
-void Mouse::SetReleaseState(std::uint8_t releaseState) noexcept
+void MouseImpl::SetReleaseState(std::uint8_t releaseState) noexcept
 {
 	m_mouseState ^= releaseState;
 
@@ -143,12 +143,12 @@ void Mouse::SetReleaseState(std::uint8_t releaseState) noexcept
 		}
 }
 
-void Mouse::ClearState() noexcept
+void MouseImpl::ClearState() noexcept
 {
 	m_mouseState.reset();
 }
 
-CursorCoord Mouse::GetCurrentCursorCoord() const noexcept
+CursorCoord MouseImpl::GetCurrentCursorCoord() const noexcept
 {
 	return m_currentCursorCoord;
 }

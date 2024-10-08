@@ -1,13 +1,13 @@
-#ifndef MOUSE_HPP_
-#define MOUSE_HPP_
+#ifndef MOUSE_IMPL_HPP_
+#define MOUSE_IMPL_HPP_
 #include <queue>
 #include <bitset>
-#include <IMouse.hpp>
+#include <Mouse.hpp>
 
-class Mouse final : public IMouse
+class MouseImpl final : public Mouse
 {
 public:
-	Mouse();
+	MouseImpl();
 
 	[[nodiscard]]
 	float GetMouseTicks() const noexcept override;
@@ -46,15 +46,36 @@ private:
 
 private:
 	static constexpr size_t s_bufferSize = 16u;
-	bool              m_inWindow;
+
 	float             m_mouseTicks;
 	int               m_wheelDeltaCarry;
 	CursorCoord       m_currentCursorCoord;
 	std::bitset<8u>   m_mouseState;
 	std::queue<Event> m_eventBuffer;
+	bool              m_inWindow;
 
 public:
-	Mouse(const Mouse&) = delete;
-	Mouse& operator=(const Mouse&) = delete;
+	MouseImpl(const MouseImpl&) = delete;
+	MouseImpl& operator=(const MouseImpl&) = delete;
+
+	MouseImpl(MouseImpl&& other) noexcept
+		: m_mouseTicks{ other.m_mouseTicks },
+		m_wheelDeltaCarry{ other.m_wheelDeltaCarry },
+		m_currentCursorCoord{ other.m_currentCursorCoord },
+		m_mouseState{ std::move(other.m_mouseState) },
+		m_eventBuffer{ std::move(other.m_eventBuffer) },
+		m_inWindow{ other.m_inWindow }
+	{}
+	MouseImpl& operator=(MouseImpl&& other) noexcept
+	{
+		m_mouseTicks         = other.m_mouseTicks;
+		m_wheelDeltaCarry    = other.m_wheelDeltaCarry;
+		m_currentCursorCoord = other.m_currentCursorCoord;
+		m_mouseState         = std::move(other.m_mouseState);
+		m_eventBuffer        = std::move(other.m_eventBuffer);
+		m_inWindow           = other.m_inWindow;
+
+		return *this;
+	}
 };
 #endif

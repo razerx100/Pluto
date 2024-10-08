@@ -1,5 +1,5 @@
-#ifndef I_GAMEPAD_HPP_
-#define I_GAMEPAD_HPP_
+#ifndef GAMEPAD_HPP_
+#define GAMEPAD_HPP_
 #include <cstdint>
 #include <optional>
 
@@ -29,7 +29,7 @@ struct ThumbStickData
 	float yDirection;
 };
 
-class IGamepad
+class Gamepad
 {
 public:
 	class Event
@@ -43,17 +43,17 @@ public:
 		};
 
 	private:
-		Type m_type;
+		Type       m_type;
 		XBoxButton m_button;
 
 	public:
 		Event()
-			: m_type(Type::Invalid),
-			m_button(XBoxButton::Invalid) {}
+			: m_type{ Type::Invalid }, m_button{ XBoxButton::Invalid }
+		{}
 
 		Event(Type type, XBoxButton button)
-			: m_type(type),
-			m_button(button) {}
+			: m_type{ type }, m_button{ button }
+		{}
 
 		[[nodiscard]]
 		bool IsValid() const noexcept
@@ -75,7 +75,7 @@ public:
 	};
 
 public:
-	virtual ~IGamepad() = default;
+	virtual ~Gamepad() = default;
 
 	virtual void ClearState() noexcept = 0;
 	virtual void ClearBuffers() noexcept = 0;

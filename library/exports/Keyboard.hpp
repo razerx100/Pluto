@@ -1,5 +1,5 @@
-#ifndef I_KEYBOARD_HPP_
-#define I_KEYBOARD_HPP_
+#ifndef KEYBOARD_HPP_
+#define KEYBOARD_HPP_
 #include <optional>
 
 enum class SKeyCodes
@@ -48,7 +48,7 @@ enum class SKeyCodes
 	QuoteUS
 };
 
-class IKeyboard
+class Keyboard
 {
 public:
 	class Event
@@ -62,14 +62,16 @@ public:
 		};
 
 	private:
-		Type m_type;
+		Type      m_type;
 		SKeyCodes m_code;
 
 	public:
 		Event()
-			: m_type(Type::Invalid), m_code(SKeyCodes::Default) {}
+			: m_type{ Type::Invalid }, m_code{ SKeyCodes::Default }
+		{}
 		Event(Type type, SKeyCodes code)
-			: m_type(type), m_code(code) {}
+			: m_type{ type }, m_code{ code }
+		{}
 
 		[[nodiscard]]
 		bool IsPress() const noexcept
@@ -97,7 +99,7 @@ public:
 	};
 
 public:
-	virtual ~IKeyboard() = default;
+	virtual ~Keyboard() = default;
 
 	// key events
 	[[nodiscard]]

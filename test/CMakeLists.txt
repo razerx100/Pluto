@@ -14,9 +14,6 @@ unset(PLUTO_PRIVATE_INCLUDES)
 
 if(MSVC)
     target_compile_definitions(PlutoTest PRIVATE PLUTO_WIN32)
-    target_link_libraries(PlutoTest PRIVATE
-       Xinput.lib
-    )
     target_compile_options(PlutoTest PRIVATE /fp:fast /MP /Ot /W4 /Gy)
 endif()
 
