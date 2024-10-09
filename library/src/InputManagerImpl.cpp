@@ -1,14 +1,12 @@
 #include <InputManagerImpl.hpp>
+#include <PlatformSpecificFunctions.hpp>
 
 void InputManagerImpl::AddGamepadSupport(size_t count) noexcept
 {
 	for (size_t index = 0u; index < count; ++index)
 		m_gamepads.emplace_back(GamepadImpl{});
-}
 
-void InputManagerImpl::DisconnectGamepad(size_t index) noexcept
-{
-	m_gamepads[index].Flush();
+	SetGamepadData(m_gamepads);
 }
 
 void InputManagerImpl::ClearInputStates() noexcept
@@ -18,4 +16,15 @@ void InputManagerImpl::ClearInputStates() noexcept
 
 	for (auto& gamepad : m_gamepads)
 		gamepad.ClearState();
+}
+
+void InputManagerImpl::UpdateIndependentInputs() noexcept
+{
+	CheckXBoxControllerStates(m_gamepads);
+}
+
+void InputManagerImpl::InputCallback(
+	void* hwnd, std::uint32_t message, std::uint64_t wParameter, std::uint64_t lParameter
+) {
+	PlutoWin32InputCallback(*this, hwnd, message, wParameter, lParameter);
 }

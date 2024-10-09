@@ -27,7 +27,7 @@ public:
 
 	void SetPressState(std::uint8_t mouseState) noexcept override;
 	void SetReleaseState(std::uint8_t mouseState) noexcept override;
-	void SetCurrentCursorCoord(std::uint16_t xCoord, std::uint16_t yCoord) noexcept override;
+	void SetCurrentCursorCoord(std::int32_t xCoord, std::int32_t yCoord) noexcept override;
 	void OnMouseLeave() noexcept override;
 	void OnMouseEnter() noexcept override;
 	void OnWheelDelta(std::int16_t delta) noexcept override;

@@ -8,40 +8,40 @@
 
 class InputManagerImpl final : public InputManager
 {
+	friend void PlutoWin32InputCallback(
+		InputManagerImpl& inputManager,
+		void* hwnd, std::uint32_t message, std::uint64_t wParameter, std::uint64_t lParameter
+	);
+
 public:
 	InputManagerImpl()
 		: m_keyboard{}, m_mouse{}, m_gamepads{}
 	{}
 
 	void AddGamepadSupport(size_t count) noexcept override;
+	void UpdateIndependentInputs() noexcept override;
 
 	[[nodiscard]]
 	size_t GetGamepadCount() const noexcept override { return std::size(m_gamepads); }
 
 	[[nodiscard]]
 	const Keyboard& GetKeyboard() const noexcept override { return m_keyboard; }
-	[[nodiscard]]
-	Keyboard& GetKeyboard() noexcept override { return m_keyboard; }
 
 	[[nodiscard]]
 	const Mouse& GetMouse() const noexcept override { return m_mouse; }
-	[[nodiscard]]
-	Mouse& GetMouse() noexcept override { return m_mouse; }
 
 	[[nodiscard]]
 	const Gamepad& GetGamepad(size_t index = 0u) const noexcept override
 	{
 		return m_gamepads[index];
 	}
-	[[nodiscard]]
-	Gamepad& GetGamepad(size_t index = 0u) noexcept override
-	{
-		return m_gamepads[index];
-	}
 
-	void DisconnectGamepad(size_t index = 0u) noexcept override;
+	void InputCallback(
+		void* hwnd, std::uint32_t message, std::uint64_t wParameter, std::uint64_t lParameter
+	) override;
 
-	void ClearInputStates() noexcept override;
+private:
+	void ClearInputStates() noexcept;
 
 private:
 	KeyboardImpl             m_keyboard;

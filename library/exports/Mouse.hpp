@@ -5,8 +5,8 @@
 
 struct CursorCoord
 {
-	std::uint16_t x;
-	std::uint16_t y;
+	std::int32_t x;
+	std::int32_t y;
 };
 
 enum class MouseButtons
@@ -88,7 +88,7 @@ public:
 
 	virtual void SetPressState(std::uint8_t mouseState) noexcept = 0;
 	virtual void SetReleaseState(std::uint8_t mouseState) noexcept = 0;
-	virtual void SetCurrentCursorCoord(std::uint16_t xCoord, std::uint16_t yCoord) noexcept = 0;
+	virtual void SetCurrentCursorCoord(std::int32_t xCoord, std::int32_t yCoord) noexcept = 0;
 	virtual void OnMouseLeave() noexcept = 0;
 	virtual void OnMouseEnter() noexcept = 0;
 	virtual void OnWheelDelta(std::int16_t delta) noexcept = 0;

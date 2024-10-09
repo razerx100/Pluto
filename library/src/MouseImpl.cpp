@@ -55,7 +55,7 @@ void MouseImpl::Flush() noexcept
 	ClearState();
 }
 
-void MouseImpl::SetCurrentCursorCoord(std::uint16_t xCoord, std::uint16_t yCoord) noexcept
+void MouseImpl::SetCurrentCursorCoord(std::int32_t xCoord, std::int32_t yCoord) noexcept
 {
 	m_currentCursorCoord.x = xCoord;
 	m_currentCursorCoord.y = yCoord;
