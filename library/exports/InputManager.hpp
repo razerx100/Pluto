@@ -3,14 +3,22 @@
 #include <Keyboard.hpp>
 #include <Mouse.hpp>
 #include <Gamepad.hpp>
+#include <InputEvents.hpp>
 
 class InputManager
 {
+public:
+	using EventCallback = void(*)(void*, void*);
+
 public:
 	virtual ~InputManager() = default;
 
 	virtual void AddGamepadSupport(size_t count) noexcept = 0;
 	virtual void UpdateIndependentInputs() noexcept = 0;
+
+	virtual void SubscribeToEvent(
+		InputEvent event, EventCallback eventCallback, void* extraData = nullptr
+	) noexcept = 0;
 
 	[[nodiscard]]
 	virtual size_t GetGamepadCount() const noexcept = 0;

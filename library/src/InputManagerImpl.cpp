@@ -28,3 +28,17 @@ void InputManagerImpl::InputCallback(
 ) {
 	PlutoWin32InputCallback(*this, hwnd, message, wParameter, lParameter);
 }
+
+void InputManagerImpl::SubscribeToEvent(
+	InputEvent event, EventCallback eventCallback, void* extraData /* = nullptr */
+) noexcept {
+	EventContainer_t& eventContainer = m_eventCallbacks[static_cast<size_t>(event)];
+
+	eventContainer.emplace_back(
+		EventData
+		{
+			.callback  = eventCallback,
+			.extraData = extraData
+		}
+	);
+}

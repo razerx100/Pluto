@@ -10,11 +10,10 @@ void PlutoWin32InputCallback(
 	InputManagerImpl& inputManager,
 	void* hwnd, std::uint32_t message, std::uint64_t wParameter, std::uint64_t lParameter
 ) {
-	[[maybe_unused]] auto hWnd = reinterpret_cast<HWND>(hwnd);
-
-	UINT msg           = message;
-	auto wParam        = static_cast<WPARAM>(wParameter);
-	auto lParam        = static_cast<LPARAM>(lParameter);
+	auto hWnd   = reinterpret_cast<HWND>(hwnd);
+	UINT msg    = message;
+	auto wParam = static_cast<WPARAM>(wParameter);
+	auto lParam = static_cast<LPARAM>(lParameter);
 
 	switch (msg)
 	{
@@ -31,11 +30,41 @@ void PlutoWin32InputCallback(
 
 		break;
 	}
+	case WM_SIZE:
+	{
+		if (wParam != SIZE_MINIMIZED)
+		{
+			RECT clientRect{};
+			GetClientRect(hWnd, &clientRect);
+
+			ResizeData resizeData
+			{
+				.width  = static_cast<std::uint32_t>(clientRect.right - clientRect.left),
+				.height = static_cast<std::uint32_t>(clientRect.bottom - clientRect.top)
+			};
+
+			InputManagerImpl::EventContainer_t& resizeCallbacks
+				= inputManager.m_eventCallbacks[static_cast<size_t>(InputEvent::Resize)];
+
+			for (const auto& eventData : resizeCallbacks)
+				eventData.callback(&resizeData, eventData.extraData);
+		}
+
+		break;
+	}
 	/************* KEYBOARD MESSAGES *************/
 	case WM_SYSKEYDOWN:
 	{
-		//if ((wParam == VK_RETURN) && (lParam & 0x20000000ul)) // 29th bit checks if Alt is down
-			//ToggleFullScreenMode();
+		if ((wParam == VK_RETURN) && (lParam & 0x20000000ul)) // 29th bit checks if Alt is down
+		{
+			InputManagerImpl::EventContainer_t& fullscreenCallbacks
+				= inputManager.m_eventCallbacks[static_cast<size_t>(InputEvent::Fullscreen)];
+
+			FullscreenData fullscreenData{};
+
+			for (const auto& eventData : fullscreenCallbacks)
+				eventData.callback(&fullscreenData, eventData.extraData);
+		}
 
 		break;
 	}
