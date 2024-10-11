@@ -6,13 +6,8 @@
 
 class GamepadImpl final : public Gamepad
 {
-	friend void CheckXBoxControllerStates(std::vector<GamepadImpl>& gamepads) noexcept;
-	friend void SetGamepadData(std::vector<GamepadImpl>& gamepads) noexcept;
-
 public:
 	GamepadImpl();
-
-	void ClearState() noexcept;
 
 	[[nodiscard]]
 	float GetCurrentLeftTriggerData() const noexcept override
@@ -79,7 +74,8 @@ public:
 		return m_triggerThreshold;
 	}
 
-private:
+	void ClearState() noexcept;
+
 	void OnLeftThumbStickMove(const ThumbStickData& data) noexcept;
 	void OnRightThumbStickMove(const ThumbStickData& data) noexcept;
 	void OnLeftTriggerMove(float data) noexcept;
