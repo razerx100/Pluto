@@ -4,7 +4,7 @@
 #include <InputManagerImpl.hpp>
 #include <GamepadImpl.hpp>
 
-void SetGamepadData(std::vector<GamepadImpl>& gamepads);
+void SetGamepadData(std::vector<GamepadImpl>& gamepads) noexcept;
 
 void CheckXBoxControllerStates(std::vector<GamepadImpl>& gamepads) noexcept;
 void DisconnectXBoxController(std::vector<GamepadImpl>& gamepads) noexcept;

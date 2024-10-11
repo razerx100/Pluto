@@ -2,7 +2,7 @@
 #include <CleanWin.hpp>
 #include <Xinput.h>
 
-void SetGamepadData(std::vector<GamepadImpl>& gamepads)
+void SetGamepadData(std::vector<GamepadImpl>& gamepads) noexcept
 {
 	for (GamepadImpl& gamepad : gamepads)
 	{

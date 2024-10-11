@@ -44,7 +44,7 @@ void CheckXBoxControllerStates(std::vector<GamepadImpl>& gamepads) noexcept
 	{
 		if (XInputGetState(gamepadIndex, &state) == ERROR_SUCCESS)
 		{
-			Gamepad& gamepad            = gamepads[gamepadIndex];
+			GamepadImpl& gamepad        = gamepads[gamepadIndex];
 
 			const XINPUT_GAMEPAD& xData = state.Gamepad;
 
@@ -104,5 +104,5 @@ void DisconnectXBoxController(std::vector<GamepadImpl>& gamepads) noexcept
 
 	for (DWORD gamepadIndex = 0u; gamepadIndex < gamepadCount; ++gamepadIndex)
 		if (XInputGetState(gamepadIndex, &state) == ERROR_DEVICE_NOT_CONNECTED)
-			gamepads[gamepadIndex].Flush();
+			gamepads[gamepadIndex].ClearState();
 }

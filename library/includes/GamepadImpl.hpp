@@ -6,45 +6,62 @@
 
 class GamepadImpl final : public Gamepad
 {
+	friend void CheckXBoxControllerStates(std::vector<GamepadImpl>& gamepads) noexcept;
+	friend void SetGamepadData(std::vector<GamepadImpl>& gamepads) noexcept;
+
 public:
 	GamepadImpl();
 
-	void ClearState() noexcept override;
-	void ClearBuffers() noexcept override;
-	void Flush() noexcept override;
+	void ClearState() noexcept;
 
 	[[nodiscard]]
-	std::optional<Event> ReadEvent() noexcept override;
+	float GetCurrentLeftTriggerData() const noexcept override
+	{
+		return m_currentLeftTriggerData;
+	}
 	[[nodiscard]]
-	std::optional<float> ReadLeftTriggerData() noexcept override;
+	float GetPreviousLeftTriggerData() const noexcept override
+	{
+		return m_previousLeftTriggerData;
+	}
+
 	[[nodiscard]]
-	std::optional<float> ReadRightTriggerData() noexcept override;
+	float GetCurrentRightTriggerData() const noexcept override
+	{
+		return m_currentRightTriggerData;
+	}
 	[[nodiscard]]
-	std::optional<ThumbStickData> ReadLeftThumbStickData() noexcept override;
+	float GetPreviousRightTriggerData() const noexcept override
+	{
+		return m_previousRightTriggerData;
+	}
+
 	[[nodiscard]]
-	std::optional<ThumbStickData> ReadRightThumbStickData() noexcept override;
+	ThumbStickData GetCurrentLeftThumbStickData() const noexcept override
+	{
+		return m_currentLeftThumbStickData;
+	}
+	[[nodiscard]]
+	ThumbStickData GetPreviousLeftThumbStickData() const noexcept override
+	{
+		return m_previousLeftThumbStickData;
+	}
+
+	[[nodiscard]]
+	ThumbStickData GetCurrentRightThumbStickData() const noexcept override
+	{
+		return m_currentRightThumbStickData;
+	}
+	[[nodiscard]]
+	ThumbStickData GetPreviousRightThumbStickData() const noexcept override
+	{
+		return m_previousRightThumbStickData;
+	}
 
 	[[nodiscard]]
 	bool IsButtonPressed(XBoxButton button) const noexcept override;
-
-	void OnLeftThumbStickMove(ThumbStickData data) noexcept override;
-	void OnRightThumbStickMove(ThumbStickData data) noexcept override;
-	void OnLeftTriggerMove(float data) noexcept override;
-	void OnRightTriggerMove(float data) noexcept override;
-
-	void SetRawButtonState(std::uint16_t buttonFlags) noexcept override;
-	void SetLeftThumbStickDeadZone(std::uint32_t deadzone) noexcept override
-	{
-		m_leftThumbStickDeadZone = deadzone;
-	}
-	void SetRightThumbStickDeadZone(std::uint32_t deadzone) noexcept override
-	{
-		m_rightThumbStickDeadZone = deadzone;
-	}
-	void SetTriggerThreshold(std::uint32_t threshold) noexcept override
-	{
-		m_triggerThreshold = threshold;
-	}
+	[[nodiscard]]
+	bool WasButtonPressed(XBoxButton button) const noexcept override;
 
 	[[nodiscard]]
 	std::uint32_t GetLeftThumbStickDeadZone() const noexcept override
@@ -63,22 +80,38 @@ public:
 	}
 
 private:
-	template<typename T>
-	static void TrimBuffer(std::queue<T>& buffer) noexcept
+	void OnLeftThumbStickMove(const ThumbStickData& data) noexcept;
+	void OnRightThumbStickMove(const ThumbStickData& data) noexcept;
+	void OnLeftTriggerMove(float data) noexcept;
+	void OnRightTriggerMove(float data) noexcept;
+
+	void SetRawButtonState(std::uint16_t buttonFlags) noexcept;
+	void SetLeftThumbStickDeadZone(std::uint32_t deadzone) noexcept
 	{
-		while (std::size(buffer) > s_bufferSize)
-			buffer.pop();
+		m_leftThumbStickDeadZone = deadzone;
+	}
+	void SetRightThumbStickDeadZone(std::uint32_t deadzone) noexcept
+	{
+		m_rightThumbStickDeadZone = deadzone;
+	}
+	void SetTriggerThreshold(std::uint32_t threshold) noexcept
+	{
+		m_triggerThreshold = threshold;
 	}
 
 private:
-	static constexpr size_t s_bufferSize = 16u;
+	static constexpr size_t s_buttonCount = static_cast<size_t>(XBoxButton::Invalid);
 
-	std::bitset<16u>           m_buttonState;
-	std::queue<Event>          m_eventBuffer;
-	std::queue<float>          m_leftTriggerBuffer;
-	std::queue<float>          m_rightTriggerBuffer;
-	std::queue<ThumbStickData> m_leftThumbStickBuffer;
-	std::queue<ThumbStickData> m_rightThumbStickBuffer;
+	std::bitset<s_buttonCount> m_currentButtonState;
+	std::bitset<s_buttonCount> m_previousButtonState;
+	float                      m_currentLeftTriggerData;
+	float                      m_previousLeftTriggerData;
+	float                      m_currentRightTriggerData;
+	float                      m_previousRightTriggerData;
+	ThumbStickData             m_currentLeftThumbStickData;
+	ThumbStickData             m_previousLeftThumbStickData;
+	ThumbStickData             m_currentRightThumbStickData;
+	ThumbStickData             m_previousRightThumbStickData;
 	std::uint32_t              m_leftThumbStickDeadZone;
 	std::uint32_t              m_rightThumbStickDeadZone;
 	std::uint32_t              m_triggerThreshold;
@@ -88,27 +121,35 @@ public:
 	GamepadImpl& operator=(const GamepadImpl&) = delete;
 
 	GamepadImpl(GamepadImpl&& other) noexcept
-		: m_buttonState{ std::move(other.m_buttonState) },
-		m_eventBuffer{ std::move(other.m_eventBuffer) },
-		m_leftTriggerBuffer{ std::move(other.m_leftTriggerBuffer) },
-		m_rightTriggerBuffer{ std::move(other.m_rightTriggerBuffer) },
-		m_leftThumbStickBuffer{ std::move(other.m_leftThumbStickBuffer) },
-		m_rightThumbStickBuffer{ std::move(other.m_rightThumbStickBuffer) },
+		: m_currentButtonState{ std::move(other.m_currentButtonState) },
+		m_previousButtonState{ std::move(other.m_previousButtonState) },
+		m_currentLeftTriggerData{ other.m_currentLeftTriggerData },
+		m_previousLeftTriggerData{ other.m_previousLeftTriggerData },
+		m_currentRightTriggerData{ other.m_currentRightTriggerData },
+		m_previousRightTriggerData{ other.m_previousRightTriggerData },
+		m_currentLeftThumbStickData{ other.m_currentLeftThumbStickData },
+		m_previousLeftThumbStickData{ other.m_previousLeftThumbStickData },
+		m_currentRightThumbStickData{ other.m_currentRightThumbStickData },
+		m_previousRightThumbStickData{ other.m_previousRightThumbStickData },
 		m_leftThumbStickDeadZone{ other.m_leftThumbStickDeadZone },
 		m_rightThumbStickDeadZone{ other.m_rightThumbStickDeadZone },
 		m_triggerThreshold{ other.m_triggerThreshold }
 	{}
 	GamepadImpl& operator=(GamepadImpl&& other) noexcept
 	{
-		m_buttonState             = std::move(other.m_buttonState);
-		m_eventBuffer             = std::move(other.m_eventBuffer);
-		m_leftTriggerBuffer       = std::move(other.m_leftTriggerBuffer);
-		m_rightTriggerBuffer      = std::move(other.m_rightTriggerBuffer);
-		m_leftThumbStickBuffer    = std::move(other.m_leftThumbStickBuffer);
-		m_rightThumbStickBuffer   = std::move(other.m_rightThumbStickBuffer);
-		m_leftThumbStickDeadZone  = other.m_leftThumbStickDeadZone;
-		m_rightThumbStickDeadZone = other.m_rightThumbStickDeadZone;
-		m_triggerThreshold        = other.m_triggerThreshold;
+		m_currentButtonState          = std::move(other.m_currentButtonState);
+		m_previousButtonState         = std::move(other.m_previousButtonState);
+		m_currentLeftTriggerData      = other.m_currentLeftTriggerData;
+		m_previousLeftTriggerData     = other.m_previousLeftTriggerData;
+		m_currentRightTriggerData     = other.m_currentRightTriggerData;
+		m_previousRightTriggerData    = other.m_previousRightTriggerData;
+		m_currentLeftThumbStickData   = other.m_currentLeftThumbStickData;
+		m_previousLeftThumbStickData  = other.m_previousLeftThumbStickData;
+		m_currentRightThumbStickData  = other.m_currentRightThumbStickData;
+		m_previousRightThumbStickData = other.m_previousRightThumbStickData;
+		m_leftThumbStickDeadZone      = other.m_leftThumbStickDeadZone;
+		m_rightThumbStickDeadZone     = other.m_rightThumbStickDeadZone;
+		m_triggerThreshold            = other.m_triggerThreshold;
 
 		return *this;
 	}
