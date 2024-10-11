@@ -20,8 +20,6 @@ public:
 	bool IsInWindow() const noexcept override;
 	[[nodiscard]]
 	bool IsButtonPressed(MouseButtons button) const noexcept override;
-	[[nodiscard]]
-	bool AreButtonsPressed(size_t count, ...) const noexcept override;
 
 	void Flush() noexcept override;
 

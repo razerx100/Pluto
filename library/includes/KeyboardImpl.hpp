@@ -14,8 +14,6 @@ public:
 	[[nodiscard]]
 	bool IsKeyPressed(SKeyCodes keycode) const noexcept override;
 	[[nodiscard]]
-	bool AreKeysPressed(size_t count, ...) const noexcept override;
-	[[nodiscard]]
 	std::optional<Event> ReadKey() noexcept override;
 	void FlushKey() noexcept override;
 

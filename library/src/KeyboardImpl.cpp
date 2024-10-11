@@ -1,23 +1,8 @@
 #include <KeyboardImpl.hpp>
-#include <cstdarg>
 
 bool KeyboardImpl::IsKeyPressed(SKeyCodes keycode) const noexcept
 {
 	return m_keystates[static_cast<size_t>(keycode)];
-}
-
-bool KeyboardImpl::AreKeysPressed(size_t count, ...) const noexcept
-{
-	va_list list = nullptr;
-	va_start(list, count);
-
-	bool result = true;
-	for (size_t _ = 0; _ < count; ++_)
-		result = result && IsKeyPressed(va_arg(list, SKeyCodes));
-
-	va_end(list);
-
-	return result;
 }
 
 std::optional<KeyboardImpl::Event> KeyboardImpl::ReadKey() noexcept

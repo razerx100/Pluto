@@ -26,8 +26,6 @@ public:
 
 	[[nodiscard]]
 	bool IsButtonPressed(XBoxButton button) const noexcept override;
-	[[nodiscard]]
-	bool AreButtonsPressed(size_t count, ...) const noexcept override;
 
 	void OnLeftThumbStickMove(ThumbStickData data) noexcept override;
 	void OnRightThumbStickMove(ThumbStickData data) noexcept override;

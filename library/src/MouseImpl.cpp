@@ -1,5 +1,4 @@
 #include <MouseImpl.hpp>
-#include <cstdarg>
 
 MouseImpl::MouseImpl()
 	: m_mouseTicks{ 0.f }, m_wheelDeltaCarry{ 0 }, m_mouseState{ 0u },
@@ -14,20 +13,6 @@ float MouseImpl::GetMouseTicks() const noexcept
 bool MouseImpl::IsButtonPressed(MouseButtons button) const noexcept
 {
 	return m_mouseState[static_cast<size_t>(button)];
-}
-
-bool MouseImpl::AreButtonsPressed(size_t count, ...) const noexcept
-{
-	va_list list = nullptr;
-	va_start(list, count);
-
-	bool result = true;
-	for (int _ = 0; _ < count; ++_)
-		result = result && IsButtonPressed(va_arg(list, MouseButtons));
-
-	va_end(list);
-
-	return result;
 }
 
 bool MouseImpl::IsInWindow() const noexcept

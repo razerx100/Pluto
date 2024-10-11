@@ -81,8 +81,13 @@ public:
 	virtual bool IsInWindow() const noexcept = 0;
 	[[nodiscard]]
 	virtual bool IsButtonPressed(MouseButtons button) const noexcept = 0;
+
+	template<typename... Keys>
 	[[nodiscard]]
-	virtual bool AreButtonsPressed(size_t count, ...) const noexcept = 0;
+	bool AreButtonsPressed(Keys... buttons) const noexcept
+	{
+		return (IsButtonPressed(buttons) && ...);
+	}
 
 	virtual void Flush() noexcept = 0;
 

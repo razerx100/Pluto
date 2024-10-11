@@ -1,5 +1,4 @@
 #include <GamepadImpl.hpp>
-#include <cstdarg>
 
 GamepadImpl::GamepadImpl()
 	: m_buttonState{ 0u }, m_eventBuffer{},
@@ -12,20 +11,6 @@ GamepadImpl::GamepadImpl()
 bool GamepadImpl::IsButtonPressed(XBoxButton button) const noexcept
 {
 	return m_buttonState[static_cast<size_t>(button)];
-}
-
-bool GamepadImpl::AreButtonsPressed(size_t count, ...) const noexcept
-{
-	va_list list = nullptr;
-	va_start(list, count);
-
-	bool result = true;
-	for (int _ = 0; _ < count; ++_)
-		result = result && IsButtonPressed(va_arg(list, XBoxButton));
-
-	va_end(list);
-
-	return result;
 }
 
 void GamepadImpl::ClearBuffers() noexcept

@@ -94,8 +94,13 @@ public:
 
 	[[nodiscard]]
 	virtual bool IsButtonPressed(XBoxButton button) const noexcept = 0;
+
+	template<typename... Keys>
 	[[nodiscard]]
-	virtual bool AreButtonsPressed(size_t count, ...) const noexcept = 0;
+	bool AreButtonsPressed(Keys... buttons) const noexcept
+	{
+		return (IsButtonPressed(buttons) && ...);
+	}
 
 	virtual void OnLeftThumbStickMove(ThumbStickData data) noexcept = 0;
 	virtual void OnRightThumbStickMove(ThumbStickData data) noexcept = 0;

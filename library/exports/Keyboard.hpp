@@ -104,8 +104,14 @@ public:
 	// key events
 	[[nodiscard]]
 	virtual bool IsKeyPressed(SKeyCodes keycode) const noexcept = 0;
+
+	template<typename... Keys>
 	[[nodiscard]]
-	virtual bool AreKeysPressed(size_t count, ...) const noexcept = 0;
+	bool AreKeysPressed(Keys... keys) const noexcept
+	{
+		return (IsKeyPressed(keys) && ...);
+	}
+
 	[[nodiscard]]
 	virtual std::optional<Event> ReadKey() noexcept = 0;
 
