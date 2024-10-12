@@ -6,43 +6,32 @@
 
 class KeyboardImpl final : public Keyboard
 {
+	friend void PlutoWin32InputCallback(
+		class InputManagerImpl& inputManager,
+		void* hwnd, std::uint32_t message, std::uint64_t wParameter, std::uint64_t lParameter
+	);
+
 public:
-	KeyboardImpl()
-		: m_keystates{}, m_keyBuffer{}, m_charBuffer{}
-	{}
+	KeyboardImpl() : m_keystates{ 0u }, m_currentCharacter{ 0u } {}
 
 	[[nodiscard]]
 	bool IsKeyPressed(SKeyCodes keycode) const noexcept override;
+
 	[[nodiscard]]
-	std::optional<Event> ReadKey() noexcept override;
-	void FlushKey() noexcept override;
+	std::optional<char> GetCurrentCharacter() const noexcept override;
 
-	// char events
-	[[nodiscard]]
-	std::optional<char> ReadChar() noexcept override;
-	void FlushChar() noexcept override;
-	void Flush() noexcept override;
+	void OnKeyPressed(SKeyCodes keycode) noexcept;
+	void OnKeyReleased(SKeyCodes keycode) noexcept;
+	void SetChar(char character) noexcept;
 
-	void OnKeyPressed(SKeyCodes keycode) noexcept override;
-	void OnKeyReleased(SKeyCodes keycode) noexcept override;
-	void OnChar(char character) noexcept override;
-	void ClearState() noexcept override;
-
-private:
-	template<typename T>
-	static void TrimBuffer(std::queue<T>& buffer) noexcept
-	{
-		while (std::size(buffer) > s_bufferSize)
-			buffer.pop();
-	}
+	void ClearState() noexcept;
 
 private:
 	static constexpr std::uint32_t s_nKeys      = 256u;
 	static constexpr std::uint32_t s_bufferSize = 16u;
 
 	std::bitset<s_nKeys> m_keystates;
-	std::queue<Event>    m_keyBuffer;
-	std::queue<char>     m_charBuffer;
+	char                 m_currentCharacter;
 
 public:
 	KeyboardImpl(const KeyboardImpl&) = delete;
@@ -50,14 +39,12 @@ public:
 
 	KeyboardImpl(KeyboardImpl&& other) noexcept
 		: m_keystates{ std::move(other.m_keystates) },
-		m_keyBuffer{ std::move(other.m_keyBuffer) },
-		m_charBuffer{ std::move(other.m_charBuffer) }
+		m_currentCharacter{ other.m_currentCharacter }
 	{}
 	KeyboardImpl& operator=(KeyboardImpl&& other) noexcept
 	{
-		m_keystates  = std::move(other.m_keystates);
-		m_keyBuffer  = std::move(other.m_keyBuffer);
-		m_charBuffer = std::move(other.m_charBuffer);
+		m_keystates        = std::move(other.m_keystates);
+		m_currentCharacter = other.m_currentCharacter;
 
 		return *this;
 	}

@@ -5,67 +5,26 @@ bool KeyboardImpl::IsKeyPressed(SKeyCodes keycode) const noexcept
 	return m_keystates[static_cast<size_t>(keycode)];
 }
 
-std::optional<KeyboardImpl::Event> KeyboardImpl::ReadKey() noexcept
+std::optional<char> KeyboardImpl::GetCurrentCharacter() const noexcept
 {
-	if (!std::empty(m_keyBuffer))
-	{
-		Keyboard::Event _event = m_keyBuffer.front();
-		m_keyBuffer.pop();
+	constexpr char unusedKey = static_cast<char>(129u);
 
-		return _event;
-	}
-	else
-		return {};
-}
-
-std::optional<char> KeyboardImpl::ReadChar() noexcept
-{
-	if (!std::empty(m_charBuffer))
-	{
-		char charCode = m_charBuffer.front();
-		m_charBuffer.pop();
-
-		return charCode;
-	}
-	else
-		return {};
-}
-
-void KeyboardImpl::FlushChar() noexcept
-{
-	m_charBuffer = std::queue<char>();
-}
-
-void KeyboardImpl::FlushKey() noexcept
-{
-	m_keyBuffer = std::queue<Event>();
-}
-
-void KeyboardImpl::Flush() noexcept
-{
-	FlushKey();
-	FlushChar();
-	ClearState();
+	return m_currentCharacter == unusedKey ? std::optional<char>{} : m_currentCharacter;
 }
 
 void KeyboardImpl::OnKeyPressed(SKeyCodes keycode) noexcept
 {
 	m_keystates[static_cast<size_t>(keycode)] = true;
-	m_keyBuffer.emplace(Keyboard::Event(Keyboard::Event::Type::Press, keycode));
-	TrimBuffer(m_keyBuffer);
 }
 
 void KeyboardImpl::OnKeyReleased(SKeyCodes keycode) noexcept
 {
 	m_keystates[static_cast<size_t>(keycode)] = false;
-	m_keyBuffer.emplace(Keyboard::Event(Keyboard::Event::Type::Release, keycode));
-	TrimBuffer(m_keyBuffer);
 }
 
-void KeyboardImpl::OnChar(char character) noexcept
+void KeyboardImpl::SetChar(char character) noexcept
 {
-	m_charBuffer.emplace(character);
-	TrimBuffer(m_charBuffer);
+	m_currentCharacter = character;
 }
 
 void KeyboardImpl::ClearState() noexcept

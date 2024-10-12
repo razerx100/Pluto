@@ -70,7 +70,7 @@ void PlutoWin32InputCallback(
 	}
 	case WM_CHAR:
 	{
-		inputManager.m_keyboard.OnChar(static_cast<char>(wParam));
+		inputManager.m_keyboard.SetChar(static_cast<char>(wParam));
 
 		break;
 	}
@@ -80,7 +80,7 @@ void PlutoWin32InputCallback(
 		std::uint16_t xCoord = LOWORD(lParam);
 		std::uint16_t yCoord = HIWORD(lParam);
 
-		Mouse& mouse = inputManager.m_mouse;
+		MouseImpl& mouse = inputManager.m_mouse;
 		mouse.SetCurrentCursorCoord(xCoord, yCoord);
 
 		break;
@@ -113,8 +113,7 @@ void PlutoWin32InputCallback(
 
 		if (rawHeader.dwType == RIM_TYPEMOUSE)
 		{
-			Mouse& mouse = inputManager.m_mouse;
-
+			MouseImpl& mouse         = inputManager.m_mouse;
 			const RAWMOUSE& rawMouse = rawInput->data.mouse;
 
 			if (rawMouse.usButtonFlags)
@@ -173,7 +172,7 @@ void PlutoWin32InputCallback(
 		}
 		else if (rawHeader.dwType == RIM_TYPEKEYBOARD)
 		{
-			Keyboard& keyboard             = inputManager.m_keyboard;
+			KeyboardImpl& keyboard         = inputManager.m_keyboard;
 			const RAWKEYBOARD& rawKeyboard = rawInput->data.keyboard;
 
 			UINT legacyMessage = rawKeyboard.Message;
@@ -244,6 +243,15 @@ void PlutoWin32InputCallback(
 
 					break;
 				}
+				}
+
+				{
+					constexpr char unusedKey      = static_cast<char>(129u);
+
+					const char currentCharKeyCode = keyboard.m_currentCharacter;
+
+					if (rawKeyboard.VKey == currentCharKeyCode)
+						keyboard.SetChar(unusedKey);
 				}
 
 				keyboard.OnKeyReleased(GetSKeyCodes(rawKeyboard.VKey));

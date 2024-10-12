@@ -51,57 +51,8 @@ enum class SKeyCodes
 class Keyboard
 {
 public:
-	class Event
-	{
-	public:
-		enum class Type
-		{
-			Press,
-			Release,
-			Invalid
-		};
-
-	private:
-		Type      m_type;
-		SKeyCodes m_code;
-
-	public:
-		Event()
-			: m_type{ Type::Invalid }, m_code{ SKeyCodes::Default }
-		{}
-		Event(Type type, SKeyCodes code)
-			: m_type{ type }, m_code{ code }
-		{}
-
-		[[nodiscard]]
-		bool IsPress() const noexcept
-		{
-			return m_type == Type::Press;
-		}
-
-		[[nodiscard]]
-		bool IsRelease() const noexcept
-		{
-			return m_type == Type::Release;
-		}
-
-		[[nodiscard]]
-		bool IsValid() const noexcept
-		{
-			return m_type != Type::Invalid;
-		}
-
-		[[nodiscard]]
-		SKeyCodes GetCode() const noexcept
-		{
-			return m_code;
-		}
-	};
-
-public:
 	virtual ~Keyboard() = default;
 
-	// key events
 	[[nodiscard]]
 	virtual bool IsKeyPressed(SKeyCodes keycode) const noexcept = 0;
 
@@ -113,19 +64,6 @@ public:
 	}
 
 	[[nodiscard]]
-	virtual std::optional<Event> ReadKey() noexcept = 0;
-
-	virtual void FlushKey() noexcept = 0;
-
-	// char events
-	[[nodiscard]]
-	virtual std::optional<char> ReadChar() noexcept = 0;
-	virtual void FlushChar() noexcept = 0;
-	virtual void Flush() noexcept = 0;
-
-	virtual void OnKeyPressed(SKeyCodes keycode) noexcept = 0;
-	virtual void OnKeyReleased(SKeyCodes keycode) noexcept = 0;
-	virtual void OnChar(char character) noexcept = 0;
-	virtual void ClearState() noexcept = 0;
+	virtual std::optional<char> GetCurrentCharacter() const noexcept = 0;
 };
 #endif
