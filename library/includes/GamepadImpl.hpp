@@ -55,8 +55,6 @@ public:
 
 	[[nodiscard]]
 	bool IsButtonPressed(XBoxButton button) const noexcept override;
-	[[nodiscard]]
-	bool WasButtonPressed(XBoxButton button) const noexcept override;
 
 	[[nodiscard]]
 	std::uint32_t GetLeftThumbStickDeadZone() const noexcept override
@@ -76,10 +74,10 @@ public:
 
 	void ClearState() noexcept;
 
-	void OnLeftThumbStickMove(const ThumbStickData& data) noexcept;
-	void OnRightThumbStickMove(const ThumbStickData& data) noexcept;
-	void OnLeftTriggerMove(float data) noexcept;
-	void OnRightTriggerMove(float data) noexcept;
+	void SetLeftThumbStickData(const ThumbStickData& data) noexcept;
+	void SetRightThumbStickData(const ThumbStickData& data) noexcept;
+	void SetLeftTriggerData(float data) noexcept;
+	void SetRightTriggerData(float data) noexcept;
 
 	void SetRawButtonState(std::uint16_t buttonFlags) noexcept;
 	void SetLeftThumbStickDeadZone(std::uint32_t deadzone) noexcept
@@ -98,8 +96,7 @@ public:
 private:
 	static constexpr size_t s_buttonCount = static_cast<size_t>(XBoxButton::Invalid);
 
-	std::bitset<s_buttonCount> m_currentButtonState;
-	std::bitset<s_buttonCount> m_previousButtonState;
+	std::bitset<s_buttonCount> m_buttonsState;
 	float                      m_currentLeftTriggerData;
 	float                      m_previousLeftTriggerData;
 	float                      m_currentRightTriggerData;
@@ -117,8 +114,7 @@ public:
 	GamepadImpl& operator=(const GamepadImpl&) = delete;
 
 	GamepadImpl(GamepadImpl&& other) noexcept
-		: m_currentButtonState{ std::move(other.m_currentButtonState) },
-		m_previousButtonState{ std::move(other.m_previousButtonState) },
+		: m_buttonsState{ std::move(other.m_buttonsState) },
 		m_currentLeftTriggerData{ other.m_currentLeftTriggerData },
 		m_previousLeftTriggerData{ other.m_previousLeftTriggerData },
 		m_currentRightTriggerData{ other.m_currentRightTriggerData },
@@ -133,8 +129,7 @@ public:
 	{}
 	GamepadImpl& operator=(GamepadImpl&& other) noexcept
 	{
-		m_currentButtonState          = std::move(other.m_currentButtonState);
-		m_previousButtonState         = std::move(other.m_previousButtonState);
+		m_buttonsState                = std::move(other.m_buttonsState);
 		m_currentLeftTriggerData      = other.m_currentLeftTriggerData;
 		m_previousLeftTriggerData     = other.m_previousLeftTriggerData;
 		m_currentRightTriggerData     = other.m_currentRightTriggerData;

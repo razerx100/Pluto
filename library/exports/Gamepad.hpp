@@ -66,17 +66,6 @@ public:
 	}
 
 	[[nodiscard]]
-	// Previous button
-	virtual bool WasButtonPressed(XBoxButton button) const noexcept = 0;
-
-	template<typename... Keys>
-	[[nodiscard]]
-	bool WereButtonsPressed(Keys... buttons) const noexcept
-	{
-		return (WasButtonPressed(buttons) && ...);
-	}
-
-	[[nodiscard]]
 	virtual std::uint32_t GetLeftThumbStickDeadZone() const noexcept = 0;
 	[[nodiscard]]
 	virtual std::uint32_t GetRightThumbStickDeadZone() const noexcept = 0;

@@ -50,47 +50,64 @@ void CheckXBoxControllerStates(std::vector<GamepadImpl>& gamepads) noexcept
 
 			gamepad.SetRawButtonState(ProcessGamepadRawButtons(xData.wButtons));
 
-			std::uint32_t leftStickDeadZone = gamepad.GetLeftThumbStickDeadZone();
+			{
+				ThumbStickData leftThumbStickData{ 0.f, 0.f, 0.f };
 
-			if (float magnitude = GetMagnitude(xData.sThumbLX, xData.sThumbLY);
-				magnitude > leftStickDeadZone)
-				gamepad.OnLeftThumbStickMove(
-					ProcessThumbStickData(
+				const std::uint32_t leftStickDeadZone = gamepad.GetLeftThumbStickDeadZone();
+				const float magnitude                 = GetMagnitude(xData.sThumbLX, xData.sThumbLY);
+
+				if (magnitude > leftStickDeadZone)
+					leftThumbStickData = ProcessThumbStickData(
 						magnitude, xData.sThumbLX, xData.sThumbLY,
 						leftStickDeadZone
-					)
-				);
+					);
 
-			std::uint32_t rightStickDeadZone = gamepad.GetRightThumbStickDeadZone();
+				gamepad.SetLeftThumbStickData(leftThumbStickData);
+			}
 
-			if (float magnitude = GetMagnitude(xData.sThumbRX, xData.sThumbRY);
-				magnitude > rightStickDeadZone)
-				gamepad.OnRightThumbStickMove(
-					ProcessThumbStickData(
+			{
+				ThumbStickData rightThumbStickData{ 0.f, 0.f, 0.f };
+
+				const std::uint32_t rightStickDeadZone = gamepad.GetRightThumbStickDeadZone();
+				const float magnitude                  = GetMagnitude(xData.sThumbRX, xData.sThumbRY);
+
+				if (magnitude > rightStickDeadZone)
+					rightThumbStickData = ProcessThumbStickData(
 						magnitude, xData.sThumbRX, xData.sThumbRY,
 						rightStickDeadZone
-					)
-				);
+					);
 
-			std::uint32_t threshold = gamepad.GetTriggerThreshold();
+				gamepad.SetRightThumbStickData(rightThumbStickData);
+			}
 
-			if (xData.bLeftTrigger > threshold)
-				gamepad.OnLeftTriggerMove(
-					ProcessDeadZone(
+			constexpr std::uint32_t maximumMagnitude = 255u;
+			const std::uint32_t threshold            = gamepad.GetTriggerThreshold();
+
+			{
+				float leftTriggerData = 0.f;
+
+				if (xData.bLeftTrigger > threshold)
+					leftTriggerData = ProcessDeadZone(
 						static_cast<float>(xData.bLeftTrigger),
-						255u,
+						maximumMagnitude,
 						threshold
-					)
-				);
+					);
 
-			if (xData.bRightTrigger > threshold)
-				gamepad.OnRightTriggerMove(
-					ProcessDeadZone(
+				gamepad.SetLeftTriggerData(leftTriggerData);
+			}
+
+			{
+				float rightTriggerData = 0.f;
+
+				if (xData.bRightTrigger > threshold)
+					rightTriggerData = ProcessDeadZone(
 						static_cast<float>(xData.bRightTrigger),
 						255u,
 						threshold
-					)
-				);
+					);
+
+				gamepad.SetRightTriggerData(rightTriggerData);
+			}
 		}
 	}
 }
