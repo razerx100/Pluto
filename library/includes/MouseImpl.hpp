@@ -10,67 +10,71 @@ public:
 	MouseImpl();
 
 	[[nodiscard]]
-	float GetMouseTicks() const noexcept override;
+	float GetMouseWheelDelta() const noexcept override { return m_mouseWheelDelta; }
 	[[nodiscard]]
-	std::optional<Event> ReadEvents() noexcept override;
-	[[nodiscard]]
-	CursorCoord GetCurrentCursorCoord() const noexcept override;
-
-	[[nodiscard]]
-	bool IsInWindow() const noexcept override;
-	[[nodiscard]]
-	bool IsButtonPressed(MouseButtons button) const noexcept override;
-
-	void Flush() noexcept override;
-
-	void SetPressState(std::uint8_t mouseState) noexcept override;
-	void SetReleaseState(std::uint8_t mouseState) noexcept override;
-	void SetCurrentCursorCoord(std::int32_t xCoord, std::int32_t yCoord) noexcept override;
-	void OnMouseLeave() noexcept override;
-	void OnMouseEnter() noexcept override;
-	void OnWheelDelta(std::int16_t delta) noexcept override;
-	void ClearState() noexcept override;
-
-private:
-	template<typename T>
-	static void TrimBuffer(std::queue<T>& buffer) noexcept
+	std::uint16_t GetMouseRotationCount() const noexcept override
 	{
-		while (std::size(buffer) > s_bufferSize)
-			buffer.pop();
+		return m_wheelRotationCount;
+	}
+	[[nodiscard]]
+	bool IsWheelUp() const noexcept override { return m_isWheelUp; }
+	[[nodiscard]]
+	bool IsWheelDown() const noexcept override { return m_isWheelDown; }
+	[[nodiscard]]
+	CursorCoord GetCurrentCursorCoord() const noexcept override
+	{
+		return m_currentCursorCoord;
 	}
 
-	void OnWheelUp() noexcept;
-	void OnWheelDown() noexcept;
+	[[nodiscard]]
+	bool IsInWindow() const noexcept override { return m_inWindow; }
+	[[nodiscard]]
+	bool IsButtonPressed(MouseButton button) const noexcept override;
+
+	void SetPressState(std::uint8_t mouseState) noexcept;
+	void SetReleaseState(std::uint8_t mouseState) noexcept;
+	void SetCurrentCursorCoord(std::int32_t xCoord, std::int32_t yCoord) noexcept;
+	void OnMouseLeave() noexcept;
+	void OnMouseEnter() noexcept;
+	void SetWheelDelta(std::int16_t delta) noexcept;
+
+	void ClearState() noexcept;
 
 private:
-	static constexpr size_t s_bufferSize = 16u;
+	static constexpr size_t s_buttonCount = static_cast<size_t>(MouseButton::Invalid);
 
-	float             m_mouseTicks;
-	int               m_wheelDeltaCarry;
-	CursorCoord       m_currentCursorCoord;
-	std::bitset<8u>   m_mouseState;
-	std::queue<Event> m_eventBuffer;
-	bool              m_inWindow;
+	std::bitset<s_buttonCount> m_mouseState;
+	CursorCoord                m_currentCursorCoord;
+	float                      m_mouseWheelDelta;
+	std::uint16_t              m_wheelRotationCount;
+	bool                       m_isWheelUp;
+	bool                       m_isWheelDown;
+	std::int32_t               m_wheelDeltaCarry;
+	bool                       m_inWindow;
 
 public:
 	MouseImpl(const MouseImpl&) = delete;
 	MouseImpl& operator=(const MouseImpl&) = delete;
 
 	MouseImpl(MouseImpl&& other) noexcept
-		: m_mouseTicks{ other.m_mouseTicks },
-		m_wheelDeltaCarry{ other.m_wheelDeltaCarry },
+		: m_mouseState{ std::move(other.m_mouseState) },
 		m_currentCursorCoord{ other.m_currentCursorCoord },
-		m_mouseState{ std::move(other.m_mouseState) },
-		m_eventBuffer{ std::move(other.m_eventBuffer) },
+		m_mouseWheelDelta{ other.m_mouseWheelDelta },
+		m_wheelRotationCount{ other.m_wheelRotationCount },
+		m_isWheelUp{ other.m_isWheelUp },
+		m_isWheelDown{ other.m_isWheelDown },
+		m_wheelDeltaCarry{ other.m_wheelDeltaCarry },
 		m_inWindow{ other.m_inWindow }
 	{}
 	MouseImpl& operator=(MouseImpl&& other) noexcept
 	{
-		m_mouseTicks         = other.m_mouseTicks;
-		m_wheelDeltaCarry    = other.m_wheelDeltaCarry;
-		m_currentCursorCoord = other.m_currentCursorCoord;
 		m_mouseState         = std::move(other.m_mouseState);
-		m_eventBuffer        = std::move(other.m_eventBuffer);
+		m_currentCursorCoord = other.m_currentCursorCoord;
+		m_mouseWheelDelta    = other.m_mouseWheelDelta;
+		m_wheelRotationCount = other.m_wheelRotationCount;
+		m_isWheelUp          = other.m_isWheelUp;
+		m_isWheelDown        = other.m_isWheelDown;
+		m_wheelDeltaCarry    = other.m_wheelDeltaCarry;
 		m_inWindow           = other.m_inWindow;
 
 		return *this;

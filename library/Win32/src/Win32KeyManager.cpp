@@ -116,7 +116,7 @@ MouseStateFlags ProcessMouseRawButtons(std::uint16_t newState) noexcept
 	std::uint8_t pressFlags   = 0u;
 	std::uint8_t releaseFlags = 0u;
 
-	constexpr auto mouseButtonCount = static_cast<size_t>(MouseButtons::Invalid);
+	constexpr auto mouseButtonCount = static_cast<size_t>(MouseButton::Invalid);
 
 	for (size_t index = 0u; index < mouseButtonCount; ++index)
 	{

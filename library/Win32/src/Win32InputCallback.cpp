@@ -118,15 +118,19 @@ void PlutoWin32InputCallback(
 
 			if (rawMouse.usButtonFlags)
 			{
-				if (rawMouse.usButtonFlags & RI_MOUSE_WHEEL)
-					mouse.OnWheelDelta(static_cast<short>(rawMouse.usButtonData));
+				{
+					std::int16_t wheelDelta = 0;
 
-				auto [pressedButtons, releasedButtons] = ProcessMouseRawButtons(
-					rawMouse.usButtonFlags
-				);
+					if (rawMouse.usButtonFlags & RI_MOUSE_WHEEL)
+						wheelDelta = static_cast<std::int16_t>(rawMouse.usButtonData);
 
-				mouse.SetPressState(pressedButtons);
-				mouse.SetReleaseState(releasedButtons);
+					mouse.SetWheelDelta(wheelDelta);
+				}
+
+				const MouseStateFlags mouseFlags = ProcessMouseRawButtons(rawMouse.usButtonFlags);
+
+				mouse.SetPressState(mouseFlags.pressFlags);
+				mouse.SetReleaseState(mouseFlags.releaseFlags);
 
 				std::int32_t mouseX = 0;
 				std::int32_t mouseY = 0;
@@ -151,13 +155,11 @@ void PlutoWin32InputCallback(
 					}
 
 					mouseX = MulDiv(
-						rawMouse.lLastX, rect.right,
-						std::numeric_limits<std::uint16_t>::max()
+						rawMouse.lLastX, rect.right, std::numeric_limits<std::uint16_t>::max()
 					) + rect.left;
 
 					mouseY = MulDiv(
-						rawMouse.lLastY, rect.bottom,
-						std::numeric_limits<std::uint16_t>::max()
+						rawMouse.lLastY, rect.bottom, std::numeric_limits<std::uint16_t>::max()
 					) + rect.top;
 				}
 				else if (rawMouse.lLastX != 0l || rawMouse.lLastY != 0l)
