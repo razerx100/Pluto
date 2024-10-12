@@ -25,6 +25,8 @@ void MouseImpl::OnMouseEnter() noexcept
 void MouseImpl::OnMouseLeave() noexcept
 {
 	m_inWindow = false;
+
+	SetCurrentCursorCoord(0, 0);
 }
 
 void MouseImpl::SetWheelDelta(std::int16_t delta) noexcept
@@ -74,4 +76,11 @@ void MouseImpl::SetReleaseState(std::uint8_t releaseState) noexcept
 void MouseImpl::ClearState() noexcept
 {
 	m_mouseState.reset();
+
+	m_wheelDeltaCarry    = 0;
+	m_isWheelUp          = false;
+	m_isWheelDown        = false;
+	m_wheelRotationCount = 0u;
+
+	SetCurrentCursorCoord(0, 0);
 }

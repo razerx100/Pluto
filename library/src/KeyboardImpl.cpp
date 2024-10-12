@@ -30,4 +30,6 @@ void KeyboardImpl::SetChar(char character) noexcept
 void KeyboardImpl::ClearState() noexcept
 {
 	m_keystates.reset();
+
+	m_currentCharacter = static_cast<char>(129u);
 }
