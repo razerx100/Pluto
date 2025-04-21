@@ -2,6 +2,8 @@
 #include <CleanWin.hpp>
 #include <Xinput.h>
 
+namespace Pluto
+{
 void SetGamepadData(std::vector<GamepadImpl>& gamepads) noexcept
 {
 	for (GamepadImpl& gamepad : gamepads)
@@ -10,4 +12,5 @@ void SetGamepadData(std::vector<GamepadImpl>& gamepads) noexcept
 		gamepad.SetRightThumbStickDeadZone(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 		gamepad.SetTriggerThreshold(XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
 	}
+}
 }

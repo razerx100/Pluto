@@ -6,6 +6,8 @@
 #include <CleanWin.hpp>
 #include <Xinput.h>
 
+namespace Pluto
+{
 using enum SKeyCodes;
 
 static constexpr std::array WinKeyMap
@@ -155,4 +157,5 @@ std::uint16_t ProcessGamepadRawButtons(std::uint16_t state) noexcept
 		buttonFlags |= MapBit(state, gamepadButtonChecks, index);
 
 	return buttonFlags;
+}
 }

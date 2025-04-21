@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <Keyboard.hpp>
 
+namespace Pluto
+{
 struct MouseStateFlags
 {
 	std::uint8_t pressFlags;
@@ -17,4 +19,5 @@ SKeyCodes GetSKeyCodes(std::uint16_t nativeKeycode) noexcept;
 std::uint16_t ProcessGamepadRawButtons(std::uint16_t state) noexcept;
 [[nodiscard]]
 MouseStateFlags ProcessMouseRawButtons(std::uint16_t newState) noexcept;
+}
 #endif

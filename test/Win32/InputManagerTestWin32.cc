@@ -8,5 +8,5 @@ namespace Constants
 
 TEST(InputManagerTest, IOTest)
 {
-	InputManagerImpl inputManager{};
+	Pluto::InputManagerImpl inputManager{};
 }

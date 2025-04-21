@@ -3,5 +3,5 @@
 
 std::unique_ptr<InputManager> CreatePlutoInstance()
 {
-	return std::make_unique<InputManagerImpl>();
+	return std::make_unique<Pluto::InputManagerImpl>();
 }

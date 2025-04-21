@@ -7,6 +7,8 @@
 #include <MouseImpl.hpp>
 #include <GamepadImpl.hpp>
 
+namespace Pluto
+{
 class InputManagerImpl final : public InputManager
 {
 	friend void PlutoWin32InputCallback(
@@ -85,4 +87,5 @@ public:
 		return *this;
 	}
 };
+}
 #endif

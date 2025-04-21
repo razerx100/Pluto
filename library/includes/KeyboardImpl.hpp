@@ -4,6 +4,8 @@
 #include <bitset>
 #include <Keyboard.hpp>
 
+namespace Pluto
+{
 class KeyboardImpl final : public Keyboard
 {
 	friend void PlutoWin32InputCallback(
@@ -49,4 +51,5 @@ public:
 		return *this;
 	}
 };
+}
 #endif

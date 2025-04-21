@@ -4,6 +4,8 @@
 #include <Win32KeyManager.hpp>
 #include <PlatformSpecificFunctions.hpp>
 
+namespace Pluto
+{
 static std::vector<std::uint8_t> s_rawInputBuffer(sizeof(RAWINPUT), 0u);
 
 void PlutoWin32InputCallback(
@@ -264,4 +266,5 @@ void PlutoWin32InputCallback(
 	}
 	/************* END RAW MESSAGES *************/
 	}
+}
 }

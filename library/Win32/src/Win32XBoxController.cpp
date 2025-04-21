@@ -4,6 +4,8 @@
 #include <Xinput.h>
 #include <cmath>
 
+namespace Pluto
+{
 [[nodiscard]]
 static float GetMagnitude(std::int16_t x, std::int16_t y) noexcept
 {
@@ -122,4 +124,5 @@ void DisconnectXBoxController(std::vector<GamepadImpl>& gamepads) noexcept
 	for (DWORD gamepadIndex = 0u; gamepadIndex < gamepadCount; ++gamepadIndex)
 		if (XInputGetState(gamepadIndex, &state) == ERROR_DEVICE_NOT_CONNECTED)
 			gamepads[gamepadIndex].ClearState();
+}
 }

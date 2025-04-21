@@ -1,6 +1,8 @@
 #include <InputManagerImpl.hpp>
 #include <PlatformSpecificFunctions.hpp>
 
+namespace Pluto
+{
 void InputManagerImpl::AddGamepadSupport(size_t count) noexcept
 {
 	for (size_t index = 0u; index < count; ++index)
@@ -41,4 +43,5 @@ void InputManagerImpl::SubscribeToEvent(
 			.extraData = extraData
 		}
 	);
+}
 }

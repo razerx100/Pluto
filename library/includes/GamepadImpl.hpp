@@ -4,6 +4,8 @@
 #include <bitset>
 #include <Gamepad.hpp>
 
+namespace Pluto
+{
 class GamepadImpl final : public Gamepad
 {
 public:
@@ -145,4 +147,5 @@ public:
 		return *this;
 	}
 };
+}
 #endif

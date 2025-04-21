@@ -4,6 +4,8 @@
 #include <bitset>
 #include <Mouse.hpp>
 
+namespace Pluto
+{
 class MouseImpl final : public Mouse
 {
 public:
@@ -80,4 +82,5 @@ public:
 		return *this;
 	}
 };
+}
 #endif

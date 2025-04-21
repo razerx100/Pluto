@@ -1,5 +1,7 @@
 #include <MouseImpl.hpp>
 
+namespace Pluto
+{
 MouseImpl::MouseImpl()
 	: m_mouseState{ 0u }, m_currentCursorCoord{ 0u, 0u },
 	m_mouseWheelDelta{ 0.f }, m_wheelRotationCount{ 0u },
@@ -83,4 +85,5 @@ void MouseImpl::ClearState() noexcept
 	m_wheelRotationCount = 0u;
 
 	SetCurrentCursorCoord(0, 0);
+}
 }

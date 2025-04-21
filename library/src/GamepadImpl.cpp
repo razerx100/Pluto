@@ -1,5 +1,7 @@
 #include <GamepadImpl.hpp>
 
+namespace Pluto
+{
 GamepadImpl::GamepadImpl()
 	: m_buttonsState{ 0u },
 	m_currentLeftTriggerData{ 0.f }, m_previousLeftTriggerData{ 0.f },
@@ -58,4 +60,5 @@ void GamepadImpl::SetRightTriggerData(float data) noexcept
 void GamepadImpl::SetRawButtonState(std::uint16_t buttonFlags) noexcept
 {
 	m_buttonsState = buttonFlags;
+}
 }

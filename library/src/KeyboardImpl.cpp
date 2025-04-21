@@ -1,5 +1,7 @@
 #include <KeyboardImpl.hpp>
 
+namespace Pluto
+{
 bool KeyboardImpl::IsKeyPressed(SKeyCodes keycode) const noexcept
 {
 	return m_keystates[static_cast<size_t>(keycode)];
@@ -32,4 +34,5 @@ void KeyboardImpl::ClearState() noexcept
 	m_keystates.reset();
 
 	m_currentCharacter = static_cast<char>(129u);
+}
 }
