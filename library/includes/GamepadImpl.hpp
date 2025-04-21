@@ -1,5 +1,5 @@
-#ifndef GAMEPAD_IMPL_HPP_
-#define GAMEPAD_IMPL_HPP_
+#ifndef PLUTO_GAMEPAD_IMPL_HPP_
+#define PLUTO_GAMEPAD_IMPL_HPP_
 #include <queue>
 #include <bitset>
 #include <Gamepad.hpp>

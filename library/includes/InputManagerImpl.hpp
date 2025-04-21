@@ -1,5 +1,5 @@
-#ifndef INPUT_MANAGER_IMPL_HPP_
-#define INPUT_MANAGER_IMPL_HPP_
+#ifndef PLUTO_INPUT_MANAGER_IMPL_HPP_
+#define PLUTO_INPUT_MANAGER_IMPL_HPP_
 #include <InputManager.hpp>
 #include <array>
 #include <vector>

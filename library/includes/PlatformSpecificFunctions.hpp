@@ -1,5 +1,5 @@
-#ifndef PLATFORM_SPECIFIC_FUNCTIONS_HPP_
-#define PLATFORM_SPECIFIC_FUNCTIONS_HPP_
+#ifndef PLUTO_PLATFORM_SPECIFIC_FUNCTIONS_HPP_
+#define PLUTO_PLATFORM_SPECIFIC_FUNCTIONS_HPP_
 #include <vector>
 #include <InputManagerImpl.hpp>
 #include <GamepadImpl.hpp>

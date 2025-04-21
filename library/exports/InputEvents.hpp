@@ -1,5 +1,5 @@
-#ifndef INPUT_EVENTS_HPP_
-#define INPUT_EVENTS_HPP_
+#ifndef PLUTO_INPUT_EVENTS_HPP_
+#define PLUTO_INPUT_EVENTS_HPP_
 #include <cstdint>
 
 enum class InputEvent

@@ -1,5 +1,5 @@
-#ifndef MOUSE_IMPL_HPP_
-#define MOUSE_IMPL_HPP_
+#ifndef PLUTO_MOUSE_IMPL_HPP_
+#define PLUTO_MOUSE_IMPL_HPP_
 #include <queue>
 #include <bitset>
 #include <Mouse.hpp>

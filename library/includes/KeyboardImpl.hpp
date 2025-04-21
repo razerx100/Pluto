@@ -1,5 +1,5 @@
-#ifndef KEYBOARD_IMPL_HPP_
-#define KEYBOARD_IMPL_HPP_
+#ifndef PLUTO_KEYBOARD_IMPL_HPP_
+#define PLUTO_KEYBOARD_IMPL_HPP_
 #include <queue>
 #include <bitset>
 #include <Keyboard.hpp>
