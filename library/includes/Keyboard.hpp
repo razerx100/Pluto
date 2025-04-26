@@ -54,10 +54,12 @@ enum class SKeyCodes
 
 class Keyboard
 {
+#ifdef PLUTO_WIN32
 	friend void PlutoWin32InputCallback(
 		class InputManager& inputManager,
 		void* hwnd, std::uint32_t message, std::uint64_t wParameter, std::uint64_t lParameter
 	);
+#endif
 
 public:
 	Keyboard() : m_keystates{ 0u }, m_currentCharacter{ 0u } {}

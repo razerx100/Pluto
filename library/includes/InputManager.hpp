@@ -11,10 +11,12 @@ namespace Pluto
 {
 class InputManager
 {
+#ifdef PLUTO_WIN32
 	friend void PlutoWin32InputCallback(
 		InputManager& inputManager,
 		void* hwnd, std::uint32_t message, std::uint64_t wParameter, std::uint64_t lParameter
 	);
+#endif
 
 public:
 	using EventCallback = void(*)(void*, void*);
@@ -28,6 +30,8 @@ public:
 	void SubscribeToEvent(
 		InputEvent event, EventCallback eventCallback, void* extraData = nullptr
 	) noexcept;
+
+	void UnsubscribeAllCallbacks(InputEvent event) noexcept;
 
 	[[nodiscard]]
 	size_t GetGamepadCount() const noexcept { return std::size(m_gamepads); }
@@ -59,8 +63,8 @@ private:
 
 	static constexpr size_t s_eventCallbackCount = static_cast<size_t>(InputEvent::Invalid);
 
-	using EventContainer_t       = std::vector<EventData>;
-	using EventArray_t           = std::array<EventContainer_t, s_eventCallbackCount>;
+	using EventContainer_t = std::vector<EventData>;
+	using EventArray_t     = std::array<EventContainer_t, s_eventCallbackCount>;
 
 private:
 	Keyboard             m_keyboard;
