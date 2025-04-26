@@ -1,8 +1,8 @@
-#include <GamepadImpl.hpp>
+#include <Gamepad.hpp>
 
 namespace Pluto
 {
-GamepadImpl::GamepadImpl()
+Gamepad::Gamepad()
 	: m_buttonsState{ 0u },
 	m_currentLeftTriggerData{ 0.f }, m_previousLeftTriggerData{ 0.f },
 	m_currentRightTriggerData{ 0.f }, m_previousRightTriggerData{ 0.f },
@@ -11,12 +11,12 @@ GamepadImpl::GamepadImpl()
 	m_leftThumbStickDeadZone{ 0u }, m_rightThumbStickDeadZone{ 0u }, m_triggerThreshold{ 0u }
 {}
 
-bool GamepadImpl::IsButtonPressed(XBoxButton button) const noexcept
+bool Gamepad::IsButtonPressed(XBoxButton button) const noexcept
 {
 	return m_buttonsState[static_cast<size_t>(button)];
 }
 
-void GamepadImpl::ClearState() noexcept
+void Gamepad::ClearState() noexcept
 {
 	m_buttonsState.reset();
 
@@ -33,31 +33,31 @@ void GamepadImpl::ClearState() noexcept
 	m_triggerThreshold            = 0u;
 }
 
-void GamepadImpl::SetLeftThumbStickData(const ThumbStickData& data) noexcept
+void Gamepad::SetLeftThumbStickData(const ThumbStickData& data) noexcept
 {
 	m_previousLeftThumbStickData = m_currentLeftThumbStickData;
 	m_currentLeftThumbStickData  = data;
 }
 
-void GamepadImpl::SetRightThumbStickData(const ThumbStickData& data) noexcept
+void Gamepad::SetRightThumbStickData(const ThumbStickData& data) noexcept
 {
 	m_previousRightThumbStickData = m_currentRightThumbStickData;
 	m_currentRightThumbStickData  = data;
 }
 
-void GamepadImpl::SetLeftTriggerData(float data) noexcept
+void Gamepad::SetLeftTriggerData(float data) noexcept
 {
 	m_previousLeftTriggerData = m_currentLeftTriggerData;
 	m_currentLeftTriggerData  = data;
 }
 
-void GamepadImpl::SetRightTriggerData(float data) noexcept
+void Gamepad::SetRightTriggerData(float data) noexcept
 {
 	m_previousRightTriggerData = m_currentRightTriggerData;
 	m_currentRightTriggerData  = data;
 }
 
-void GamepadImpl::SetRawButtonState(std::uint16_t buttonFlags) noexcept
+void Gamepad::SetRawButtonState(std::uint16_t buttonFlags) noexcept
 {
 	m_buttonsState = buttonFlags;
 }

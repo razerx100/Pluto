@@ -4,9 +4,9 @@
 
 namespace Pluto
 {
-void SetGamepadData(std::vector<GamepadImpl>& gamepads) noexcept
+void SetGamepadData(std::vector<Gamepad>& gamepads) noexcept
 {
-	for (GamepadImpl& gamepad : gamepads)
+	for (Gamepad& gamepad : gamepads)
 	{
 		gamepad.SetLeftThumbStickDeadZone(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
 		gamepad.SetRightThumbStickDeadZone(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);

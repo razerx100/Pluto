@@ -9,7 +9,7 @@ namespace Pluto
 static std::vector<std::uint8_t> s_rawInputBuffer(sizeof(RAWINPUT), 0u);
 
 void PlutoWin32InputCallback(
-	InputManagerImpl& inputManager,
+	InputManager& inputManager,
 	void* hwnd, std::uint32_t message, std::uint64_t wParameter, std::uint64_t lParameter
 ) {
 	auto hWnd   = reinterpret_cast<HWND>(hwnd);
@@ -45,7 +45,7 @@ void PlutoWin32InputCallback(
 				.height = static_cast<std::uint32_t>(clientRect.bottom - clientRect.top)
 			};
 
-			InputManagerImpl::EventContainer_t& resizeCallbacks
+			InputManager::EventContainer_t& resizeCallbacks
 				= inputManager.m_eventCallbacks[static_cast<size_t>(InputEvent::Resize)];
 
 			for (const auto& eventData : resizeCallbacks)
@@ -59,7 +59,7 @@ void PlutoWin32InputCallback(
 	{
 		if ((wParam == VK_RETURN) && (lParam & 0x20000000ul)) // 29th bit checks if Alt is down
 		{
-			InputManagerImpl::EventContainer_t& fullscreenCallbacks
+			InputManager::EventContainer_t& fullscreenCallbacks
 				= inputManager.m_eventCallbacks[static_cast<size_t>(InputEvent::Fullscreen)];
 
 			FullscreenData fullscreenData{};
@@ -82,7 +82,7 @@ void PlutoWin32InputCallback(
 		std::uint16_t xCoord = LOWORD(lParam);
 		std::uint16_t yCoord = HIWORD(lParam);
 
-		MouseImpl& mouse = inputManager.m_mouse;
+		Mouse& mouse = inputManager.m_mouse;
 		mouse.SetCurrentCursorCoord(xCoord, yCoord);
 
 		break;
@@ -115,7 +115,7 @@ void PlutoWin32InputCallback(
 
 		if (rawHeader.dwType == RIM_TYPEMOUSE)
 		{
-			MouseImpl& mouse         = inputManager.m_mouse;
+			Mouse& mouse             = inputManager.m_mouse;
 			const RAWMOUSE& rawMouse = rawInput->data.mouse;
 
 			if (rawMouse.usButtonFlags)
@@ -176,7 +176,7 @@ void PlutoWin32InputCallback(
 		}
 		else if (rawHeader.dwType == RIM_TYPEKEYBOARD)
 		{
-			KeyboardImpl& keyboard         = inputManager.m_keyboard;
+			Keyboard& keyboard             = inputManager.m_keyboard;
 			const RAWKEYBOARD& rawKeyboard = rawInput->data.keyboard;
 
 			UINT legacyMessage = rawKeyboard.Message;

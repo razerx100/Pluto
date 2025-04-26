@@ -1,37 +1,54 @@
-#ifndef PLUTO_MOUSE_IMPL_HPP_
-#define PLUTO_MOUSE_IMPL_HPP_
+#ifndef PLUTO_MOUSE_HPP_
+#define PLUTO_MOUSE_HPP_
 #include <queue>
 #include <bitset>
-#include <Mouse.hpp>
+#include <utility>
+#include <optional>
 
 namespace Pluto
 {
-class MouseImpl final : public Mouse
+struct CursorCoord
+{
+	std::int32_t x;
+	std::int32_t y;
+};
+
+enum class MouseButton
+{
+	Left,
+	Right,
+	Middle,
+	X1,
+	X2,
+	Invalid
+};
+
+class Mouse
 {
 public:
-	MouseImpl();
+	Mouse();
 
 	[[nodiscard]]
-	float GetMouseWheelDelta() const noexcept override { return m_mouseWheelDelta; }
+	float GetMouseWheelDelta() const noexcept { return m_mouseWheelDelta; }
 	[[nodiscard]]
-	std::uint16_t GetMouseRotationCount() const noexcept override
+	std::uint16_t GetMouseRotationCount() const noexcept
 	{
 		return m_wheelRotationCount;
 	}
 	[[nodiscard]]
-	bool IsWheelUp() const noexcept override { return m_isWheelUp; }
+	bool IsWheelUp() const noexcept { return m_isWheelUp; }
 	[[nodiscard]]
-	bool IsWheelDown() const noexcept override { return m_isWheelDown; }
+	bool IsWheelDown() const noexcept { return m_isWheelDown; }
 	[[nodiscard]]
-	CursorCoord GetCurrentCursorCoord() const noexcept override
+	CursorCoord GetCurrentCursorCoord() const noexcept
 	{
 		return m_currentCursorCoord;
 	}
 
 	[[nodiscard]]
-	bool IsInWindow() const noexcept override { return m_inWindow; }
+	bool IsInWindow() const noexcept { return m_inWindow; }
 	[[nodiscard]]
-	bool IsButtonPressed(MouseButton button) const noexcept override;
+	bool IsButtonPressed(MouseButton button) const noexcept;
 
 	void SetPressState(std::uint8_t mouseState) noexcept;
 	void SetReleaseState(std::uint8_t mouseState) noexcept;
@@ -55,10 +72,10 @@ private:
 	bool                       m_inWindow;
 
 public:
-	MouseImpl(const MouseImpl&) = delete;
-	MouseImpl& operator=(const MouseImpl&) = delete;
+	Mouse(const Mouse&) = delete;
+	Mouse& operator=(const Mouse&) = delete;
 
-	MouseImpl(MouseImpl&& other) noexcept
+	Mouse(Mouse&& other) noexcept
 		: m_mouseState{ std::move(other.m_mouseState) },
 		m_currentCursorCoord{ other.m_currentCursorCoord },
 		m_mouseWheelDelta{ other.m_mouseWheelDelta },
@@ -68,7 +85,7 @@ public:
 		m_wheelDeltaCarry{ other.m_wheelDeltaCarry },
 		m_inWindow{ other.m_inWindow }
 	{}
-	MouseImpl& operator=(MouseImpl&& other) noexcept
+	Mouse& operator=(Mouse&& other) noexcept
 	{
 		m_mouseState         = std::move(other.m_mouseState);
 		m_currentCursorCoord = other.m_currentCursorCoord;

@@ -1,75 +1,102 @@
-#ifndef PLUTO_GAMEPAD_IMPL_HPP_
-#define PLUTO_GAMEPAD_IMPL_HPP_
+#ifndef PLUTO_GAMEPAD_HPP_
+#define PLUTO_GAMEPAD_HPP_
+#include <cstdint>
 #include <queue>
 #include <bitset>
-#include <Gamepad.hpp>
+#include <optional>
 
 namespace Pluto
 {
-class GamepadImpl final : public Gamepad
+enum class XBoxButton
+{
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT,
+	START,
+	BACK,
+	LEFT_THUMB,
+	RIGHT_THUMB,
+	LEFT_SHOULDER,
+	RIGHT_SHOULDER,
+	A,
+	B,
+	X,
+	Y,
+	Invalid
+};
+
+struct ThumbStickData
+{
+	float magnitude;
+	float xDirection;
+	float yDirection;
+};
+
+class Gamepad
 {
 public:
-	GamepadImpl();
+	Gamepad();
 
 	[[nodiscard]]
-	float GetCurrentLeftTriggerData() const noexcept override
+	float GetCurrentLeftTriggerData() const noexcept
 	{
 		return m_currentLeftTriggerData;
 	}
 	[[nodiscard]]
-	float GetPreviousLeftTriggerData() const noexcept override
+	float GetPreviousLeftTriggerData() const noexcept
 	{
 		return m_previousLeftTriggerData;
 	}
 
 	[[nodiscard]]
-	float GetCurrentRightTriggerData() const noexcept override
+	float GetCurrentRightTriggerData() const noexcept
 	{
 		return m_currentRightTriggerData;
 	}
 	[[nodiscard]]
-	float GetPreviousRightTriggerData() const noexcept override
+	float GetPreviousRightTriggerData() const noexcept
 	{
 		return m_previousRightTriggerData;
 	}
 
 	[[nodiscard]]
-	ThumbStickData GetCurrentLeftThumbStickData() const noexcept override
+	ThumbStickData GetCurrentLeftThumbStickData() const noexcept
 	{
 		return m_currentLeftThumbStickData;
 	}
 	[[nodiscard]]
-	ThumbStickData GetPreviousLeftThumbStickData() const noexcept override
+	ThumbStickData GetPreviousLeftThumbStickData() const noexcept
 	{
 		return m_previousLeftThumbStickData;
 	}
 
 	[[nodiscard]]
-	ThumbStickData GetCurrentRightThumbStickData() const noexcept override
+	ThumbStickData GetCurrentRightThumbStickData() const noexcept
 	{
 		return m_currentRightThumbStickData;
 	}
 	[[nodiscard]]
-	ThumbStickData GetPreviousRightThumbStickData() const noexcept override
+	ThumbStickData GetPreviousRightThumbStickData() const noexcept
 	{
 		return m_previousRightThumbStickData;
 	}
 
 	[[nodiscard]]
-	bool IsButtonPressed(XBoxButton button) const noexcept override;
+	bool IsButtonPressed(XBoxButton button) const noexcept;
 
 	[[nodiscard]]
-	std::uint32_t GetLeftThumbStickDeadZone() const noexcept override
+	std::uint32_t GetLeftThumbStickDeadZone() const noexcept
 	{
 		return m_leftThumbStickDeadZone;
 	}
 	[[nodiscard]]
-	std::uint32_t GetRightThumbStickDeadZone() const noexcept override
+	std::uint32_t GetRightThumbStickDeadZone() const noexcept
 	{
 		return m_rightThumbStickDeadZone;
 	}
 	[[nodiscard]]
-	std::uint32_t GetTriggerThreshold() const noexcept override
+	std::uint32_t GetTriggerThreshold() const noexcept
 	{
 		return m_triggerThreshold;
 	}
@@ -112,10 +139,10 @@ private:
 	std::uint32_t              m_triggerThreshold;
 
 public:
-	GamepadImpl(const GamepadImpl&) = delete;
-	GamepadImpl& operator=(const GamepadImpl&) = delete;
+	Gamepad(const Gamepad&) = delete;
+	Gamepad& operator=(const Gamepad&) = delete;
 
-	GamepadImpl(GamepadImpl&& other) noexcept
+	Gamepad(Gamepad&& other) noexcept
 		: m_buttonsState{ std::move(other.m_buttonsState) },
 		m_currentLeftTriggerData{ other.m_currentLeftTriggerData },
 		m_previousLeftTriggerData{ other.m_previousLeftTriggerData },
@@ -129,7 +156,7 @@ public:
 		m_rightThumbStickDeadZone{ other.m_rightThumbStickDeadZone },
 		m_triggerThreshold{ other.m_triggerThreshold }
 	{}
-	GamepadImpl& operator=(GamepadImpl&& other) noexcept
+	Gamepad& operator=(Gamepad&& other) noexcept
 	{
 		m_buttonsState                = std::move(other.m_buttonsState);
 		m_currentLeftTriggerData      = other.m_currentLeftTriggerData;

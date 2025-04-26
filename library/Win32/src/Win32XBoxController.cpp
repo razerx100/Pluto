@@ -35,7 +35,7 @@ static ThumbStickData ProcessThumbStickData(
 	};
 }
 
-void CheckXBoxControllerStates(std::vector<GamepadImpl>& gamepads) noexcept
+void CheckXBoxControllerStates(std::vector<Gamepad>& gamepads) noexcept
 {
 	XINPUT_STATE state{};
 	ZeroMemory(&state, sizeof(XINPUT_STATE));
@@ -46,7 +46,7 @@ void CheckXBoxControllerStates(std::vector<GamepadImpl>& gamepads) noexcept
 	{
 		if (XInputGetState(gamepadIndex, &state) == ERROR_SUCCESS)
 		{
-			GamepadImpl& gamepad        = gamepads[gamepadIndex];
+			Gamepad& gamepad            = gamepads[gamepadIndex];
 
 			const XINPUT_GAMEPAD& xData = state.Gamepad;
 
@@ -56,7 +56,7 @@ void CheckXBoxControllerStates(std::vector<GamepadImpl>& gamepads) noexcept
 				ThumbStickData leftThumbStickData{ 0.f, 0.f, 0.f };
 
 				const std::uint32_t leftStickDeadZone = gamepad.GetLeftThumbStickDeadZone();
-				const float magnitude                 = GetMagnitude(xData.sThumbLX, xData.sThumbLY);
+				const float magnitude = GetMagnitude(xData.sThumbLX, xData.sThumbLY);
 
 				if (magnitude > leftStickDeadZone)
 					leftThumbStickData = ProcessThumbStickData(
@@ -71,7 +71,7 @@ void CheckXBoxControllerStates(std::vector<GamepadImpl>& gamepads) noexcept
 				ThumbStickData rightThumbStickData{ 0.f, 0.f, 0.f };
 
 				const std::uint32_t rightStickDeadZone = gamepad.GetRightThumbStickDeadZone();
-				const float magnitude                  = GetMagnitude(xData.sThumbRX, xData.sThumbRY);
+				const float magnitude = GetMagnitude(xData.sThumbRX, xData.sThumbRY);
 
 				if (magnitude > rightStickDeadZone)
 					rightThumbStickData = ProcessThumbStickData(
@@ -114,7 +114,7 @@ void CheckXBoxControllerStates(std::vector<GamepadImpl>& gamepads) noexcept
 	}
 }
 
-void DisconnectXBoxController(std::vector<GamepadImpl>& gamepads) noexcept
+void DisconnectXBoxController(std::vector<Gamepad>& gamepads) noexcept
 {
 	XINPUT_STATE state{};
 	ZeroMemory(&state, sizeof(XINPUT_STATE));

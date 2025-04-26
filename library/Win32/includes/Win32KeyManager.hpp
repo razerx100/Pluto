@@ -1,5 +1,5 @@
-#ifndef WIN32_KEY_MANAGER_HPP_
-#define WIN32_KEY_MANAGER_HPP_
+#ifndef PLUTO_WIN32_KEY_MANAGER_HPP_
+#define PLUTO_WIN32_KEY_MANAGER_HPP_
 #include <cstdint>
 #include <Keyboard.hpp>
 

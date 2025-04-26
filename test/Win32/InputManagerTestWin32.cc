@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <InputManagerImpl.hpp>
+#include <InputManager.hpp>
 
 namespace Constants
 {
@@ -8,5 +8,5 @@ namespace Constants
 
 TEST(InputManagerTest, IOTest)
 {
-	Pluto::InputManagerImpl inputManager{};
+	Pluto::InputManager inputManager{};
 }

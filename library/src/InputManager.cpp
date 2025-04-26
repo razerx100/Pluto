@@ -1,17 +1,17 @@
-#include <InputManagerImpl.hpp>
+#include <InputManager.hpp>
 #include <PlatformSpecificFunctions.hpp>
 
 namespace Pluto
 {
-void InputManagerImpl::AddGamepadSupport(size_t count) noexcept
+void InputManager::AddGamepadSupport(size_t count) noexcept
 {
 	for (size_t index = 0u; index < count; ++index)
-		m_gamepads.emplace_back(GamepadImpl{});
+		m_gamepads.emplace_back(Gamepad{});
 
 	SetGamepadData(m_gamepads);
 }
 
-void InputManagerImpl::ClearInputStates() noexcept
+void InputManager::ClearInputStates() noexcept
 {
 	m_keyboard.ClearState();
 	m_mouse.ClearState();
@@ -20,18 +20,18 @@ void InputManagerImpl::ClearInputStates() noexcept
 		gamepad.ClearState();
 }
 
-void InputManagerImpl::UpdateIndependentInputs() noexcept
+void InputManager::UpdateIndependentInputs() noexcept
 {
 	CheckXBoxControllerStates(m_gamepads);
 }
 
-void InputManagerImpl::InputCallback(
+void InputManager::InputCallback(
 	void* hwnd, std::uint32_t message, std::uint64_t wParameter, std::uint64_t lParameter
 ) {
 	PlutoWin32InputCallback(*this, hwnd, message, wParameter, lParameter);
 }
 
-void InputManagerImpl::SubscribeToEvent(
+void InputManager::SubscribeToEvent(
 	InputEvent event, EventCallback eventCallback, void* extraData /* = nullptr */
 ) noexcept {
 	EventContainer_t& eventContainer = m_eventCallbacks[static_cast<size_t>(event)];

@@ -8,12 +8,7 @@ add_executable(PlutoTest
     ${WIN32SRC}
 )
 
-target_include_directories(PlutoTest PRIVATE ${PLUTO_PRIVATE_INCLUDES})
-
-unset(PLUTO_PRIVATE_INCLUDES)
-
 if(MSVC)
-    target_compile_definitions(PlutoTest PRIVATE PLUTO_WIN32)
     target_compile_options(PlutoTest PRIVATE /fp:fast /MP /Ot /W4 /Gy)
 endif()
 
